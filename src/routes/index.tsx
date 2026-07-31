@@ -6,6 +6,7 @@ import {
   Crown,
   Loader2,
   Lock,
+  Settings,
   Sparkles,
   Target,
   Timer,
@@ -104,15 +105,24 @@ function Dashboard() {
             </p>
           </div>
         </div>
-        {!isPremium && (
+        <div className="flex shrink-0 items-center gap-2">
+          {!isPremium && (
+            <Link
+              to="/premium"
+              className="tint-primary flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold"
+            >
+              <Crown className="h-3.5 w-3.5" />
+              Premium
+            </Link>
+          )}
           <Link
-            to="/premium"
-            className="tint-primary flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold"
+            to="/profil"
+            aria-label="Můj profil"
+            className="rounded-full bg-card p-2.5 text-muted-foreground"
           >
-            <Crown className="h-3.5 w-3.5" />
-            Premium
+            <Settings className="h-4 w-4" />
           </Link>
-        )}
+        </div>
       </header>
 
       <motion.section
@@ -217,10 +227,10 @@ function Dashboard() {
 
       {isGuest && (
         <Link
-          to="/premium"
+          to="/prihlaseni"
           className="text-center text-xs text-muted-foreground underline"
         >
-          Zkoušíš jako host — vytvoř si účet a nepřijdeš o pokrok
+          Zkoušíš jako host — zaregistrovat se a nepřijít o pokrok
         </Link>
       )}
     </main>
