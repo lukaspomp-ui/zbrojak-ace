@@ -314,7 +314,6 @@ function ResultCard({
   total,
   passed,
   onNextRound,
-  embedded,
 }: {
   mode: QuizMode;
   correct: number;
