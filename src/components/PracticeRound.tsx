@@ -77,6 +77,7 @@ export function PracticeRound({
       userId={userId}
       progress={progress}
       onNextRound={() => setRound((r) => r + 1)}
+      embedded
     />
   );
 }
