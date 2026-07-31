@@ -70,6 +70,143 @@ export type Database = {
         }
         Relationships: []
       }
+      documents: {
+        Row: {
+          app_id: string
+          created_at: string
+          description: string
+          file_url: string
+          id: string
+          sort_order: number
+          subject_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          description?: string
+          file_url: string
+          id?: string
+          sort_order?: number
+          subject_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          description?: string
+          file_url?: string
+          id?: string
+          sort_order?: number
+          subject_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      glossary: {
+        Row: {
+          app_id: string
+          created_at: string
+          definition: string
+          id: string
+          sort_order: number
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          definition?: string
+          id?: string
+          sort_order?: number
+          term: string
+          updated_at?: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          definition?: string
+          id?: string
+          sort_order?: number
+          term?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "glossary_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lessons: {
+        Row: {
+          app_id: string
+          content: string
+          created_at: string
+          id: string
+          sort_order: number
+          subject_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          app_id: string
+          content?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          subject_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          app_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          subject_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lessons_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -193,6 +330,51 @@ export type Database = {
             columns: ["app_id"]
             isOneToOne: false
             referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      summaries: {
+        Row: {
+          app_id: string
+          content: string
+          created_at: string
+          id: string
+          sort_order: number
+          subject_id: string
+          updated_at: string
+        }
+        Insert: {
+          app_id: string
+          content?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          subject_id: string
+          updated_at?: string
+        }
+        Update: {
+          app_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          subject_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summaries_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "summaries_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
             referencedColumns: ["id"]
           },
         ]
