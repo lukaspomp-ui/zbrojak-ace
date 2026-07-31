@@ -10,15 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DokumentyRouteImport } from './routes/dokumenty'
 import { Route as KvizRouteImport } from './routes/kviz'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PrihlaseniRouteImport } from './routes/prihlaseni'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ResetHeslaRouteImport } from './routes/reset-hesla'
+import { Route as SlovnicekRouteImport } from './routes/slovnicek'
+import { Route as StatistikyRouteImport } from './routes/statistiky'
+import { Route as OkruhSubjectIdRouteImport } from './routes/okruh.$subjectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DokumentyRoute = DokumentyRouteImport.update({
+  id: '/dokumenty',
+  path: '/dokumenty',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KvizRoute = KvizRouteImport.update({
@@ -46,55 +55,109 @@ const ResetHeslaRoute = ResetHeslaRouteImport.update({
   path: '/reset-hesla',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SlovnicekRoute = SlovnicekRouteImport.update({
+  id: '/slovnicek',
+  path: '/slovnicek',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatistikyRoute = StatistikyRouteImport.update({
+  id: '/statistiky',
+  path: '/statistiky',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OkruhSubjectIdRoute = OkruhSubjectIdRouteImport.update({
+  id: '/okruh/$subjectId',
+  path: '/okruh/$subjectId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dokumenty': typeof DokumentyRoute
   '/kviz': typeof KvizRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
+  '/slovnicek': typeof SlovnicekRoute
+  '/statistiky': typeof StatistikyRoute
+  '/okruh/$subjectId': typeof OkruhSubjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dokumenty': typeof DokumentyRoute
   '/kviz': typeof KvizRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
+  '/slovnicek': typeof SlovnicekRoute
+  '/statistiky': typeof StatistikyRoute
+  '/okruh/$subjectId': typeof OkruhSubjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dokumenty': typeof DokumentyRoute
   '/kviz': typeof KvizRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
+  '/slovnicek': typeof SlovnicekRoute
+  '/statistiky': typeof StatistikyRoute
+  '/okruh/$subjectId': typeof OkruhSubjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/kviz' | '/premium' | '/prihlaseni' | '/profil' | '/reset-hesla'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kviz' | '/premium' | '/prihlaseni' | '/profil' | '/reset-hesla'
-  id:
-    | '__root__'
     | '/'
+    | '/dokumenty'
     | '/kviz'
     | '/premium'
     | '/prihlaseni'
     | '/profil'
     | '/reset-hesla'
+    | '/slovnicek'
+    | '/statistiky'
+    | '/okruh/$subjectId'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/dokumenty'
+    | '/kviz'
+    | '/premium'
+    | '/prihlaseni'
+    | '/profil'
+    | '/reset-hesla'
+    | '/slovnicek'
+    | '/statistiky'
+    | '/okruh/$subjectId'
+  id:
+    | '__root__'
+    | '/'
+    | '/dokumenty'
+    | '/kviz'
+    | '/premium'
+    | '/prihlaseni'
+    | '/profil'
+    | '/reset-hesla'
+    | '/slovnicek'
+    | '/statistiky'
+    | '/okruh/$subjectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DokumentyRoute: typeof DokumentyRoute
   KvizRoute: typeof KvizRoute
   PremiumRoute: typeof PremiumRoute
   PrihlaseniRoute: typeof PrihlaseniRoute
   ProfilRoute: typeof ProfilRoute
   ResetHeslaRoute: typeof ResetHeslaRoute
+  SlovnicekRoute: typeof SlovnicekRoute
+  StatistikyRoute: typeof StatistikyRoute
+  OkruhSubjectIdRoute: typeof OkruhSubjectIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -104,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dokumenty': {
+      id: '/dokumenty'
+      path: '/dokumenty'
+      fullPath: '/dokumenty'
+      preLoaderRoute: typeof DokumentyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kviz': {
@@ -141,16 +211,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetHeslaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/slovnicek': {
+      id: '/slovnicek'
+      path: '/slovnicek'
+      fullPath: '/slovnicek'
+      preLoaderRoute: typeof SlovnicekRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistiky': {
+      id: '/statistiky'
+      path: '/statistiky'
+      fullPath: '/statistiky'
+      preLoaderRoute: typeof StatistikyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/okruh/$subjectId': {
+      id: '/okruh/$subjectId'
+      path: '/okruh/$subjectId'
+      fullPath: '/okruh/$subjectId'
+      preLoaderRoute: typeof OkruhSubjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DokumentyRoute: DokumentyRoute,
   KvizRoute: KvizRoute,
   PremiumRoute: PremiumRoute,
   PrihlaseniRoute: PrihlaseniRoute,
   ProfilRoute: ProfilRoute,
   ResetHeslaRoute: ResetHeslaRoute,
+  SlovnicekRoute: SlovnicekRoute,
+  StatistikyRoute: StatistikyRoute,
+  OkruhSubjectIdRoute: OkruhSubjectIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

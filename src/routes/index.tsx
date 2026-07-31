@@ -1,13 +1,17 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
+  BarChart3,
   BookOpen,
   ChevronRight,
   Crown,
+  FileText,
   Loader2,
   Lock,
+  type LucideIcon,
   Settings,
   Sparkles,
+  SpellCheck,
   Target,
   Timer,
 } from "lucide-react";
@@ -203,8 +207,8 @@ function Dashboard() {
               transition={{ delay: 0.05 * i }}
             >
               <Link
-                to="/kviz"
-                search={{ mode: "subject", subjectId: subject.id }}
+                to="/okruh/$subjectId"
+                params={{ subjectId: subject.id }}
                 className="card-surface flex items-center gap-4 p-4"
               >
                 <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
@@ -225,6 +229,28 @@ function Dashboard() {
         })}
       </section>
 
+      <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-semibold text-muted-foreground">Studium</h2>
+        <StudyLink
+          to="/dokumenty"
+          icon={FileText}
+          title="Dokumenty"
+          subtitle="Materiály ke stažení"
+        />
+        <StudyLink
+          to="/slovnicek"
+          icon={SpellCheck}
+          title="Slovníček"
+          subtitle="Pojmy a jejich vysvětlení"
+        />
+        <StudyLink
+          to="/statistiky"
+          icon={BarChart3}
+          title="Statistiky"
+          subtitle="Připravenost a slabá místa"
+        />
+      </section>
+
       {isGuest && (
         <Link
           to="/prihlaseni"
@@ -234,5 +260,30 @@ function Dashboard() {
         </Link>
       )}
     </main>
+  );
+}
+
+function StudyLink({
+  to,
+  icon: Icon,
+  title,
+  subtitle,
+}: {
+  to: "/dokumenty" | "/slovnicek" | "/statistiky";
+  icon: LucideIcon;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <Link to={to} className="card-surface flex items-center gap-4 p-4">
+      <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
+        <Icon className="h-4.5 w-4.5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[15px] font-semibold">{title}</span>
+        <span className="block text-xs text-muted-foreground">{subtitle}</span>
+      </span>
+      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+    </Link>
   );
 }

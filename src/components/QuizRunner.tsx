@@ -35,6 +35,7 @@ export function QuizRunner({
   userId,
   progress,
   onNextRound,
+  embedded,
 }: {
   questions: Question[];
   mode: QuizMode;
@@ -42,6 +43,8 @@ export function QuizRunner({
   userId: string;
   progress: Progress[];
   onNextRound?: () => void;
+  /** Rendered inside the subject tabs, where the screen already has a header. */
+  embedded?: boolean;
 }) {
   const queryClient = useQueryClient();
   const [index, setIndex] = useState(0);
@@ -142,15 +145,19 @@ export function QuizRunner({
   return (
     <div className="flex flex-col gap-4">
       <header className="flex items-center gap-3">
-        <Link
-          to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
-          aria-label="Zpět"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
+        {!embedded && (
+          <Link
+            to="/"
+            className="rounded-full bg-card p-2.5 text-muted-foreground"
+            aria-label="Zpět"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        )}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold">{title}</p>
+          {!embedded && (
+            <p className="truncate text-sm font-semibold">{title}</p>
+          )}
           <p className="text-xs text-muted-foreground tabular-nums">
             {index + 1} / {total}
           </p>
