@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as KvizRouteImport } from './routes/kviz'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PrihlaseniRouteImport } from './routes/prihlaseni'
+import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as ResetHeslaRouteImport } from './routes/reset-hesla'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +36,32 @@ const PrihlaseniRoute = PrihlaseniRouteImport.update({
   path: '/prihlaseni',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetHeslaRoute = ResetHeslaRouteImport.update({
+  id: '/reset-hesla',
+  path: '/reset-hesla',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kviz': typeof KvizRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
+  '/profil': typeof ProfilRoute
+  '/reset-hesla': typeof ResetHeslaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kviz': typeof KvizRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
+  '/profil': typeof ProfilRoute
+  '/reset-hesla': typeof ResetHeslaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +69,23 @@ export interface FileRoutesById {
   '/kviz': typeof KvizRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
+  '/profil': typeof ProfilRoute
+  '/reset-hesla': typeof ResetHeslaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kviz' | '/premium' | '/prihlaseni'
+  fullPaths:
+    '/' | '/kviz' | '/premium' | '/prihlaseni' | '/profil' | '/reset-hesla'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kviz' | '/premium' | '/prihlaseni'
-  id: '__root__' | '/' | '/kviz' | '/premium' | '/prihlaseni'
+  to: '/' | '/kviz' | '/premium' | '/prihlaseni' | '/profil' | '/reset-hesla'
+  id:
+    | '__root__'
+    | '/'
+    | '/kviz'
+    | '/premium'
+    | '/prihlaseni'
+    | '/profil'
+    | '/reset-hesla'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +93,8 @@ export interface RootRouteChildren {
   KvizRoute: typeof KvizRoute
   PremiumRoute: typeof PremiumRoute
   PrihlaseniRoute: typeof PrihlaseniRoute
+  ProfilRoute: typeof ProfilRoute
+  ResetHeslaRoute: typeof ResetHeslaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +127,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrihlaseniRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-hesla': {
+      id: '/reset-hesla'
+      path: '/reset-hesla'
+      fullPath: '/reset-hesla'
+      preLoaderRoute: typeof ResetHeslaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +149,8 @@ const rootRouteChildren: RootRouteChildren = {
   KvizRoute: KvizRoute,
   PremiumRoute: PremiumRoute,
   PrihlaseniRoute: PrihlaseniRoute,
+  ProfilRoute: ProfilRoute,
+  ResetHeslaRoute: ResetHeslaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

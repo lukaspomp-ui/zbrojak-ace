@@ -11,6 +11,9 @@ export const EXAM_QUESTION_COUNT = 30;
 export const EXAM_DURATION_SECONDS = 20 * 60;
 export const EXAM_PASS_RATIO = 0.8;
 
+/** Subject practice: one round serves this many random questions */
+export const PRACTICE_ROUND_SIZE = 5;
+
 /** Mastery rule: correct answers in a row needed to master a question */
 export const MASTERY_STREAK = 2;
 
