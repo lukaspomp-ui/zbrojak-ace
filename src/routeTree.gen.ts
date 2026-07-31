@@ -17,6 +17,7 @@ import { Route as PrihlaseniRouteImport } from './routes/prihlaseni'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ResetHeslaRouteImport } from './routes/reset-hesla'
 import { Route as SlovnicekRouteImport } from './routes/slovnicek'
+import { Route as StatistikyRouteImport } from './routes/statistiky'
 import { Route as OkruhSubjectIdRouteImport } from './routes/okruh.$subjectId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +60,11 @@ const SlovnicekRoute = SlovnicekRouteImport.update({
   path: '/slovnicek',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StatistikyRoute = StatistikyRouteImport.update({
+  id: '/statistiky',
+  path: '/statistiky',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OkruhSubjectIdRoute = OkruhSubjectIdRouteImport.update({
   id: '/okruh/$subjectId',
   path: '/okruh/$subjectId',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
+  '/statistiky': typeof StatistikyRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
+  '/statistiky': typeof StatistikyRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
+  '/statistiky': typeof StatistikyRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
+    | '/statistiky'
     | '/okruh/$subjectId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
+    | '/statistiky'
     | '/okruh/$subjectId'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
+    | '/statistiky'
     | '/okruh/$subjectId'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   ResetHeslaRoute: typeof ResetHeslaRoute
   SlovnicekRoute: typeof SlovnicekRoute
+  StatistikyRoute: typeof StatistikyRoute
   OkruhSubjectIdRoute: typeof OkruhSubjectIdRoute
 }
 
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlovnicekRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/statistiky': {
+      id: '/statistiky'
+      path: '/statistiky'
+      fullPath: '/statistiky'
+      preLoaderRoute: typeof StatistikyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/okruh/$subjectId': {
       id: '/okruh/$subjectId'
       path: '/okruh/$subjectId'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   ResetHeslaRoute: ResetHeslaRoute,
   SlovnicekRoute: SlovnicekRoute,
+  StatistikyRoute: StatistikyRoute,
   OkruhSubjectIdRoute: OkruhSubjectIdRoute,
 }
 export const routeTree = rootRouteImport
