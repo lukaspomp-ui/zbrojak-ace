@@ -34,12 +34,14 @@ export function QuizRunner({
   title,
   userId,
   progress,
+  onNextRound,
 }: {
   questions: Question[];
   mode: QuizMode;
   title: string;
   userId: string;
   progress: Progress[];
+  onNextRound?: () => void;
 }) {
   const queryClient = useQueryClient();
   const [index, setIndex] = useState(0);
@@ -119,6 +121,7 @@ export function QuizRunner({
         correct={correctCount}
         total={total}
         passed={passed}
+        onNextRound={onNextRound}
       />
     );
   }
@@ -303,11 +306,13 @@ function ResultCard({
   correct,
   total,
   passed,
+  onNextRound,
 }: {
   mode: QuizMode;
   correct: number;
   total: number;
   passed: boolean;
+  onNextRound?: () => void;
 }) {
   const percent = total ? Math.round((correct / total) * 100) : 0;
   return (
@@ -336,7 +341,9 @@ function ResultCard({
             ? passed
               ? "Prospěl jsi!"
               : "Neprospěl jsi"
-            : "Procvičeno!"}
+            : onNextRound
+              ? "Kolo dokončeno!"
+              : "Procvičeno!"}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Správně {correct} z {total} otázek ({percent} %)
@@ -344,8 +351,16 @@ function ResultCard({
         </p>
       </div>
       <div className="flex w-full flex-col gap-2">
+        {onNextRound && (
+          <Button full onClick={onNextRound}>
+            <RotateCcw className="h-4 w-4" />
+            Další kolo
+          </Button>
+        )}
         <Link to="/">
-          <Button full>Zpět na přehled</Button>
+          <Button variant={onNextRound ? "outline" : "primary"} full>
+            Zpět na přehled
+          </Button>
         </Link>
         <Link to="/kviz" search={{ mode: "mistakes" }}>
           <Button variant="outline" full>

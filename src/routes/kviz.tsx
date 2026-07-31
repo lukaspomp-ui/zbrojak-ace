@@ -16,6 +16,7 @@ import {
 import {
   EXAM_QUESTION_COUNT,
   FREE_EXAM_ATTEMPTS,
+  PRACTICE_ROUND_SIZE,
 } from "@/lib/app-config";
 import {
   availableQuestions,
@@ -88,6 +89,9 @@ function QuizPage() {
     void consumeExamAttempt(userId, profile.exam_attempts_used ?? 0);
   }, [mode, profile, userId, isPremium, blocked]);
 
+  const [round, setRound] = useState(0);
+  const lastRoundIds = useRef<string[]>([]);
+
   const set = useMemo<Question[] | null>(() => {
     if (!questions || !progress) return null;
     const pool = availableQuestions(questions, isPremium);
@@ -102,9 +106,23 @@ function QuizPage() {
         .map((p) => pool.find((q) => q.id === p.question_id))
         .filter((q): q is Question => !!q);
     }
-    return pool.filter((q) => q.subject_id === subjectId);
+    // Subject practice: a fresh random round, avoiding an exact repeat.
+    const subjectPool = pool.filter((q) => q.subject_id === subjectId);
+    if (subjectPool.length <= PRACTICE_ROUND_SIZE) return shuffle(subjectPool);
+    const previous = lastRoundIds.current;
+    const fresh = subjectPool.filter((q) => !previous.includes(q.id));
+    const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
+    if (picked.length < PRACTICE_ROUND_SIZE) {
+      const filler = shuffle(
+        subjectPool.filter((q) => !picked.some((p) => p.id === q.id)),
+      ).slice(0, PRACTICE_ROUND_SIZE - picked.length);
+      picked.push(...filler);
+    }
+    lastRoundIds.current = picked.map((q) => q.id);
+    return shuffle(picked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions, progress, isPremium, mode, subjectId]);
+  }, [questions, progress, isPremium, mode, subjectId, round]);
+
 
   if (!ready || !userId || !set || !profile || !progress) {
     return (
@@ -152,6 +170,10 @@ function QuizPage() {
         title={title}
         userId={userId}
         progress={progress}
+        {...(mode === "subject"
+          ? { onNextRound: () => setRound((r) => r + 1) }
+          : {})}
+        key={`${mode}-${subjectId ?? ""}-${round}`}
       />
     </main>
   );
