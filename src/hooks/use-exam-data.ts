@@ -2,6 +2,10 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchApp,
+  fetchDocuments,
+  fetchGlossary,
+  fetchLessons,
+  fetchSummaries,
   fetchProgress,
   fetchProfile,
   fetchQuestions,
@@ -53,5 +57,37 @@ export function useProgressQuery() {
     queryKey: ["progress", userId],
     queryFn: () => fetchProgress(userId as string),
     enabled: !!userId,
+  });
+}
+
+export function useLessonsQuery() {
+  return useQuery({
+    queryKey: ["lessons"],
+    queryFn: fetchLessons,
+    staleTime: 300_000,
+  });
+}
+
+export function useSummariesQuery() {
+  return useQuery({
+    queryKey: ["summaries"],
+    queryFn: fetchSummaries,
+    staleTime: 300_000,
+  });
+}
+
+export function useGlossaryQuery() {
+  return useQuery({
+    queryKey: ["glossary"],
+    queryFn: fetchGlossary,
+    staleTime: 300_000,
+  });
+}
+
+export function useDocumentsQuery() {
+  return useQuery({
+    queryKey: ["documents"],
+    queryFn: fetchDocuments,
+    staleTime: 300_000,
   });
 }

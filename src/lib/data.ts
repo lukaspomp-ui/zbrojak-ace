@@ -43,6 +43,38 @@ export type Progress = {
   times_wrong: number;
   correct_streak: number;
   mastered: boolean;
+  last_answered_at?: string | null;
+};
+
+export type Lesson = {
+  id: string;
+  subject_id: string;
+  title: string;
+  content: string;
+  sort_order: number;
+};
+
+export type Summary = {
+  id: string;
+  subject_id: string;
+  content: string;
+  sort_order: number;
+};
+
+export type GlossaryTerm = {
+  id: string;
+  term: string;
+  definition: string;
+  sort_order: number;
+};
+
+export type DocumentRow = {
+  id: string;
+  subject_id: string | null;
+  title: string;
+  description: string;
+  file_url: string;
+  sort_order: number;
 };
 
 export type Profile = {
@@ -113,7 +145,7 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
 export async function fetchProgress(userId: string): Promise<Progress[]> {
   const { data, error } = await supabase
     .from("user_progress")
-    .select("question_id, times_wrong, correct_streak, mastered")
+    .select("question_id, times_wrong, correct_streak, mastered, last_answered_at")
     .eq("user_id", userId);
   if (error) throw error;
   return (data ?? []) as Progress[];
@@ -200,4 +232,60 @@ export async function consumeExamAttempt(
     .update({ exam_attempts_used: used + 1 })
     .eq("id", userId);
   if (error) throw error;
+}
+
+/* ---------- Educational content (data-driven per app_id) ---------- */
+
+export async function fetchLessons(): Promise<Lesson[]> {
+  const { data, error } = await supabase
+    .from("lessons")
+    .select("id, subject_id, title, content, sort_order")
+    .eq("app_id", CURRENT_APP_ID)
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []) as Lesson[];
+}
+
+export async function fetchSummaries(): Promise<Summary[]> {
+  const { data, error } = await supabase
+    .from("summaries")
+    .select("id, subject_id, content, sort_order")
+    .eq("app_id", CURRENT_APP_ID)
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []) as Summary[];
+}
+
+export async function fetchGlossary(): Promise<GlossaryTerm[]> {
+  const { data, error } = await supabase
+    .from("glossary")
+    .select("id, term, definition, sort_order")
+    .eq("app_id", CURRENT_APP_ID)
+    .order("term");
+  if (error) throw error;
+  return (data ?? []) as GlossaryTerm[];
+}
+
+export async function fetchDocuments(): Promise<DocumentRow[]> {
+  const { data, error } = await supabase
+    .from("documents")
+    .select("id, subject_id, title, description, file_url, sort_order")
+    .eq("app_id", CURRENT_APP_ID)
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []) as DocumentRow[];
+}
+
+/**
+ * Documents may store either an absolute URL or a path inside the private
+ * "documents" storage bucket — resolve both to something openable.
+ */
+export async function resolveDocumentUrl(fileUrl: string): Promise<string> {
+  if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
+  const path = fileUrl.replace(/^\/+/, "");
+  const { data, error } = await supabase.storage
+    .from("documents")
+    .createSignedUrl(path, 3600);
+  if (error || !data?.signedUrl) throw error ?? new Error("Soubor nenalezen");
+  return data.signedUrl;
 }
