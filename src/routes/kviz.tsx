@@ -16,6 +16,7 @@ import {
 import {
   EXAM_QUESTION_COUNT,
   FREE_EXAM_ATTEMPTS,
+  PRACTICE_ROUND_SIZE,
 } from "@/lib/app-config";
 import {
   availableQuestions,
@@ -169,6 +170,10 @@ function QuizPage() {
         title={title}
         userId={userId}
         progress={progress}
+        {...(mode === "subject"
+          ? { onNextRound: () => setRound((r) => r + 1) }
+          : {})}
+        key={`${mode}-${subjectId ?? ""}-${round}`}
       />
     </main>
   );
