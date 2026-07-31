@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KvizRouteImport } from './routes/kviz'
+import { Route as PremiumRouteImport } from './routes/premium'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KvizRoute = KvizRouteImport.update({
+  id: '/kviz',
+  path: '/kviz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/kviz': typeof KvizRoute
+  '/premium': typeof PremiumRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/kviz': typeof KvizRoute
+  '/premium': typeof PremiumRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/kviz': typeof KvizRoute
+  '/premium': typeof PremiumRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/kviz' | '/premium'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/kviz' | '/premium'
+  id: '__root__' | '/' | '/kviz' | '/premium'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KvizRoute: typeof KvizRoute
+  PremiumRoute: typeof PremiumRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kviz': {
+      id: '/kviz'
+      path: '/kviz'
+      fullPath: '/kviz'
+      preLoaderRoute: typeof KvizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KvizRoute: KvizRoute,
+  PremiumRoute: PremiumRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
