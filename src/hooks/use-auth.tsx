@@ -59,7 +59,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       session,
       userId: session?.user.id ?? null,
-      isGuest: session?.user.is_anonymous === true,
+      // TEMPORARY (DEV_OPEN): the anonymous session is treated as a full user,
+      // so no sign-in prompts appear anywhere.
+      isGuest: DEV_OPEN ? false : session?.user.is_anonymous === true,
       ready,
     }),
     [session, ready],
