@@ -14,6 +14,7 @@ import {
   type Question,
   type Subject,
 } from "@/lib/data";
+import { DEV_OPEN } from "@/lib/app-config";
 import { useAuth } from "./use-auth";
 
 /** Applies the tenant's primary color to the design system at runtime. */
