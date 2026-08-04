@@ -4,6 +4,11 @@ import { useState } from "react";
 
 export function ZoomableImage({ src, alt }: { src: string; alt: string }) {
   const [open, setOpen] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  // If the image can't load, hide the box entirely rather than showing a
+  // broken image or the alt text inside the frame.
+  if (failed) return null;
 
   return (
     <>
@@ -12,7 +17,12 @@ export function ZoomableImage({ src, alt }: { src: string; alt: string }) {
         onClick={() => setOpen(true)}
         className="relative block w-full overflow-hidden rounded-xl border border-border"
       >
-        <img src={src} alt={alt} className="h-auto w-full object-cover" />
+        <img
+          src={src}
+          alt={alt}
+          onError={() => setFailed(true)}
+          className="h-auto w-full object-cover"
+        />
         <span className="absolute bottom-2 right-2 rounded-full bg-background/80 p-2">
           <ZoomIn className="h-4 w-4" />
         </span>
