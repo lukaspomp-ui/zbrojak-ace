@@ -4,7 +4,6 @@ import {
   fetchApp,
   fetchDocuments,
   fetchGlossary,
-  fetchLessons,
   fetchSummaries,
   fetchProgress,
   fetchProfile,

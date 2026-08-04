@@ -27,14 +27,6 @@ export type Progress = {
   last_answered_at?: string | null;
 };
 
-export type Lesson = {
-  id: string;
-  subject_id: string | null;
-  title: string;
-  content: string;
-  sort_order: number;
-};
-
 export type Summary = {
   id: string;
   subject_id: string | null;
