@@ -8,6 +8,7 @@ import {
 } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { DEV_OPEN } from "@/lib/app-config";
 
 export type AuthState = {
   session: Session | null;
