@@ -4,20 +4,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Markdown } from "@/components/Markdown";
 import { PracticeRound } from "@/components/PracticeRound";
-import { PremiumTeaser } from "@/components/PremiumTeaser";
 import {
   useAppQuery,
   useAppTheme,
-  useLessonsQuery,
-  useProfileQuery,
   useSubjectsQuery,
   useSummariesQuery,
 } from "@/hooks/use-exam-data";
-import { FREE_LESSON_CHARS } from "@/lib/app-config";
 import { cn } from "@/lib/utils";
 
 const TABS = [
-  { id: "teorie", label: "Teorie" },
   { id: "procvicit", label: "Procvičit" },
   { id: "shrnuti", label: "Shrnutí" },
 ] as const;
@@ -32,12 +27,12 @@ export const Route = createFileRoute("/okruh/$subjectId")({
       {
         name: "description",
         content:
-          "Teorie, procvičování a shrnutí ke každému okruhu zkoušky ze zbrojního průkazu.",
+          "Procvičování a shrnutí ke každému okruhu zkoušky ze zbrojního průkazu.",
       },
       { property: "og:title", content: "Okruh — Zbrojní průkaz 2026" },
       {
         property: "og:description",
-        content: "Studijní text, kolo otázek a rychlé shrnutí okruhu.",
+        content: "Kolo otázek a rychlé shrnutí okruhu.",
       },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -48,15 +43,12 @@ export const Route = createFileRoute("/okruh/$subjectId")({
 
 function SubjectDetail() {
   const { subjectId } = Route.useParams();
-  const [tab, setTab] = useState<TabId>("teorie");
+  const [tab, setTab] = useState<TabId>("procvicit");
   const { data: app } = useAppQuery();
   const { data: subjects } = useSubjectsQuery();
-  const { data: lessons } = useLessonsQuery();
   const { data: summaries } = useSummariesQuery();
-  const { data: profile } = useProfileQuery();
   useAppTheme(app);
 
-  const isPremium = profile?.is_premium === true;
   const subject = subjects?.find((s) => s.id === subjectId);
 
   if (!subjects) {
@@ -67,9 +59,6 @@ function SubjectDetail() {
     );
   }
 
-  const subjectLessons = (lessons ?? []).filter(
-    (l) => l.subject_id === subjectId,
-  );
   const subjectSummaries = (summaries ?? []).filter(
     (s) => s.subject_id === subjectId,
   );
@@ -120,40 +109,6 @@ function SubjectDetail() {
         transition={{ duration: 0.2 }}
         className="flex flex-col gap-3"
       >
-        {tab === "teorie" && (
-          <>
-            {subjectLessons.length === 0 && (
-              <div className="card-surface p-5 text-sm text-muted-foreground">
-                Studijní text k tomuto okruhu se připravuje.
-              </div>
-            )}
-            {subjectLessons.map((lesson, i) => {
-              const locked = !isPremium && i > 0;
-              const truncated =
-                !isPremium && lesson.content.length > FREE_LESSON_CHARS;
-              if (locked) return null;
-              return (
-                <article key={lesson.id} className="card-surface p-5">
-                  <h2 className="text-[16px] font-semibold">{lesson.title}</h2>
-                  <div className="mt-3">
-                    <Markdown>
-                      {truncated
-                        ? `${lesson.content.slice(0, FREE_LESSON_CHARS)}…`
-                        : lesson.content}
-                    </Markdown>
-                  </div>
-                </article>
-              );
-            })}
-            {!isPremium && subjectLessons.length > 0 && (
-              <PremiumTeaser
-                title="Kompletní teorie je v Premium"
-                text="Ve free verzi vidíš jen ukázku textu. Premium odemkne celou teorii ke všem okruhům."
-              />
-            )}
-          </>
-        )}
-
         {tab === "procvicit" && (
           <PracticeRound
             subjectId={subjectId}

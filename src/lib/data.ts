@@ -27,14 +27,6 @@ export type Progress = {
   last_answered_at?: string | null;
 };
 
-export type Lesson = {
-  id: string;
-  subject_id: string | null;
-  title: string;
-  content: string;
-  sort_order: number;
-};
-
 export type Summary = {
   id: string;
   subject_id: string | null;
@@ -178,17 +170,6 @@ export async function consumeExamAttempt(
 
 /* ---------- Educational content (data-driven per app_id) ---------- */
 
-export async function fetchLessons(): Promise<Lesson[]> {
-  const { data, error } = await supabase
-    .from("lessons")
-    .select("id, subject_key, title, content, sort_order")
-    .eq("app_id", CURRENT_APP_ID)
-    .order("sort_order");
-  if (error) throw error;
-  return ((data ?? []) as unknown as (Omit<Lesson, "subject_id"> & {
-    subject_key: string | null;
-  })[]).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
-}
 
 export async function fetchSummaries(): Promise<Summary[]> {
   const { data, error } = await supabase

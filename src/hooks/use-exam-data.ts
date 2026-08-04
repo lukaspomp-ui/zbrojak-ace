@@ -4,7 +4,6 @@ import {
   fetchApp,
   fetchDocuments,
   fetchGlossary,
-  fetchLessons,
   fetchSummaries,
   fetchProgress,
   fetchProfile,
@@ -69,13 +68,8 @@ export function useProgressQuery() {
   });
 }
 
-export function useLessonsQuery() {
-  return useQuery({
-    queryKey: ["lessons"],
-    queryFn: fetchLessons,
-    staleTime: 300_000,
-  });
-}
+
+
 
 export function useSummariesQuery() {
   return useQuery({

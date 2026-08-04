@@ -12,8 +12,6 @@ export const CURRENT_APP_ID: string =
 export const FREE_QUESTION_LIMIT = 50;
 export const FREE_EXAM_ATTEMPTS = 1;
 
-/** Free tier: how much of a lesson is visible before the paywall */
-export const FREE_LESSON_CHARS = 400;
 /** Free tier: how many documents are downloadable */
 export const FREE_DOCUMENT_LIMIT = 1;
 
