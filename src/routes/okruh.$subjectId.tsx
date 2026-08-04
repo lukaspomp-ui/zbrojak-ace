@@ -4,20 +4,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Markdown } from "@/components/Markdown";
 import { PracticeRound } from "@/components/PracticeRound";
-import { PremiumTeaser } from "@/components/PremiumTeaser";
 import {
   useAppQuery,
   useAppTheme,
-  useLessonsQuery,
-  useProfileQuery,
   useSubjectsQuery,
   useSummariesQuery,
 } from "@/hooks/use-exam-data";
-import { FREE_LESSON_CHARS } from "@/lib/app-config";
 import { cn } from "@/lib/utils";
 
 const TABS = [
-  { id: "teorie", label: "Teorie" },
   { id: "procvicit", label: "Procvičit" },
   { id: "shrnuti", label: "Shrnutí" },
 ] as const;
@@ -32,12 +27,12 @@ export const Route = createFileRoute("/okruh/$subjectId")({
       {
         name: "description",
         content:
-          "Teorie, procvičování a shrnutí ke každému okruhu zkoušky ze zbrojního průkazu.",
+          "Procvičování a shrnutí ke každému okruhu zkoušky ze zbrojního průkazu.",
       },
       { property: "og:title", content: "Okruh — Zbrojní průkaz 2026" },
       {
         property: "og:description",
-        content: "Studijní text, kolo otázek a rychlé shrnutí okruhu.",
+        content: "Kolo otázek a rychlé shrnutí okruhu.",
       },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -48,15 +43,12 @@ export const Route = createFileRoute("/okruh/$subjectId")({
 
 function SubjectDetail() {
   const { subjectId } = Route.useParams();
-  const [tab, setTab] = useState<TabId>("teorie");
+  const [tab, setTab] = useState<TabId>("procvicit");
   const { data: app } = useAppQuery();
   const { data: subjects } = useSubjectsQuery();
-  const { data: lessons } = useLessonsQuery();
   const { data: summaries } = useSummariesQuery();
-  const { data: profile } = useProfileQuery();
   useAppTheme(app);
 
-  const isPremium = profile?.is_premium === true;
   const subject = subjects?.find((s) => s.id === subjectId);
 
   if (!subjects) {
@@ -67,9 +59,6 @@ function SubjectDetail() {
     );
   }
 
-  const subjectLessons = (lessons ?? []).filter(
-    (l) => l.subject_id === subjectId,
-  );
   const subjectSummaries = (summaries ?? []).filter(
     (s) => s.subject_id === subjectId,
   );
