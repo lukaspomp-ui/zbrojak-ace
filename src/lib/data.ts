@@ -1,9 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
-import {
-  CURRENT_APP_ID,
-  FREE_QUESTION_LIMIT,
-  MASTERY_STREAK,
-} from "./app-config";
+import { CURRENT_APP_ID, MASTERY_STREAK } from "./app-config";
+
+export {
+  availableQuestions,
+  getQuestion,
+  getSubject,
+  QUESTIONS,
+  QUESTIONS_VERSION,
+  SUBJECTS,
+} from "./questions";
+export type { Answer, AnswerKey, Question, Subject } from "./questions";
 
 export type AppRow = {
   id: string;
@@ -12,34 +18,9 @@ export type AppRow = {
   logo_url: string | null;
 };
 
-export type Subject = {
-  id: string;
-  app_id: string;
-  name: string;
-  sort_order: number;
-};
-
-export type Answer = {
-  id: string;
-  question_id: string;
-  text: string;
-  is_correct: boolean;
-  sort_order: number;
-};
-
-export type Question = {
-  id: string;
-  app_id: string;
-  subject_id: string;
-  text: string;
-  explanation: string;
-  image_url: string | null;
-  sort_order: number;
-  answers: Answer[];
-};
-
+/** Progress rows are keyed on the official question number ("cislo"). */
 export type Progress = {
-  question_id: string;
+  question_id: number;
   times_wrong: number;
   correct_streak: number;
   mastered: boolean;
@@ -48,7 +29,7 @@ export type Progress = {
 
 export type Lesson = {
   id: string;
-  subject_id: string;
+  subject_id: string | null;
   title: string;
   content: string;
   sort_order: number;
@@ -56,7 +37,7 @@ export type Lesson = {
 
 export type Summary = {
   id: string;
-  subject_id: string;
+  subject_id: string | null;
   content: string;
   sort_order: number;
 };
@@ -83,16 +64,6 @@ export type Profile = {
   exam_attempts_used: number;
 };
 
-const QUESTION_SELECT =
-  "id, app_id, subject_id, text, explanation, image_url, sort_order, answers(id, question_id, text, is_correct, sort_order)";
-
-function sortAnswers(rows: Question[]): Question[] {
-  return rows.map((q) => ({
-    ...q,
-    answers: [...(q.answers ?? [])].sort((a, b) => a.sort_order - b.sort_order),
-  }));
-}
-
 export async function fetchApp(): Promise<AppRow | null> {
   const { data, error } = await supabase
     .from("apps")
@@ -101,27 +72,6 @@ export async function fetchApp(): Promise<AppRow | null> {
     .maybeSingle();
   if (error) throw error;
   return (data as AppRow | null) ?? null;
-}
-
-export async function fetchSubjects(): Promise<Subject[]> {
-  const { data, error } = await supabase
-    .from("subjects")
-    .select("id, app_id, name, sort_order")
-    .eq("app_id", CURRENT_APP_ID)
-    .order("sort_order");
-  if (error) throw error;
-  return (data ?? []) as Subject[];
-}
-
-/** All questions of the app, in stable order (used for free-tier slicing). */
-export async function fetchQuestions(): Promise<Question[]> {
-  const { data, error } = await supabase
-    .from("questions")
-    .select(QUESTION_SELECT)
-    .eq("app_id", CURRENT_APP_ID)
-    .order("sort_order");
-  if (error) throw error;
-  return sortAnswers((data ?? []) as unknown as Question[]);
 }
 
 export async function fetchProfile(userId: string): Promise<Profile | null> {
@@ -148,15 +98,7 @@ export async function fetchProgress(userId: string): Promise<Progress[]> {
     .select("question_id, times_wrong, correct_streak, mastered, last_answered_at")
     .eq("user_id", userId);
   if (error) throw error;
-  return (data ?? []) as Progress[];
-}
-
-/** Questions available to the user given their entitlement. */
-export function availableQuestions(
-  questions: Question[],
-  isPremium: boolean,
-): Question[] {
-  return isPremium ? questions : questions.slice(0, FREE_QUESTION_LIMIT);
+  return (data ?? []) as unknown as Progress[];
 }
 
 export function shuffle<T>(items: T[]): T[] {
@@ -171,7 +113,7 @@ export function shuffle<T>(items: T[]): T[] {
 /** Spaced repetition write: applied after every answer. */
 export async function recordAnswer(
   userId: string,
-  questionId: string,
+  questionId: number,
   wasCorrect: boolean,
   current: Progress | undefined,
 ): Promise<Progress> {
@@ -197,7 +139,7 @@ export async function recordAnswer(
       correct_streak: next.correct_streak,
       mastered: next.mastered,
       last_answered_at: new Date().toISOString(),
-    },
+    } as never,
     { onConflict: "user_id,question_id" },
   );
   if (error) throw error;
@@ -206,12 +148,12 @@ export async function recordAnswer(
 
 export async function reportQuestion(
   userId: string,
-  questionId: string,
+  questionId: number,
   message: string,
 ): Promise<void> {
   const { error } = await supabase
     .from("question_reports")
-    .insert({ user_id: userId, question_id: questionId, message });
+    .insert({ user_id: userId, question_id: questionId, message } as never);
   if (error) throw error;
 }
 
@@ -239,21 +181,25 @@ export async function consumeExamAttempt(
 export async function fetchLessons(): Promise<Lesson[]> {
   const { data, error } = await supabase
     .from("lessons")
-    .select("id, subject_id, title, content, sort_order")
+    .select("id, subject_key, title, content, sort_order")
     .eq("app_id", CURRENT_APP_ID)
     .order("sort_order");
   if (error) throw error;
-  return (data ?? []) as Lesson[];
+  return ((data ?? []) as unknown as (Omit<Lesson, "subject_id"> & {
+    subject_key: string | null;
+  })[]).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
 }
 
 export async function fetchSummaries(): Promise<Summary[]> {
   const { data, error } = await supabase
     .from("summaries")
-    .select("id, subject_id, content, sort_order")
+    .select("id, subject_key, content, sort_order")
     .eq("app_id", CURRENT_APP_ID)
     .order("sort_order");
   if (error) throw error;
-  return (data ?? []) as Summary[];
+  return ((data ?? []) as unknown as (Omit<Summary, "subject_id"> & {
+    subject_key: string | null;
+  })[]).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
 }
 
 export async function fetchGlossary(): Promise<GlossaryTerm[]> {
@@ -269,11 +215,13 @@ export async function fetchGlossary(): Promise<GlossaryTerm[]> {
 export async function fetchDocuments(): Promise<DocumentRow[]> {
   const { data, error } = await supabase
     .from("documents")
-    .select("id, subject_id, title, description, file_url, sort_order")
+    .select("id, subject_key, title, description, file_url, sort_order")
     .eq("app_id", CURRENT_APP_ID)
     .order("sort_order");
   if (error) throw error;
-  return (data ?? []) as DocumentRow[];
+  return ((data ?? []) as unknown as (Omit<DocumentRow, "subject_id"> & {
+    subject_key: string | null;
+  })[]).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
 }
 
 /**
