@@ -18,7 +18,12 @@ import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS, EXAM_PASS_RATIO } from "@/lib/app-config";
-import { recordAnswer, type Progress, type Question } from "@/lib/data";
+import {
+  recordAnswer,
+  type AnswerKey,
+  type Progress,
+  type Question,
+} from "@/lib/data";
 
 export type QuizMode = "practice" | "exam";
 
@@ -48,7 +53,7 @@ export function QuizRunner({
 }) {
   const queryClient = useQueryClient();
   const [index, setIndex] = useState(0);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<AnswerKey | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [reporting, setReporting] = useState(false);
@@ -87,7 +92,7 @@ export function QuizRunner({
     [correctCount, total],
   );
 
-  async function pick(answerId: string) {
+  async function pick(answerId: AnswerKey) {
     if (selectedId || !question) return;
     setSelectedId(answerId);
     const answer = question.answers.find((a) => a.id === answerId);
@@ -197,9 +202,11 @@ export function QuizRunner({
             <h1 className="text-[17px] font-semibold leading-snug">
               {question.text}
             </h1>
-            {question.image_url && (
-              <div className="mt-4">
-                <ZoomableImage src={question.image_url} alt={question.text} />
+            {question.images.length > 0 && (
+              <div className="mt-4 flex flex-col gap-3">
+                {question.images.map((src) => (
+                  <ZoomableImage key={src} src={src} alt={question.text} />
+                ))}
               </div>
             )}
           </div>
@@ -242,7 +249,7 @@ export function QuizRunner({
             })}
           </div>
 
-          {selectedId && (
+          {selectedId && question.explanation && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}

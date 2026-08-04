@@ -83,7 +83,7 @@ function StatsPage() {
   }
 
   const pool = availableQuestions(questions, isPremium);
-  const inPool = (id: string) => pool.some((q) => q.id === id);
+  const inPool = (id: number) => pool.some((q) => q.id === id);
   const masteredCount = progress.filter(
     (p) => p.mastered && inPool(p.question_id),
   ).length;

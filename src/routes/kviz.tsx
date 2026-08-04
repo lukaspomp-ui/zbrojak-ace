@@ -90,7 +90,7 @@ function QuizPage() {
   }, [mode, profile, userId, isPremium, blocked]);
 
   const [round, setRound] = useState(0);
-  const lastRoundIds = useRef<string[]>([]);
+  const lastRoundIds = useRef<number[]>([]);
 
   const set = useMemo<Question[] | null>(() => {
     if (!questions || !progress) return null;
