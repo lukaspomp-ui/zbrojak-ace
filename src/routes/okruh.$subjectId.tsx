@@ -109,40 +109,6 @@ function SubjectDetail() {
         transition={{ duration: 0.2 }}
         className="flex flex-col gap-3"
       >
-        {tab === "teorie" && (
-          <>
-            {subjectLessons.length === 0 && (
-              <div className="card-surface p-5 text-sm text-muted-foreground">
-                Studijní text k tomuto okruhu se připravuje.
-              </div>
-            )}
-            {subjectLessons.map((lesson, i) => {
-              const locked = !isPremium && i > 0;
-              const truncated =
-                !isPremium && lesson.content.length > FREE_LESSON_CHARS;
-              if (locked) return null;
-              return (
-                <article key={lesson.id} className="card-surface p-5">
-                  <h2 className="text-[16px] font-semibold">{lesson.title}</h2>
-                  <div className="mt-3">
-                    <Markdown>
-                      {truncated
-                        ? `${lesson.content.slice(0, FREE_LESSON_CHARS)}…`
-                        : lesson.content}
-                    </Markdown>
-                  </div>
-                </article>
-              );
-            })}
-            {!isPremium && subjectLessons.length > 0 && (
-              <PremiumTeaser
-                title="Kompletní teorie je v Premium"
-                text="Ve free verzi vidíš jen ukázku textu. Premium odemkne celou teorii ke všem okruhům."
-              />
-            )}
-          </>
-        )}
-
         {tab === "procvicit" && (
           <PracticeRound
             subjectId={subjectId}
