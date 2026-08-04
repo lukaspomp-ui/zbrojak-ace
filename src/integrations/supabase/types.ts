@@ -14,38 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      answers: {
-        Row: {
-          id: string
-          is_correct: boolean
-          question_id: string
-          sort_order: number
-          text: string
-        }
-        Insert: {
-          id?: string
-          is_correct?: boolean
-          question_id: string
-          sort_order?: number
-          text: string
-        }
-        Update: {
-          id?: string
-          is_correct?: boolean
-          question_id?: string
-          sort_order?: number
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "answers_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       apps: {
         Row: {
           created_at: string
@@ -78,7 +46,7 @@ export type Database = {
           file_url: string
           id: string
           sort_order: number
-          subject_id: string | null
+          subject_key: string | null
           title: string
           updated_at: string
         }
@@ -89,7 +57,7 @@ export type Database = {
           file_url: string
           id?: string
           sort_order?: number
-          subject_id?: string | null
+          subject_key?: string | null
           title: string
           updated_at?: string
         }
@@ -100,7 +68,7 @@ export type Database = {
           file_url?: string
           id?: string
           sort_order?: number
-          subject_id?: string | null
+          subject_key?: string | null
           title?: string
           updated_at?: string
         }
@@ -110,13 +78,6 @@ export type Database = {
             columns: ["app_id"]
             isOneToOne: false
             referencedRelation: "apps"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "documents_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
             referencedColumns: ["id"]
           },
         ]
@@ -166,7 +127,7 @@ export type Database = {
           created_at: string
           id: string
           sort_order: number
-          subject_id: string
+          subject_key: string | null
           title: string
           updated_at: string
         }
@@ -176,7 +137,7 @@ export type Database = {
           created_at?: string
           id?: string
           sort_order?: number
-          subject_id: string
+          subject_key?: string | null
           title: string
           updated_at?: string
         }
@@ -186,7 +147,7 @@ export type Database = {
           created_at?: string
           id?: string
           sort_order?: number
-          subject_id?: string
+          subject_key?: string | null
           title?: string
           updated_at?: string
         }
@@ -196,13 +157,6 @@ export type Database = {
             columns: ["app_id"]
             isOneToOne: false
             referencedRelation: "apps"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lessons_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
             referencedColumns: ["id"]
           },
         ]
@@ -233,106 +187,24 @@ export type Database = {
           created_at: string
           id: string
           message: string
-          question_id: string
+          question_id: number
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           message: string
-          question_id: string
+          question_id: number
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
           message?: string
-          question_id?: string
+          question_id?: number
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "question_reports_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      questions: {
-        Row: {
-          app_id: string
-          explanation: string
-          id: string
-          image_url: string | null
-          sort_order: number
-          subject_id: string
-          text: string
-        }
-        Insert: {
-          app_id: string
-          explanation?: string
-          id?: string
-          image_url?: string | null
-          sort_order?: number
-          subject_id: string
-          text: string
-        }
-        Update: {
-          app_id?: string
-          explanation?: string
-          id?: string
-          image_url?: string | null
-          sort_order?: number
-          subject_id?: string
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "questions_app_id_fkey"
-            columns: ["app_id"]
-            isOneToOne: false
-            referencedRelation: "apps"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "questions_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      subjects: {
-        Row: {
-          app_id: string
-          id: string
-          name: string
-          sort_order: number
-        }
-        Insert: {
-          app_id: string
-          id?: string
-          name: string
-          sort_order?: number
-        }
-        Update: {
-          app_id?: string
-          id?: string
-          name?: string
-          sort_order?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "subjects_app_id_fkey"
-            columns: ["app_id"]
-            isOneToOne: false
-            referencedRelation: "apps"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       summaries: {
         Row: {
@@ -341,7 +213,7 @@ export type Database = {
           created_at: string
           id: string
           sort_order: number
-          subject_id: string
+          subject_key: string | null
           updated_at: string
         }
         Insert: {
@@ -350,7 +222,7 @@ export type Database = {
           created_at?: string
           id?: string
           sort_order?: number
-          subject_id: string
+          subject_key?: string | null
           updated_at?: string
         }
         Update: {
@@ -359,7 +231,7 @@ export type Database = {
           created_at?: string
           id?: string
           sort_order?: number
-          subject_id?: string
+          subject_key?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -370,13 +242,6 @@ export type Database = {
             referencedRelation: "apps"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "summaries_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
-            referencedColumns: ["id"]
-          },
         ]
       }
       user_progress: {
@@ -385,7 +250,7 @@ export type Database = {
           id: string
           last_answered_at: string
           mastered: boolean
-          question_id: string
+          question_id: number
           times_wrong: number
           user_id: string
         }
@@ -394,7 +259,7 @@ export type Database = {
           id?: string
           last_answered_at?: string
           mastered?: boolean
-          question_id: string
+          question_id: number
           times_wrong?: number
           user_id: string
         }
@@ -403,19 +268,11 @@ export type Database = {
           id?: string
           last_answered_at?: string
           mastered?: boolean
-          question_id?: string
+          question_id?: number
           times_wrong?: number
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_progress_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {

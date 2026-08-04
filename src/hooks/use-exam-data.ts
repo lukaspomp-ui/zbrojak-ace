@@ -8,9 +8,11 @@ import {
   fetchSummaries,
   fetchProgress,
   fetchProfile,
-  fetchQuestions,
-  fetchSubjects,
+  QUESTIONS,
+  SUBJECTS,
   type AppRow,
+  type Question,
+  type Subject,
 } from "@/lib/data";
 import { useAuth } from "./use-auth";
 
@@ -26,20 +28,14 @@ export function useAppQuery() {
   return useQuery({ queryKey: ["app"], queryFn: fetchApp, staleTime: 300_000 });
 }
 
-export function useSubjectsQuery() {
-  return useQuery({
-    queryKey: ["subjects"],
-    queryFn: fetchSubjects,
-    staleTime: 300_000,
-  });
+/** Subjects (okruhy) come from the bundled official question file. */
+export function useSubjectsQuery(): { data: Subject[] } {
+  return { data: SUBJECTS };
 }
 
-export function useQuestionsQuery() {
-  return useQuery({
-    queryKey: ["questions"],
-    queryFn: fetchQuestions,
-    staleTime: 300_000,
-  });
+/** Questions come from the bundled official question file. */
+export function useQuestionsQuery(): { data: Question[] } {
+  return { data: QUESTIONS };
 }
 
 export function useProfileQuery() {

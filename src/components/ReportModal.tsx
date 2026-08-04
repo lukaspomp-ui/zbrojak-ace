@@ -11,7 +11,7 @@ export function ReportModal({
   onClose,
 }: {
   userId: string;
-  questionId: string;
+  questionId: number;
   onClose: () => void;
 }) {
   const [message, setMessage] = useState("");

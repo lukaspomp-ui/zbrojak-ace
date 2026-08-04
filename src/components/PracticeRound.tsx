@@ -29,7 +29,7 @@ export function PracticeRound({
 
   const isPremium = profile?.is_premium === true;
   const [round, setRound] = useState(0);
-  const lastRoundIds = useRef<string[]>([]);
+  const lastRoundIds = useRef<number[]>([]);
 
   const set = useMemo<Question[] | null>(() => {
     if (!questions || !progress) return null;
