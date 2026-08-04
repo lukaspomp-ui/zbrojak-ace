@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
-import { QuizRunner, type QuizMode } from "@/components/QuizRunner";
+import { QuizRunner } from "@/components/QuizRunner";
+import { ExamRunner } from "@/components/ExamRunner";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -155,18 +156,27 @@ function QuizPage() {
     );
   }
 
+  if (mode === "exam") {
+    return (
+      <ExamRunner
+        questions={set}
+        userId={userId}
+        progress={progress}
+        title="Ostrý test"
+      />
+    );
+  }
+
   const title =
-    mode === "exam"
-      ? "Ostrý test"
-      : mode === "mistakes"
-        ? "Mé chyby"
-        : (subjects?.find((s) => s.id === subjectId)?.name ?? "Procvičování");
+    mode === "mistakes"
+      ? "Mé chyby"
+      : (subjects?.find((s) => s.id === subjectId)?.name ?? "Procvičování");
 
   return (
     <main className="mx-auto w-full max-w-md px-5 pt-6">
       <QuizRunner
         questions={set}
-        mode={mode === "exam" ? "exam" : "practice"}
+        mode="practice"
         title={title}
         userId={userId}
         progress={progress}
