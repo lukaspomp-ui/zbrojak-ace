@@ -40,11 +40,23 @@ export function useQuestionsQuery(): { data: Question[] } {
 
 export function useProfileQuery() {
   const { userId } = useAuth();
-  return useQuery({
+  const query = useQuery({
     queryKey: ["profile", userId],
     queryFn: () => fetchProfile(userId as string),
     enabled: !!userId,
   });
+  // TEMPORARY (DEV_OPEN): everyone is treated as Premium, paywall never shows.
+  if (DEV_OPEN) {
+    return {
+      ...query,
+      data: {
+        id: userId ?? "dev-open",
+        exam_attempts_used: query.data?.exam_attempts_used ?? 0,
+        is_premium: true,
+      },
+    } as typeof query;
+  }
+  return query;
 }
 
 export function useProgressQuery() {
