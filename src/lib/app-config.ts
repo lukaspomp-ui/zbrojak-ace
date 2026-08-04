@@ -1,3 +1,9 @@
+/**
+ * TEMPORARY TESTING FLAG — set back to false to restore login + paywall.
+ * true = no sign-in screen (local guest session) and every user is Premium.
+ */
+export const DEV_OPEN = true;
+
 /** Multi-tenant configuration. One codebase, many exam apps. */
 export const CURRENT_APP_ID: string =
   (import.meta.env.VITE_CURRENT_APP_ID as string | undefined) || "zbrojak";
