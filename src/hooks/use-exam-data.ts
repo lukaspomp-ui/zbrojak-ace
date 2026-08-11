@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchApp,
-  fetchDocuments,
+  DOCUMENTS,
   fetchGlossary,
   fetchSummaries,
   fetchProgress,
@@ -87,10 +87,7 @@ export function useGlossaryQuery() {
   });
 }
 
+/** Documents come from the bundled file (valid laws + official links). */
 export function useDocumentsQuery() {
-  return useQuery({
-    queryKey: ["documents"],
-    queryFn: fetchDocuments,
-    staleTime: 300_000,
-  });
+  return { data: DOCUMENTS };
 }
