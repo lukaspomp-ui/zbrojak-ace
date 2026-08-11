@@ -17,8 +17,10 @@ export const FREE_DOCUMENT_LIMIT = 1;
 
 /** Exam ("ostrý test") settings */
 export const EXAM_QUESTION_COUNT = 30;
-export const EXAM_DURATION_SECONDS = 20 * 60;
-export const EXAM_PASS_RATIO = 0.8;
+export const EXAM_DURATION_SECONDS = 40 * 60;
+// Reálná hranice úspěchu: 26 správných z 30 pro obecné oprávnění
+// (rozšířené oprávnění vyžaduje 28 z 30).
+export const EXAM_PASS_CORRECT = 26;
 
 /** Subject practice: one round serves this many random questions */
 export const PRACTICE_ROUND_SIZE = 5;
