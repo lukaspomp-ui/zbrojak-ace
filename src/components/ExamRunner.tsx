@@ -13,10 +13,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Button } from "./Button";
+import { AnswerReview } from "./AnswerReview";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS, EXAM_PASS_RATIO } from "@/lib/app-config";
+import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
 import {
   recordAnswer,
   SUBJECTS,
@@ -68,10 +70,25 @@ export function ExamRunner({
     if (submitting.current) return;
     submitting.current = true;
     const progressMap = new Map(progress.map((p) => [p.question_id, p]));
+    const nameById = new Map(SUBJECTS.map((s) => [s.id, s.name]));
+    const secMap = new Map<
+      string,
+      { name: string; correct: number; total: number }
+    >();
+    let correct = 0;
     for (const q of questions) {
       const chosen = answers[q.id];
       const wasCorrect =
         !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
+      if (wasCorrect) correct++;
+      const entry = secMap.get(q.subject_id) ?? {
+        name: nameById.get(q.subject_id) ?? "Okruh",
+        correct: 0,
+        total: 0,
+      };
+      entry.total++;
+      if (wasCorrect) entry.correct++;
+      secMap.set(q.subject_id, entry);
       try {
         const next = await recordAnswer(
           userId,
@@ -84,6 +101,19 @@ export function ExamRunner({
         /* progress is best-effort; never block submission */
       }
     }
+    const total = questions.length;
+    saveExamAttempt({
+      id: newAttemptId(),
+      date: new Date().toISOString(),
+      correct,
+      total,
+      passed: total > 0 && correct / total >= EXAM_PASS_RATIO,
+      sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
+        (x): x is { name: string; correct: number; total: number } => !!x,
+      ),
+      questionIds: questions.map((q) => q.id),
+      answers,
+    });
     queryClient.invalidateQueries({ queryKey: ["progress"] });
     setFinished(true);
   }, [answers, questions, userId, progress, queryClient]);
@@ -510,6 +540,16 @@ function ExamResult({
               </div>
             );
           })}
+        </div>
+      </div>
+
+      <div className="card-surface mt-4 p-5">
+        <h2 className="text-sm font-semibold">Přehled odpovědí</h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Zelená = správná odpověď, červená = tvoje chyba.
+        </p>
+        <div className="mt-4">
+          <AnswerReview questions={questions} answers={answers} />
         </div>
       </div>
 
