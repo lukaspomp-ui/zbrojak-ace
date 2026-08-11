@@ -1,0 +1,69 @@
+{
+  "verze": "Platné od 1. 1. 2026",
+  "dokumenty": [
+    {
+      "id": "zakon-90-2024",
+      "subject_id": null,
+      "title": "Zákon č. 90/2024 Sb., o zbraních a střelivu",
+      "description": "Hlavní zákon platný od 1. 1. 2026. Nahrazuje zákon č. 119/2002 Sb.",
+      "file_url": "https://www.zakonyprolidu.cz/cs/2024-90",
+      "sort_order": 1
+    },
+    {
+      "id": "zakon-220-2025",
+      "subject_id": null,
+      "title": "Zákon č. 220/2025 Sb. (doprovodný zákon)",
+      "description": "Průvodní/změnový zákon k novému zákonu o zbraních a střelivu.",
+      "file_url": "https://www.zakonyprolidu.cz/cs/2025-220",
+      "sort_order": 2
+    },
+    {
+      "id": "nv-187-2025",
+      "subject_id": "okruh-4",
+      "title": "Nařízení vlády č. 187/2025 Sb.",
+      "description": "Technické požadavky a další specifikace pro některé zbraně a střelivo.",
+      "file_url": "https://www.zakonyprolidu.cz/cs/2025-187",
+      "sort_order": 3
+    },
+    {
+      "id": "nv-238-2025",
+      "subject_id": null,
+      "title": "Nařízení vlády č. 238/2025 Sb.",
+      "description": "Provádění zkoušek odborné způsobilosti podle zákona o zbraních a střelivu.",
+      "file_url": "https://www.zakonyprolidu.cz/cs/2025-238",
+      "sort_order": 4
+    },
+    {
+      "id": "nv-351-2025",
+      "subject_id": "okruh-5",
+      "title": "Nařízení vlády č. 351/2025 Sb.",
+      "description": "Seznam nemocí a náležitosti lékařského posudku (zdravotní způsobilost).",
+      "file_url": "https://www.zakonyprolidu.cz/cs/2025-351",
+      "sort_order": 5
+    },
+    {
+      "id": "mv-testove-otazky",
+      "subject_id": null,
+      "title": "Oficiální soubor testových otázek (MV)",
+      "description": "Kompletní soubor testových otázek pro teoretickou část zkoušky, platný od 1. 1. 2026.",
+      "file_url": "https://mv.gov.cz/soubor/mv-soubor-testovych-otazek-pro-teoretickou-cast-zkousky-odborne-zpusobilosti-a-komisionalni-zkousku.aspx",
+      "sort_order": 6
+    },
+    {
+      "id": "mv-hlavni-zmeny",
+      "subject_id": null,
+      "title": "MV — Hlavní změny v právní úpravě od 1. 1. 2026",
+      "description": "Přehled nejdůležitějších změn na úseku zbraní, střeliva a munice od Ministerstva vnitra.",
+      "file_url": "https://mv.gov.cz/clanek/hlavni-zmeny-v-pravni-uprave-na-useku-zbrani-streliva-a-munice-od-1-ledna-2026.aspx",
+      "sort_order": 7
+    },
+    {
+      "id": "policie-novy-zakon",
+      "subject_id": null,
+      "title": "Policie ČR — nový zákon o zbraních",
+      "description": "Přehled změn, které přináší nový zákon o zbraních a střelivu.",
+      "file_url": "https://policie.gov.cz/clanek/zakon-o-zbranich-bude-mit-novou-podobu.aspx",
+      "sort_order": 8
+    }
+  ]
+}
