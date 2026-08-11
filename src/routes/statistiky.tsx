@@ -1,6 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Flame, Loader2, Target, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrowLeft,
+  Flame,
+  History,
+  Loader2,
+  Target,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import { AnswerReview } from "@/components/AnswerReview";
 import { ProgressRing } from "@/components/ProgressRing";
 import { PremiumTeaser } from "@/components/PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
@@ -12,7 +22,9 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { availableQuestions, type Progress } from "@/lib/data";
+import { availableQuestions, QUESTIONS, type Progress } from "@/lib/data";
+import { getExamHistory, type ExamAttempt } from "@/lib/exam-history";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/statistiky")({
   ssr: false,
@@ -71,6 +83,9 @@ function StatsPage() {
   const { data: profile } = useProfileQuery();
   const { data: progress } = useProgressQuery();
   useAppTheme(app);
+
+  const [history] = useState<ExamAttempt[]>(() => getExamHistory());
+  const [openAttempt, setOpenAttempt] = useState<ExamAttempt | null>(null);
 
   const isPremium = profile?.is_premium === true;
 
@@ -184,6 +199,93 @@ function StatsPage() {
         </p>
       )}
 
+      <section className="flex flex-col gap-2.5">
+        <h2 className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
+          <History className="h-4 w-4" />
+          Historie testů
+        </h2>
+        {history.length === 0 ? (
+          <p className="card-surface p-4 text-sm text-muted-foreground">
+            Zatím jsi nedokončil žádný ostrý test. Po odevzdání se sem uloží.
+          </p>
+        ) : (
+          <>
+            {history.length >= 2 && (
+              <div className="card-surface p-4">
+                <p className="mb-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <TrendingUp className="h-3.5 w-3.5 text-primary" />
+                  Zlepšování (poslední testy)
+                </p>
+                <div className="flex h-24 items-end gap-1.5">
+                  {[...history]
+                    .slice(0, 12)
+                    .reverse()
+                    .map((a) => {
+                      const pct = a.total
+                        ? Math.round((a.correct / a.total) * 100)
+                        : 0;
+                      return (
+                        <div
+                          key={a.id}
+                          className="flex flex-1 items-end justify-center self-stretch"
+                          title={`${pct} %`}
+                        >
+                          <span
+                            className="w-full rounded-t"
+                            style={{
+                              height: `${Math.max(pct, 4)}%`,
+                              backgroundColor: a.passed
+                                ? "var(--success)"
+                                : "var(--destructive)",
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+            {history.slice(0, 10).map((a) => {
+              const pct = a.total ? Math.round((a.correct / a.total) * 100) : 0;
+              return (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => setOpenAttempt(a)}
+                  className="card-surface flex items-center justify-between gap-3 p-4 text-left"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold tabular-nums">
+                      {a.correct}/{a.total}{" "}
+                      <span className="text-muted-foreground">({pct} %)</span>
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {new Date(a.date).toLocaleString("cs-CZ", {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold",
+                      a.passed
+                        ? "bg-success/20 text-success"
+                        : "bg-destructive/20 text-destructive",
+                    )}
+                  >
+                    {a.passed ? "Prospěl" : "Neprospěl"}
+                  </span>
+                </button>
+              );
+            })}
+          </>
+        )}
+      </section>
+
       {isPremium ? (
         <>
           <section className="flex flex-col gap-2.5">
@@ -252,6 +354,42 @@ function StatsPage() {
           title="Kompletní statistiky jsou v Premium"
           text="Premium ukáže úspěšnost po jednotlivých okruzích a tvá slabá místa s otázkami k opravě."
         />
+      )}
+      {openAttempt && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-background">
+          <div className="flex items-center gap-3 border-b border-border px-5 py-4">
+            <button
+              type="button"
+              onClick={() => setOpenAttempt(null)}
+              className="rounded-full bg-card p-2.5 text-muted-foreground"
+              aria-label="Zavřít"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold">
+                Test {openAttempt.correct}/{openAttempt.total}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {new Date(openAttempt.date).toLocaleString("cs-CZ", {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            </div>
+          </div>
+          <div className="mx-auto w-full max-w-md flex-1 overflow-y-auto px-5 py-5 safe-bottom">
+            <AnswerReview
+              questions={openAttempt.questionIds
+                .map((id) => QUESTIONS.find((q) => q.id === id))
+                .filter((q): q is (typeof QUESTIONS)[number] => !!q)}
+              answers={openAttempt.answers}
+            />
+          </div>
+        </div>
       )}
     </main>
   );
