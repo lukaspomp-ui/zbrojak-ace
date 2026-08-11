@@ -17,7 +17,7 @@ import { Button } from "./Button";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
-import { EXAM_DURATION_SECONDS, EXAM_PASS_RATIO } from "@/lib/app-config";
+import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
 import {
   recordAnswer,
   type AnswerKey,
@@ -88,7 +88,7 @@ export function QuizRunner({
   const question = questions[index];
   const total = questions.length;
   const passed = useMemo(
-    () => total > 0 && correctCount / total >= EXAM_PASS_RATIO,
+    () => total > 0 && correctCount >= EXAM_PASS_CORRECT,
     [correctCount, total],
   );
 

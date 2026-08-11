@@ -17,7 +17,7 @@ import { AnswerReview } from "./AnswerReview";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
-import { EXAM_DURATION_SECONDS, EXAM_PASS_RATIO } from "@/lib/app-config";
+import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
 import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
 import {
   recordAnswer,
@@ -107,7 +107,7 @@ export function ExamRunner({
       date: new Date().toISOString(),
       correct,
       total,
-      passed: total > 0 && correct / total >= EXAM_PASS_RATIO,
+      passed: correct >= EXAM_PASS_CORRECT,
       sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
         (x): x is { name: string; correct: number; total: number } => !!x,
       ),
@@ -485,7 +485,7 @@ function ExamResult({
   }
 
   const percent = total ? Math.round((correct / total) * 100) : 0;
-  const passed = total > 0 && correct / total >= EXAM_PASS_RATIO;
+  const passed = correct >= EXAM_PASS_CORRECT;
   const sections = SUBJECTS.map((s) => bySubject.get(s.id)).filter(
     (x): x is SectionResult => !!x,
   );
@@ -513,7 +513,7 @@ function ExamResult({
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Správně {correct} z {total} otázek ({percent} %) · k úspěchu je
-            potřeba {Math.round(EXAM_PASS_RATIO * 100)} %
+            potřeba {EXAM_PASS_CORRECT} z {total} bodů
           </p>
         </div>
       </motion.div>
