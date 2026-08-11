@@ -9,6 +9,7 @@ export {
   QUESTIONS_VERSION,
   SUBJECTS,
 } from "./questions";
+export { DOCUMENTS, DOCUMENTS_VERSION } from "./documents";
 export type { Answer, AnswerKey, Question, Subject } from "./questions";
 
 export type AppRow = {
