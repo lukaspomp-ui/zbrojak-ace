@@ -62,6 +62,7 @@ function ProfilePage() {
 
   const [changing, setChanging] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
 
   if (!ready) {
     return (
@@ -191,7 +192,11 @@ function ProfilePage() {
               <KeyRound className="h-4 w-4" />
               Změnit heslo
             </Button>
-            <Button variant="outline" full onClick={signOut}>
+            <Button
+              variant="outline"
+              full
+              onClick={() => setConfirmSignOut(true)}
+            >
               <LogOut className="h-4 w-4" />
               Odhlásit se
             </Button>
@@ -213,6 +218,47 @@ function ProfilePage() {
       )}
 
       {changing && <ChangePasswordModal onClose={() => setChanging(false)} />}
+
+      {confirmSignOut && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4"
+          onClick={() => setConfirmSignOut(false)}
+        >
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="card-surface w-full max-w-sm p-6 text-center"
+          >
+            <span className="tint-primary mx-auto flex h-12 w-12 items-center justify-center rounded-2xl">
+              <LogOut className="h-5 w-5" />
+            </span>
+            <h2 className="mt-4 text-lg font-bold">Opravdu odhlásit?</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Budeš se muset znovu přihlásit.
+            </p>
+            <div className="mt-5 flex flex-col gap-2">
+              <Button
+                variant="danger"
+                full
+                onClick={() => {
+                  setConfirmSignOut(false);
+                  void signOut();
+                }}
+              >
+                Odhlásit se
+              </Button>
+              <Button
+                variant="outline"
+                full
+                onClick={() => setConfirmSignOut(false)}
+              >
+                Zrušit
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </main>
   );
 }
