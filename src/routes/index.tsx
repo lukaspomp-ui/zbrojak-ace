@@ -425,3 +425,14 @@ function StudyLink({
     </Link>
   );
 }
+
+function GroupBadge({ group }: { group: ReturnType<typeof useLicenseGroup>["group"] }) {
+  const Icon = GROUP_ICONS[group.iconName];
+  return (
+    <span className="tint-primary flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold">
+      <Icon className="h-3 w-3" />
+      {group.id}
+    </span>
+  );
+}
+
