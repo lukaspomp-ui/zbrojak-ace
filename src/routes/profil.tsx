@@ -23,7 +23,7 @@ import { RankBadge } from "@/components/RankBadge";
 import { Loading } from "@/components/Loading";
 import { setSoundsEnabled, soundsEnabled } from "@/lib/sound";
 import { useAuth } from "@/hooks/use-auth";
-import { useLicenseGroup } from "@/lib/license-group";
+import { type LicenseGroupId, useLicenseGroup } from "@/lib/license-group";
 import {
   useAppQuery,
   useAppTheme,
@@ -33,10 +33,6 @@ import {
 } from "@/hooks/use-exam-data";
 import { availableQuestions } from "@/lib/data";
 import { deleteAccount } from "@/lib/account.functions";
-import {
-  type LicenseGroupId,
-  useLicenseGroup,
-} from "@/lib/license-group";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
