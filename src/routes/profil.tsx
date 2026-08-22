@@ -73,6 +73,8 @@ function ProfilePage() {
   useAppTheme(app);
 
   const [changing, setChanging] = useState(false);
+  const [changingGroup, setChangingGroup] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<LicenseGroupId>("A");
   const [deleting, setDeleting] = useState(false);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const [sounds, setSounds] = useState(false);
