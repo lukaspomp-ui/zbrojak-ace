@@ -1,15 +1,21 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
+  Archive,
   BarChart3,
   BookOpen,
+  Briefcase,
+  Check,
   ChevronRight,
   Crown,
   FileText,
   Flame,
   Lock,
   type LucideIcon,
+  Medal,
+  PawPrint,
   Settings,
+  Shield,
   Sparkles,
   SpellCheck,
   Target,
@@ -33,6 +39,15 @@ import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
+import { LICENSE_GROUPS, useLicenseGroup } from "@/lib/license-group";
+
+const GROUP_ICONS: Record<string, LucideIcon> = {
+  Archive,
+  Medal,
+  PawPrint,
+  Briefcase,
+  Shield,
+};
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -66,6 +81,7 @@ function Dashboard() {
   const { data: profile } = useProfileQuery();
   const { data: progress } = useProgressQuery();
   useAppTheme(app);
+  const { group, select } = useLicenseGroup();
 
   const isPremium = profile?.is_premium === true;
   const loading = !ready || !questions || !subjects;
