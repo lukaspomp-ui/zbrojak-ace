@@ -49,28 +49,17 @@ function GlossaryPage() {
     return list.filter((t) => t.term.toLocaleLowerCase("cs").includes(q));
   }, [terms, query]);
 
-  if (!terms) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
+  if (!terms) return <Loading />;
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-6 safe-bottom">
-      <header className="flex items-center gap-3">
-        <Link
-          to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
-          aria-label="Zpět"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <h1 className="text-[17px] font-bold">Slovníček</h1>
-      </header>
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
+      <PageHeader
+        title="Slovníček"
+        eyebrow="Studium"
+        icon={SpellCheck}
+      />
 
-      <label className="flex items-center gap-2.5 rounded-2xl border border-border bg-card px-4 py-3">
+      <label className="card-surface flex items-center gap-2.5 px-4 py-3">
         <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
         <input
           value={query}
