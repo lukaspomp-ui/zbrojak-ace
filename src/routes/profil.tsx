@@ -6,6 +6,7 @@ import {
   KeyRound,
   Loader2,
   LogOut,
+  Target,
   Trash2,
   User,
   UserPlus,
@@ -16,11 +17,13 @@ import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { PageHeader } from "@/components/PageHeader";
 import { ChangePasswordModal } from "@/components/ChangePasswordModal";
+import { LicenseGroupPicker } from "@/components/LicenseGroupPicker";
 import { ProgressRing } from "@/components/ProgressRing";
 import { RankBadge } from "@/components/RankBadge";
 import { Loading } from "@/components/Loading";
 import { setSoundsEnabled, soundsEnabled } from "@/lib/sound";
 import { useAuth } from "@/hooks/use-auth";
+import { type LicenseGroupId, useLicenseGroup } from "@/lib/license-group";
 import {
   useAppQuery,
   useAppTheme,
@@ -59,6 +62,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { ready, session, isGuest } = useAuth();
+  const { group, select } = useLicenseGroup();
   const { data: app } = useAppQuery();
   const { data: profile } = useProfileQuery();
   const { data: questions } = useQuestionsQuery();
@@ -66,6 +70,8 @@ function ProfilePage() {
   useAppTheme(app);
 
   const [changing, setChanging] = useState(false);
+  const [changingGroup, setChangingGroup] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<LicenseGroupId>("A");
   const [deleting, setDeleting] = useState(false);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const [sounds, setSounds] = useState(false);
@@ -109,6 +115,18 @@ function ProfilePage() {
     } finally {
       setDeleting(false);
     }
+  }
+
+  function openGroupPicker() {
+    setSelectedGroup(group.id);
+    setChangingGroup(true);
+  }
+
+  function confirmGroupChange() {
+    select(selectedGroup);
+    setChangingGroup(false);
+    toast.success(`Skupina nastavena na ${selectedGroup}`);
+    navigate({ to: "/" });
   }
 
   return (
@@ -167,6 +185,21 @@ function ProfilePage() {
                 {isPremium && <Crown className="h-3.5 w-3.5" />}
                 {isPremium ? "Premium" : "Free"}
               </span>
+            </div>
+
+            <div className="flex items-center justify-between border-t border-border pt-4">
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground">Skupina zbrojního průkazu</p>
+                <p className="text-[15px] font-semibold">
+                  {group.id} — {group.purpose}
+                </p>
+                <p className="num text-xs text-muted-foreground">
+                  {group.scopeLabel} · {group.passCorrect} z 30
+                </p>
+              </div>
+              <Button variant="outline" onClick={openGroupPicker}>
+                Změnit
+              </Button>
             </div>
 
             <div className="flex items-center gap-5 border-t border-border pt-4">
@@ -280,6 +313,48 @@ function ProfilePage() {
                 variant="outline"
                 full
                 onClick={() => setConfirmSignOut(false)}
+              >
+                Zrušit
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {changingGroup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4"
+          onClick={() => setChangingGroup(false)}
+        >
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="card-surface w-full max-w-sm p-6"
+          >
+            <div className="text-center">
+              <span className="tint-primary mx-auto flex h-12 w-12 items-center justify-center rounded-2xl">
+                <Target className="h-5 w-5" />
+              </span>
+              <h2 className="mt-4 text-lg font-bold">Změnit skupinu</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Hranice úspěchu v ostrém testu se aktualizuje podle zvolené skupiny.
+              </p>
+            </div>
+            <div className="mt-5">
+              <LicenseGroupPicker
+                initialId={selectedGroup}
+                onChange={setSelectedGroup}
+              />
+            </div>
+            <div className="mt-5 flex flex-col gap-2">
+              <Button full onClick={confirmGroupChange}>
+                Potvrdit
+              </Button>
+              <Button
+                variant="outline"
+                full
+                onClick={() => setChangingGroup(false)}
               >
                 Zrušit
               </Button>
