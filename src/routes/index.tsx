@@ -5,6 +5,8 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
+  Check,
+  ChevronRight,
   Crown,
   FileText,
   Flame,
@@ -19,6 +21,7 @@ import {
   Target,
   Timer,
 } from "lucide-react";
+
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { RankBadge } from "@/components/RankBadge";
