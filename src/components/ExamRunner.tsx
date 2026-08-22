@@ -188,7 +188,7 @@ export function ExamRunner({
       <header className="flex items-center gap-3">
         <Link
           to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
+          className="card-surface rounded-full p-2.5 text-muted-foreground"
           aria-label="Zpět"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -213,7 +213,7 @@ export function ExamRunner({
         <button
           type="button"
           onClick={() => setNavOpen(true)}
-          className="rounded-full bg-card p-2.5 text-muted-foreground md:hidden"
+          className="card-surface rounded-full p-2.5 text-muted-foreground md:hidden"
           aria-label="Přehled otázek"
         >
           <LayoutGrid className="h-4 w-4" />

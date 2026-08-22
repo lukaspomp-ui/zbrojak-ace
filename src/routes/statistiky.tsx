@@ -324,7 +324,7 @@ function StatsPage() {
             <button
               type="button"
               onClick={() => setOpenAttempt(null)}
-              className="rounded-full bg-card p-2.5 text-muted-foreground"
+              className="card-surface rounded-full p-2.5 text-muted-foreground"
               aria-label="Zavřít"
             >
               <X className="h-4 w-4" />

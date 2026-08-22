@@ -175,7 +175,7 @@ export function QuizRunner({
         {!embedded && (
           <Link
             to="/"
-            className="rounded-full bg-card p-2.5 text-muted-foreground"
+            className="card-surface rounded-full p-2.5 text-muted-foreground"
             aria-label="Zpět"
           >
             <ArrowLeft className="h-4 w-4" />
