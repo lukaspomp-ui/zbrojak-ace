@@ -19,7 +19,8 @@ import { ShareResultButton } from "./ShareResultButton";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
-import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
+import { EXAM_DURATION_SECONDS } from "@/lib/app-config";
+import { useLicenseGroup } from "@/lib/license-group";
 import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
 import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
 import {
@@ -112,7 +113,7 @@ export function ExamRunner({
       date: new Date().toISOString(),
       correct,
       total,
-      passed: correct >= EXAM_PASS_CORRECT,
+      passed: correct >= passCorrect,
       sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
         (x): x is { name: string; correct: number; total: number } => !!x,
       ),
@@ -494,7 +495,9 @@ function ExamResult({
   }
 
   const percent = total ? Math.round((correct / total) * 100) : 0;
-  const passed = correct >= EXAM_PASS_CORRECT;
+  const { group } = useLicenseGroup();
+  const passCorrect = group.passCorrect;
+  const passed = correct >= passCorrect;
   const sections = SUBJECTS.map((s) => bySubject.get(s.id)).filter(
     (x): x is SectionResult => !!x,
   );
@@ -522,7 +525,11 @@ function ExamResult({
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Správně {correct} z {total} otázek ({percent} %) · k úspěchu je
-            potřeba {EXAM_PASS_CORRECT} z {total} bodů
+            potřeba {passCorrect} z {total} bodů
+          </p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Hodnoceno pro {group.scope === "obecne" ? "obecné" : "rozšířené"}{" "}
+            oprávnění (skupina {group.id})
           </p>
         </div>
       </motion.div>
