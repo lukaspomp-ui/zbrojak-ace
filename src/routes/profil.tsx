@@ -2,18 +2,19 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft,
   Crown,
   KeyRound,
   Loader2,
   LogOut,
   Trash2,
+  User,
   UserPlus,
   Volume2,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
+import { PageHeader } from "@/components/PageHeader";
 import { ChangePasswordModal } from "@/components/ChangePasswordModal";
 import { ProgressRing } from "@/components/ProgressRing";
 import { RankBadge } from "@/components/RankBadge";
@@ -112,16 +113,7 @@ function ProfilePage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
-      <header className="flex items-center gap-3">
-        <Link
-          to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
-          aria-label="Zpět"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <h1 className="text-lg font-bold">Můj profil</h1>
-      </header>
+      <PageHeader title="Můj profil" eyebrow="Účet" icon={User} />
 
       {isGuest ? (
         <motion.section

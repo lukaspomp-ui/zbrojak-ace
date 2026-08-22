@@ -1,8 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { BookOpen } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Markdown } from "@/components/Markdown";
+import { Loading } from "@/components/Loading";
+import { PageHeader } from "@/components/PageHeader";
 import { PracticeRound } from "@/components/PracticeRound";
 import {
   useAppQuery,
@@ -51,36 +53,23 @@ function SubjectDetail() {
 
   const subject = subjects?.find((s) => s.id === subjectId);
 
-  if (!subjects) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
+  if (!subjects) return <Loading />;
 
   const subjectSummaries = (summaries ?? []).filter(
     (s) => s.subject_id === subjectId,
   );
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-6 safe-bottom">
-      <header className="flex items-center gap-3">
-        <Link
-          to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
-          aria-label="Zpět"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <h1 className="min-w-0 flex-1 truncate text-[17px] font-bold">
-          {subject?.name ?? "Okruh"}
-        </h1>
-      </header>
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
+      <PageHeader
+        title={subject?.name ?? "Okruh"}
+        eyebrow="Okruh k procvičení"
+        icon={BookOpen}
+      />
 
       <div
         role="tablist"
-        className="flex gap-1 rounded-2xl bg-card p-1"
+        className="card-surface flex gap-1 p-1"
         aria-label="Části okruhu"
       >
         {TABS.map((t) => (

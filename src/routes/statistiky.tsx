@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  ArrowLeft,
+  BarChart3,
   Flame,
   History,
   Target,
@@ -9,8 +9,10 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { PageHeader, SectionLabel } from "@/components/PageHeader";
 import { AnswerReview } from "@/components/AnswerReview";
 import { ProgressRing } from "@/components/ProgressRing";
+import { ScopeReticle } from "@/components/ScopeReticle";
 import { PremiumTeaser } from "@/components/PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -114,25 +116,26 @@ function StatsPage() {
     }));
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 pt-6 safe-bottom">
-      <header className="flex items-center gap-3">
-        <Link
-          to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
-          aria-label="Zpět"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <h1 className="text-[17px] font-bold">Statistiky</h1>
-      </header>
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 pt-8 safe-bottom">
+      <PageHeader title="Statistiky" eyebrow="Tvůj postup" icon={BarChart3} />
 
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card-surface flex items-center gap-5 p-5"
+        className="card-surface relative flex items-center gap-5 overflow-hidden p-5"
       >
-        <ProgressRing value={readiness} label="připravenost" />
-        <div className="min-w-0">
+        <ScopeReticle
+          className="pointer-events-none absolute -right-16 -top-14 h-64 w-64 text-primary"
+          opacity={0.16}
+        />
+        <div className="relative shrink-0">
+          <ScopeReticle
+            className="pointer-events-none absolute -inset-4 text-primary"
+            opacity={0.3}
+          />
+          <ProgressRing value={readiness} label="připravenost" />
+        </div>
+        <div className="relative min-w-0">
           <p className="label-tick">Připravenost na zkoušku</p>
           <p className="mt-2 text-base font-extrabold">
             {readinessVerdict(readiness)}
@@ -158,7 +161,7 @@ function StatsPage() {
             <Target className="h-3.5 w-3.5 text-primary" />
             Zvládnuto
           </span>
-          <p className="mt-1 text-xl font-bold tabular-nums">
+          <p className="mt-1 text-xl font-bold num">
             {masteredCount} otázek
           </p>
         </div>
@@ -175,10 +178,10 @@ function StatsPage() {
       )}
 
       <section className="flex flex-col gap-2.5">
-        <h2 className="flex items-center gap-1.5 text-sm font-semibold text-muted-foreground">
-          <History className="h-4 w-4" />
+        <SectionLabel>
+          <History className="h-3.5 w-3.5 text-brass" />
           Historie testů
-        </h2>
+        </SectionLabel>
         {history.length === 0 ? (
           <p className="card-surface p-4 text-sm text-muted-foreground">
             {EMPTY_HISTORY}
@@ -230,7 +233,7 @@ function StatsPage() {
                   className="card-surface flex items-center justify-between gap-3 p-4 text-left"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold tabular-nums">
+                    <p className="text-sm font-semibold num">
                       {a.correct}/{a.total}{" "}
                       <span className="text-muted-foreground">({pct} %)</span>
                     </p>
@@ -264,9 +267,7 @@ function StatsPage() {
       {isPremium ? (
         <>
           <section className="flex flex-col gap-2.5">
-            <h2 className="text-sm font-semibold text-muted-foreground">
-              Úspěšnost po okruzích
-            </h2>
+            <SectionLabel>Úspěšnost po okruzích</SectionLabel>
             {perSubject.map((s) => (
               <Link
                 key={s.id}
@@ -278,7 +279,7 @@ function StatsPage() {
                   <span className="truncate text-[15px] font-semibold">
                     {s.name}
                   </span>
-                  <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+                  <span className="shrink-0 text-xs text-muted-foreground num">
                     {s.mastered} / {s.total}
                   </span>
                 </span>
@@ -296,9 +297,7 @@ function StatsPage() {
           </section>
 
           <section className="flex flex-col gap-2.5">
-            <h2 className="text-sm font-semibold text-muted-foreground">
-              Slabá místa
-            </h2>
+            <SectionLabel>Slabá místa</SectionLabel>
             {weakQuestions.length === 0 ? (
               <p className="card-surface p-4 text-sm text-muted-foreground">
                 Zatím žádné chyby — pokračuj v procvičování.
@@ -336,7 +335,7 @@ function StatsPage() {
             <button
               type="button"
               onClick={() => setOpenAttempt(null)}
-              className="rounded-full bg-card p-2.5 text-muted-foreground"
+              className="card-surface rounded-full p-2.5 text-muted-foreground"
               aria-label="Zavřít"
             >
               <X className="h-4 w-4" />
