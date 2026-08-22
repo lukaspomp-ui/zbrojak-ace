@@ -6,6 +6,7 @@ import {
   KeyRound,
   Loader2,
   LogOut,
+  Target,
   Trash2,
   User,
   UserPlus,
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { PageHeader } from "@/components/PageHeader";
 import { ChangePasswordModal } from "@/components/ChangePasswordModal";
+import { LicenseGroupPicker } from "@/components/LicenseGroupPicker";
 import { ProgressRing } from "@/components/ProgressRing";
 import { RankBadge } from "@/components/RankBadge";
 import { Loading } from "@/components/Loading";
@@ -30,6 +32,11 @@ import {
 } from "@/hooks/use-exam-data";
 import { availableQuestions } from "@/lib/data";
 import { deleteAccount } from "@/lib/account.functions";
+import {
+  groupById,
+  setLicenseGroup,
+  type LicenseGroupId,
+} from "@/lib/license-group";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
