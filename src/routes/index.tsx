@@ -5,8 +5,6 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
-  Check,
-  ChevronRight,
   Crown,
   FileText,
   Flame,
@@ -48,6 +46,7 @@ const GROUP_ICONS: Record<string, LucideIcon> = {
   Briefcase,
   Shield,
 };
+
 
 export const Route = createFileRoute("/")({
   ssr: false,
