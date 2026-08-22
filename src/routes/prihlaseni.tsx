@@ -98,12 +98,12 @@ function LoginPage() {
       <header className="flex items-center gap-3">
         <Link
           to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
+          className="card-surface shrink-0 rounded-full p-2.5 text-muted-foreground"
           aria-label="Zpět"
         >
           <ArrowLeft className="h-4 w-4" />
         </Link>
-        <h1 className="text-lg font-bold">{title}</h1>
+        <h1 className="text-[17px] font-extrabold leading-tight">{title}</h1>
       </header>
 
       <motion.form

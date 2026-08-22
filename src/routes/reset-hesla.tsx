@@ -66,7 +66,7 @@ function ResetPasswordPage() {
         <span className="tint-primary mb-4 flex h-16 w-16 items-center justify-center rounded-3xl">
           <ShieldCheck className="h-8 w-8" />
         </span>
-        <h1 className="text-xl font-bold">Obnovit heslo</h1>
+        <h1 className="text-xl font-extrabold">Obnovit heslo</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Zadej své nové heslo. Pak už můžeš pokračovat v procvičování.
         </p>

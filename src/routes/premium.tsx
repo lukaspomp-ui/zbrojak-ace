@@ -123,7 +123,7 @@ function Paywall() {
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-6 safe-bottom">
       <Link
         to="/"
-        className="w-fit rounded-full bg-card p-2.5 text-muted-foreground"
+        className="card-surface w-fit rounded-full p-2.5 text-muted-foreground"
         aria-label="Zpět"
       >
         <ArrowLeft className="h-4 w-4" />
