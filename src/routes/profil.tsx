@@ -192,6 +192,21 @@ function ProfilePage() {
               </span>
             </div>
 
+            <div className="flex items-center justify-between border-t border-border pt-4">
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground">Skupina zbrojního průkazu</p>
+                <p className="text-[15px] font-semibold">
+                  {group.id} — {group.purpose}
+                </p>
+                <p className="num text-xs text-muted-foreground">
+                  {group.scopeLabel} · {group.passCorrect} z 30
+                </p>
+              </div>
+              <Button variant="outline" onClick={openGroupPicker}>
+                Změnit
+              </Button>
+            </div>
+
             <div className="flex items-center gap-5 border-t border-border pt-4">
               <ProgressRing value={percent} />
               <div className="min-w-0">
