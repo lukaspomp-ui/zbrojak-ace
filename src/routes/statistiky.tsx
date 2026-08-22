@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { PageHeader, SectionLabel } from "@/components/PageHeader";
 import { AnswerReview } from "@/components/AnswerReview";
 import { ProgressRing } from "@/components/ProgressRing";
+import { ScopeReticle } from "@/components/ScopeReticle";
 import { PremiumTeaser } from "@/components/PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
 import {
