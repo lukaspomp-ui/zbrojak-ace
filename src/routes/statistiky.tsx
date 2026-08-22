@@ -121,10 +121,20 @@ function StatsPage() {
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card-surface flex items-center gap-5 p-5"
+        className="card-surface relative flex items-center gap-5 overflow-hidden p-5"
       >
-        <ProgressRing value={readiness} label="připravenost" />
-        <div className="min-w-0">
+        <ScopeReticle
+          className="pointer-events-none absolute -right-16 -top-14 h-64 w-64 text-primary"
+          opacity={0.16}
+        />
+        <div className="relative shrink-0">
+          <ScopeReticle
+            className="pointer-events-none absolute -inset-4 text-primary"
+            opacity={0.3}
+          />
+          <ProgressRing value={readiness} label="připravenost" />
+        </div>
+        <div className="relative min-w-0">
           <p className="label-tick">Připravenost na zkoušku</p>
           <p className="mt-2 text-base font-extrabold">
             {readinessVerdict(readiness)}
