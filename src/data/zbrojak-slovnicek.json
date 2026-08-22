@@ -1,0 +1,161 @@
+{
+ "verze": "Definice dle oficiálního souboru testových otázek MV (platné od 1. 1. 2026)",
+ "pojmy": [
+  {
+   "pojem": "Bicí mechanismus zbraně",
+   "definice": "Mechanismus způsobující úder na zápalku (iniciační mechanismus)."
+  },
+  {
+   "pojem": "Cílový prostor",
+   "definice": "Prostor, v němž je umístěn terč a terčová zařízení."
+  },
+  {
+   "pojem": "Hlaveň",
+   "definice": "Součást zbraně, v níž se určitý druh energie přemění v pohybovou energii střely; vodicí část vývrtu přitom vede střelu v požadovaném směru."
+  },
+  {
+   "pojem": "Krytí brokovnice",
+   "definice": "Poměr počtu zásahů broků v kruhovém zkušebním terči v určené vzdálenosti od ústí zbraně k celkovému počtu broků v náboji, vyjádřený v procentech."
+  },
+  {
+   "pojem": "Maximální dostřel",
+   "definice": "Největší dosažitelný dostřel při střelbě z určité zbraně s určitým střelivem."
+  },
+  {
+   "pojem": "Munice",
+   "definice": "Zkompletovaný nebo neúplný výrobek obsahující aktivní muniční náplň, speciálně konstruovaný pro použití ozbrojenými silami nebo bezpečnostními sbory; nakládání s municí upravuje zákon o munici."
+  },
+  {
+   "pojem": "Neaktivní zbraň",
+   "definice": "Zbraň, která se stala trvale a nevratně nefunkční; za neaktivní zbraň se považuje znehodnocená zbraň, řez zbraně a neaktivní torzo zbraně."
+  },
+  {
+   "pojem": "Neuzamčený závěr",
+   "definice": "Závěr, který není v okamžiku výstřelu pevně spojen s hlavní; označuje se také jako dynamický závěr."
+  },
+  {
+   "pojem": "Noktovizní zaměřovač",
+   "definice": "Doplněk zbraně, který zákon o zbraních a střelivu nereguluje."
+  },
+  {
+   "pojem": "Náboj typu Flobert",
+   "definice": "Náboj s okrajovým zápalem; má střelu jednotnou nebo hromadnou, obvykle v rážích 4 mm, 6 mm nebo 9 mm."
+  },
+  {
+   "pojem": "Nábojová komora",
+   "definice": "Prostor v zadní části vývrtu hlavně, do kterého je po nabití zasunut náboj; svými rozměry i tvarem odpovídá příslušnému náboji. U revolverové zbraně nejsou komory součástí hlavně, ale válce."
+  },
+  {
+   "pojem": "Nástřelná série",
+   "definice": "Série sloužící k ověření nastřelení a funkce zbraně, zpravidla před soutěží."
+  },
+  {
+   "pojem": "Paintballová zbraň",
+   "definice": "Plynová zbraň konstruovaná pro vystřelování neletální střely a určená pro výcvikové, sportovní nebo rekreační účely."
+  },
+  {
+   "pojem": "Pojistka zbraně",
+   "definice": "Součást zajišťující zbraň proti výstřelu."
+  },
+  {
+   "pojem": "Polygonální vývrt hlavně",
+   "definice": "Vývrt hlavně s profilem tvořeným několika kruhovými oblouky se středy křivosti mimo podélnou osu hlavně; tvoří šroubovici, která uvádí střelu do otáčivého pohybu obdobně jako drážkovaný vývrt."
+  },
+  {
+   "pojem": "Průbojný účinek",
+   "definice": "Ničivý účinek střely spočívající v pronikání střely cílem."
+  },
+  {
+   "pojem": "Ranivý účinek",
+   "definice": "Ničivý účinek střel na živé cíle, jehož výsledkem je vznik střelných poranění."
+  },
+  {
+   "pojem": "Regulované součásti zbraně",
+   "definice": "Hlavní část zbraně, součást umožňující samočinnou střelbu, polotovar hlavní části zbraně, tlumič hluku výstřelu nebo nadlimitní zásobník."
+  },
+  {
+   "pojem": "Rám revolverové zbraně",
+   "definice": "Součást revolveru, na které jsou ostatní hlavní části a jiné součásti revolveru upevněny nebo jsou s ní pohyblivě spojeny."
+  },
+  {
+   "pojem": "Spoušťové ústrojí zbraně",
+   "definice": "Mechanismus zbraně, který slouží k ovládání iniciačního ústrojí (bicího mechanismu)."
+  },
+  {
+   "pojem": "Střelecké stanoviště",
+   "definice": "Přesně určené, popřípadě ohrazené místo, z něhož se střílí."
+  },
+  {
+   "pojem": "Střelivo",
+   "definice": "Náboje, nábojky a aktivní komponenty střeliva, které jsou zařazeny do některé z kategorií střeliva."
+  },
+  {
+   "pojem": "Terčové zařízení",
+   "definice": "Zařízení k umístění a případnému pohybu terčů."
+  },
+  {
+   "pojem": "Tlumič hluku výstřelu",
+   "definice": "Regulovaná součást zbraně."
+  },
+  {
+   "pojem": "Tělo zbraně",
+   "definice": "Základní nosná konstrukční součást zbraně, na které jsou ostatní hlavní části a jiné součásti zbraně upevněny nebo jsou s ní pohyblivě spojeny."
+  },
+  {
+   "pojem": "Uzamykací prvky závěru",
+   "definice": "Uzamykací ozuby, uzamykací kuličky nebo válečky, kleština nebo závora."
+  },
+  {
+   "pojem": "Uzamčený závěr",
+   "definice": "Závěr, který je v okamžiku výstřelu pevně spojen (uzamčen) s hlavní; účelem uzamčení je udržet tlak vznikající při výstřelu uvnitř hlavně."
+  },
+  {
+   "pojem": "Vložná hlaveň",
+   "definice": "Hlaveň menší ráže vkládaná do vývrtu hlavně větší ráže."
+  },
+  {
+   "pojem": "Výhozné okénko",
+   "definice": "Otvor, kterým se ze zbraně vyhazuje vystřelená nábojnice, resp. náboj při vybití zbraně."
+  },
+  {
+   "pojem": "Vývrt hlavně",
+   "definice": "Vnitřní dutina hlavně; může být hladký nebo drážkovaný."
+  },
+  {
+   "pojem": "Zahrdlení",
+   "definice": "Zúžení úsťové části brokové hlavně ovlivňující velikost a charakter krytí."
+  },
+  {
+   "pojem": "Zbraň",
+   "definice": "Palná zbraň, plynová zbraň a další zařízení nebo přístroj, které jsou zařazeny do některé z kategorií zbraní nebo na které se podle § 9 použijí ustanovení o nakládání se zbraní určité kategorie."
+  },
+  {
+   "pojem": "Zbrojní list",
+   "definice": "Ověřený výstup z centrálního registru zbraní coby informačního systému veřejné správy."
+  },
+  {
+   "pojem": "Znehodnocená zbraň",
+   "definice": "Neaktivní zbraň, která byla včetně všech hlavních částí učiněna trvale nefunkční postupem stanoveným zákonem, přímo použitelným předpisem EU nebo jiným právním předpisem."
+  },
+  {
+   "pojem": "Záměrná přímka",
+   "definice": "Přímka spojující mířidla zamířené zbraně a záměrný bod na cíli."
+  },
+  {
+   "pojem": "Zápalka",
+   "definice": "Součást náboje obsahující zápalkovou slož, která se nárazem nebo jiným způsobem vznítí a zažehne výmetnou náplň."
+  },
+  {
+   "pojem": "Závorník",
+   "definice": "Součást, která uzavírá nebo uzamyká nábojovou komoru u zbraně se složeným závěrovým mechanismem."
+  },
+  {
+   "pojem": "Účinný dostřel",
+   "definice": "Největší vzdálenost od zbraně, na níž lze efektivně vyřadit mířenou střelbou zvolený cíl."
+  },
+  {
+   "pojem": "Školní náboj",
+   "definice": "Náboj bez výmetné náplně a zápalky, který rozměrově odpovídá skutečnému náboji; slouží pro výuku a výcvik v nabíjení a spouštění zbraně a pro kontrolu funkce zásobníku, závěru a spouště."
+  }
+ ]
+}
