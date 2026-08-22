@@ -23,6 +23,7 @@ import { RankBadge } from "@/components/RankBadge";
 import { Loading } from "@/components/Loading";
 import { setSoundsEnabled, soundsEnabled } from "@/lib/sound";
 import { useAuth } from "@/hooks/use-auth";
+import { useLicenseGroup } from "@/lib/license-group";
 import {
   useAppQuery,
   useAppTheme,
