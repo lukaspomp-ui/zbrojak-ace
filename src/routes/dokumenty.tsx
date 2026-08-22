@@ -1,8 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, FileText, Loader2, Lock } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { FileText, Loader2, Lock } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loading } from "@/components/Loading";
 import { Markdown } from "@/components/Markdown";
+import { PageHeader, SectionLabel } from "@/components/PageHeader";
 import { PremiumTeaser } from "@/components/PremiumTeaser";
 import {
   useAppQuery,
@@ -48,13 +50,7 @@ function DocumentsPage() {
 
   const isPremium = profile?.is_premium === true;
 
-  if (!documents) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
+  if (!documents) return <Loading />;
 
   const bySubject = new Map<string, DocumentRow[]>();
   const general: DocumentRow[] = [];
@@ -75,17 +71,8 @@ function DocumentsPage() {
   );
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 pt-6 safe-bottom">
-      <header className="flex items-center gap-3">
-        <Link
-          to="/"
-          className="rounded-full bg-card p-2.5 text-muted-foreground"
-          aria-label="Zpět"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Link>
-        <h1 className="text-[17px] font-bold">Dokumenty</h1>
-      </header>
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 pt-8 safe-bottom">
+      <PageHeader title="Dokumenty" eyebrow="Studium" icon={FileText} />
 
       {documents.length === 0 && (
         <div className="card-surface p-5 text-sm text-muted-foreground">
@@ -131,7 +118,7 @@ function DocumentGroup({
 }) {
   return (
     <section className="flex flex-col gap-2.5">
-      <h2 className="text-sm font-semibold text-muted-foreground">{title}</h2>
+      <SectionLabel>{title}</SectionLabel>
       {docs.map((doc) => (
         <DocumentCard key={doc.id} doc={doc} locked={!allowed.has(doc.id)} />
       ))}
