@@ -77,20 +77,9 @@ export function useProgressQuery() {
 
 
 
-export function useSummariesQuery() {
-  return useQuery({
-    queryKey: ["summaries"],
-    queryFn: fetchSummaries,
-    staleTime: 300_000,
-  });
-}
-
-export function useGlossaryQuery() {
-  return useQuery({
-    queryKey: ["glossary"],
-    queryFn: fetchGlossary,
-    staleTime: 300_000,
-  });
+/** Glossary terms come from the bundled official glossary file. */
+export function useGlossaryQuery(): { data: GlossaryTerm[] } {
+  return { data: GLOSSARY };
 }
 
 /** Documents come from the bundled file (valid laws + official links). */
