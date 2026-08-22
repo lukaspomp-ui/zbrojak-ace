@@ -57,6 +57,7 @@ export function ExamRunner({
   title?: string;
 }) {
   const queryClient = useQueryClient();
+  const passCorrect = useLicenseGroup().group.passCorrect;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
@@ -122,7 +123,7 @@ export function ExamRunner({
     });
     queryClient.invalidateQueries({ queryKey: ["progress"] });
     setFinished(true);
-  }, [answers, questions, userId, progress, queryClient]);
+  }, [answers, questions, userId, progress, queryClient, passCorrect]);
 
   // Timer — auto-submits when it hits zero.
   useEffect(() => {
