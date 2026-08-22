@@ -34,9 +34,8 @@ import {
 import { availableQuestions } from "@/lib/data";
 import { deleteAccount } from "@/lib/account.functions";
 import {
-  groupById,
-  setLicenseGroup,
   type LicenseGroupId,
+  useLicenseGroup,
 } from "@/lib/license-group";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
