@@ -10,6 +10,8 @@ export {
   SUBJECTS,
 } from "./questions";
 export { DOCUMENTS, DOCUMENTS_VERSION } from "./documents";
+export { GLOSSARY, GLOSSARY_VERSION } from "./glossary";
+export type { GlossaryTerm } from "./glossary";
 export type { Answer, AnswerKey, Question, Subject } from "./questions";
 
 export type AppRow = {
