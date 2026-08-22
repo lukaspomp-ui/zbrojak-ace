@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Search } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Search, SpellCheck } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Loading } from "@/components/Loading";
+import { PageHeader } from "@/components/PageHeader";
 import {
   useAppQuery,
   useAppTheme,
