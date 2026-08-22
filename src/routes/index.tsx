@@ -40,7 +40,8 @@ import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
-import { LICENSE_GROUPS, useLicenseGroup } from "@/lib/license-group";
+import { useLicenseGroup } from "@/lib/license-group";
+
 
 const GROUP_ICONS: Record<string, LucideIcon> = {
   Archive,
