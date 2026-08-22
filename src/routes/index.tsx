@@ -5,9 +5,9 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
-  Check,
   ChevronRight,
   Crown,
+
   FileText,
   Flame,
   Lock,
