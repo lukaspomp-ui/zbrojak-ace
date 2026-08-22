@@ -5,9 +5,9 @@ import {
   BarChart3,
   BookOpen,
   Briefcase,
-  Check,
   ChevronRight,
   Crown,
+
   FileText,
   Flame,
   Lock,
@@ -21,6 +21,7 @@ import {
   Target,
   Timer,
 } from "lucide-react";
+
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { RankBadge } from "@/components/RankBadge";
@@ -39,7 +40,8 @@ import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
-import { LICENSE_GROUPS, useLicenseGroup } from "@/lib/license-group";
+import { useLicenseGroup } from "@/lib/license-group";
+
 
 const GROUP_ICONS: Record<string, LucideIcon> = {
   Archive,
@@ -48,6 +50,7 @@ const GROUP_ICONS: Record<string, LucideIcon> = {
   Briefcase,
   Shield,
 };
+
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -81,7 +84,8 @@ function Dashboard() {
   const { data: profile } = useProfileQuery();
   const { data: progress } = useProgressQuery();
   useAppTheme(app);
-  const { group, select } = useLicenseGroup();
+  const { group } = useLicenseGroup();
+
 
   const isPremium = profile?.is_premium === true;
   const loading = !ready || !questions || !subjects;
@@ -122,11 +126,13 @@ function Dashboard() {
             </h1>
             <div className="mt-1 flex items-center gap-2">
               <RankBadge mastered={masteredCount} />
+              <GroupBadge group={group} />
               {!isPremium && (
                 <span className="text-[11px] text-muted-foreground">Free</span>
               )}
             </div>
           </div>
+
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {!isPremium && (
@@ -197,43 +203,8 @@ function Dashboard() {
       </motion.section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="label-tick">
-          <span className="h-2 w-2 rounded-full bg-brass" />
-          Vyber skupinu zbrojního průkazu
-        </h2>
-        {LICENSE_GROUPS.map((g) => {
-          const Icon = GROUP_ICONS[g.iconName];
-          const active = group.id === g.id;
-          return (
-            <button
-              key={g.id}
-              type="button"
-              onClick={() => select(g.id)}
-              aria-pressed={active}
-              className={
-                active
-                  ? "card-surface flex items-center gap-4 border border-primary bg-primary/10 p-4 text-left"
-                  : "card-surface flex items-center gap-4 p-4 text-left"
-              }
-            >
-              <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
-                <Icon className="h-4.5 w-4.5" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-[15px] font-bold">
-                  {g.id} — {g.purpose}
-                </span>
-                <span className="num block text-xs text-muted-foreground">
-                  {g.scopeLabel} · {g.passCorrect} z 30
-                </span>
-              </span>
-              {active && <Check className="h-4 w-4 shrink-0 text-primary" />}
-            </button>
-          );
-        })}
-      </section>
 
-      <section className="flex flex-col gap-3">
+
 
         <Button
           full
@@ -421,3 +392,14 @@ function StudyLink({
     </Link>
   );
 }
+
+function GroupBadge({ group }: { group: ReturnType<typeof useLicenseGroup>["group"] }) {
+  const Icon = GROUP_ICONS[group.iconName];
+  return (
+    <span className="tint-primary flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold">
+      <Icon className="h-3 w-3" />
+      {group.id}
+    </span>
+  );
+}
+

@@ -63,6 +63,15 @@ export function groupById(id: LicenseGroupId): LicenseGroup {
   return LICENSE_GROUPS.find((g) => g.id === id) ?? LICENSE_GROUPS[0]!;
 }
 
+export function hasChosenLicenseGroup(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
 export function getLicenseGroup(): LicenseGroupId {
   if (typeof window === "undefined") return DEFAULT_GROUP;
   try {
