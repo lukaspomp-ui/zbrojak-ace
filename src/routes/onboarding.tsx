@@ -47,6 +47,13 @@ function Onboarding() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState<LicenseGroupId>(DEFAULT_GROUP);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (hasChosenLicenseGroup()) {
+      navigate({ to: "/", replace: true });
+    }
+  }, [navigate]);
+
   const confirm = () => {
     setLicenseGroup(selected);
     navigate({ to: "/", replace: true });
@@ -56,6 +63,7 @@ function Onboarding() {
     setLicenseGroup(DEFAULT_GROUP);
     navigate({ to: "/", replace: true });
   };
+
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-8 px-5 py-8 safe-bottom">
