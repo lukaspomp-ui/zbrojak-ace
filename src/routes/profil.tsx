@@ -67,6 +67,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { ready, session, isGuest } = useAuth();
+  const { group, select } = useLicenseGroup();
   const { data: app } = useAppQuery();
   const { data: profile } = useProfileQuery();
   const { data: questions } = useQuestionsQuery();
