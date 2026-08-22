@@ -122,6 +122,18 @@ function ProfilePage() {
     }
   }
 
+  function openGroupPicker() {
+    setSelectedGroup(group.id);
+    setChangingGroup(true);
+  }
+
+  function confirmGroupChange() {
+    select(selectedGroup);
+    setChangingGroup(false);
+    toast.success(`Skupina nastavena na ${selectedGroup}`);
+    navigate({ to: "/" });
+  }
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
       <PageHeader title="Můj profil" eyebrow="Účet" icon={User} />
