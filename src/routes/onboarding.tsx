@@ -11,7 +11,8 @@ import {
   Target,
   type LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/Button";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import {
