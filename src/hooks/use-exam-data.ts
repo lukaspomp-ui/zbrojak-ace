@@ -3,13 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import {
   fetchApp,
   DOCUMENTS,
-  fetchGlossary,
-  fetchSummaries,
+  GLOSSARY,
   fetchProgress,
   fetchProfile,
   QUESTIONS,
   SUBJECTS,
   type AppRow,
+  type GlossaryTerm,
   type Question,
   type Subject,
 } from "@/lib/data";
