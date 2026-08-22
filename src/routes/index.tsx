@@ -124,11 +124,13 @@ function Dashboard() {
             </h1>
             <div className="mt-1 flex items-center gap-2">
               <RankBadge mastered={masteredCount} />
+              <GroupBadge group={group} />
               {!isPremium && (
                 <span className="text-[11px] text-muted-foreground">Free</span>
               )}
             </div>
           </div>
+
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {!isPremium && (
