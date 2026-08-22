@@ -17,10 +17,12 @@ import { Button } from "@/components/Button";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import {
   DEFAULT_GROUP,
+  hasChosenLicenseGroup,
   LICENSE_GROUPS,
   setLicenseGroup,
   type LicenseGroupId,
 } from "@/lib/license-group";
+
 
 const GROUP_ICONS: Record<string, LucideIcon> = {
   Archive,
