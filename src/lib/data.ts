@@ -30,20 +30,6 @@ export type Progress = {
   last_answered_at?: string | null;
 };
 
-export type Summary = {
-  id: string;
-  subject_id: string | null;
-  content: string;
-  sort_order: number;
-};
-
-export type GlossaryTerm = {
-  id: string;
-  term: string;
-  definition: string;
-  sort_order: number;
-};
-
 export type DocumentRow = {
   id: string;
   subject_id: string | null;
@@ -173,28 +159,6 @@ export async function consumeExamAttempt(
 
 /* ---------- Educational content (data-driven per app_id) ---------- */
 
-
-export async function fetchSummaries(): Promise<Summary[]> {
-  const { data, error } = await supabase
-    .from("summaries")
-    .select("id, subject_key, content, sort_order")
-    .eq("app_id", CURRENT_APP_ID)
-    .order("sort_order");
-  if (error) throw error;
-  return ((data ?? []) as unknown as (Omit<Summary, "subject_id"> & {
-    subject_key: string | null;
-  })[]).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
-}
-
-export async function fetchGlossary(): Promise<GlossaryTerm[]> {
-  const { data, error } = await supabase
-    .from("glossary")
-    .select("id, term, definition, sort_order")
-    .eq("app_id", CURRENT_APP_ID)
-    .order("term");
-  if (error) throw error;
-  return (data ?? []) as GlossaryTerm[];
-}
 
 export async function fetchDocuments(): Promise<DocumentRow[]> {
   const { data, error } = await supabase
