@@ -1,8 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { BookOpen } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Markdown } from "@/components/Markdown";
+import { Loading } from "@/components/Loading";
+import { PageHeader } from "@/components/PageHeader";
 import { PracticeRound } from "@/components/PracticeRound";
 import {
   useAppQuery,
