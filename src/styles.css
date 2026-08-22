@@ -30,6 +30,7 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-brass: var(--brass);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -37,32 +38,37 @@
 }
 
 :root {
-  --radius: 1.125rem;
+  --radius: 0.875rem;
   --font-sans:
     "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  --background: oklch(0.16 0.008 70);
+  /* Dark cinematic base */
+  --background: #0a0a0d;
+  --background-deep: #0a0a0d;
+  --background-lift: #101015;
   --foreground: oklch(0.97 0.005 80);
-  --card: oklch(0.216 0.01 70);
+  --card: rgba(24, 24, 29, 0.62);
   --card-foreground: oklch(0.97 0.005 80);
-  --elevated: oklch(0.26 0.012 70);
-  --popover: oklch(0.21 0.01 70);
+  --elevated: rgba(255, 255, 255, 0.07);
+  --popover: #14141a;
   --popover-foreground: oklch(0.97 0.005 80);
-  /* Overridden at runtime with the current app's primary_color */
-  --primary: #f0a021;
-  --primary-foreground: oklch(0.16 0.008 70);
-  --secondary: oklch(0.26 0.012 70);
+  /* Blaze orange */
+  --primary: #ff7d1a;
+  --primary-foreground: #16100a;
+  /* Brass / gold for premium accents */
+  --brass: #e3b667;
+  --secondary: rgba(255, 255, 255, 0.07);
   --secondary-foreground: oklch(0.97 0.005 80);
-  --muted: oklch(0.26 0.012 70);
-  --muted-foreground: oklch(0.68 0.012 75);
-  --accent: oklch(0.29 0.014 70);
+  --muted: rgba(255, 255, 255, 0.07);
+  --muted-foreground: oklch(0.72 0.012 75);
+  --accent: rgba(255, 255, 255, 0.1);
   --accent-foreground: oklch(0.97 0.005 80);
-  --destructive: oklch(0.61 0.2 22);
+  --destructive: oklch(0.62 0.21 24);
   --destructive-foreground: oklch(0.98 0.005 80);
-  --success: oklch(0.68 0.17 148);
-  --success-foreground: oklch(0.16 0.008 70);
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 14%);
+  --success: oklch(0.7 0.17 150);
+  --success-foreground: #0a0a0d;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.14);
   --ring: var(--primary);
 }
 
@@ -72,12 +78,12 @@
   }
 
   html {
-    background-color: var(--color-background);
+    background-color: var(--background-deep);
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    background-color: var(--color-background);
+    background-color: var(--background-deep);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -87,14 +93,21 @@
   h1,
   h2,
   h3 {
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
+    font-weight: 800;
   }
 }
 
+/* Slightly translucent dark glass with a 0.5px light top-highlight. */
 @utility card-surface {
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  box-shadow:
+    inset 0 0.5px 0 0 rgba(255, 255, 255, 0.14),
+    0 18px 40px -22px rgba(0, 0, 0, 0.9);
 }
 
 @utility tint-primary {
@@ -102,6 +115,117 @@
   color: var(--primary);
 }
 
+@utility tint-brass {
+  background-color: color-mix(in oklab, var(--brass) 14%, transparent);
+  color: var(--brass);
+  border: 1px solid color-mix(in oklab, var(--brass) 34%, transparent);
+}
+
+/* Blaze gradient CTA with inner top highlight + soft glow. */
+@utility btn-blaze {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--primary) 78%, white) 0%,
+    var(--primary) 48%,
+    color-mix(in oklab, var(--primary) 82%, black) 100%
+  );
+  color: #14100b;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.45),
+    0 10px 26px -10px color-mix(in oklab, var(--primary) 70%, transparent);
+}
+
+/* Thin brass divider */
+@utility brass-rule {
+  height: 1px;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--brass) 55%, transparent),
+    transparent
+  );
+}
+
+/* Small uppercase section label with a brass tick */
+@utility label-tick {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+
 @utility safe-bottom {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+}
+
+/* Playful practice-mode feedback animations */
+@keyframes recoil {
+  0% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(7px) rotate(0.6deg);
+  }
+  35% {
+    transform: translateX(-5px) rotate(-0.4deg);
+  }
+  55% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes stamp-pop {
+  0% {
+    transform: scale(0.4) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12) rotate(3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes ten-float {
+  0% {
+    transform: translateY(4px) scale(0.7);
+    opacity: 0;
+  }
+  30% {
+    transform: translateY(-6px) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-22px) scale(1);
+    opacity: 0;
+  }
+}
+
+@utility animate-recoil {
+  animation: recoil 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@utility animate-stamp {
+  animation: stamp-pop 0.34s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@utility animate-ten {
+  animation: ten-float 0.9s ease-out forwards;
 }

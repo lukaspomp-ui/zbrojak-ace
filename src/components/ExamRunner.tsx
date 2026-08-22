@@ -14,11 +14,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Button } from "./Button";
 import { AnswerReview } from "./AnswerReview";
+import { RangeCountdown } from "./RangeCountdown";
+import { ShareResultButton } from "./ShareResultButton";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
 import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
+import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
 import {
   recordAnswer,
   SUBJECTS,
@@ -60,6 +63,8 @@ export function ExamRunner({
   const [navOpen, setNavOpen] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [confirmSubmit, setConfirmSubmit] = useState(false);
+  /** Povelový odpočet — jen vizuální předehra, logika testu se nemění. */
+  const [counting, setCounting] = useState(true);
   const submitting = useRef(false);
 
   const total = questions.length;
@@ -120,7 +125,7 @@ export function ExamRunner({
 
   // Timer — auto-submits when it hits zero.
   useEffect(() => {
-    if (finished) return;
+    if (finished || counting) return;
     const id = window.setInterval(() => {
       setSecondsLeft((s) => {
         if (s <= 1) {
@@ -132,12 +137,16 @@ export function ExamRunner({
       });
     }, 1000);
     return () => window.clearInterval(id);
-  }, [finished, finish]);
+  }, [finished, counting, finish]);
 
   function requestSubmit() {
     setNavOpen(false);
     if (answeredCount < total) setConfirmSubmit(true);
     else void finish();
+  }
+
+  if (counting) {
+    return <RangeCountdown onDone={() => setCounting(false)} />;
   }
 
   if (finished) {
@@ -508,8 +517,8 @@ function ExamResult({
           {passed ? <Trophy className="h-8 w-8" /> : <X className="h-8 w-8" />}
         </span>
         <div>
-          <h1 className="text-xl font-bold">
-            {passed ? "Prospěl jsi!" : "Neprospěl jsi"}
+          <h1 className="text-xl font-extrabold">
+            {passed ? EXAM_PASS_LINE : EXAM_FAIL_LINE}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Správně {correct} z {total} otázek ({percent} %) · k úspěchu je
@@ -554,6 +563,11 @@ function ExamResult({
       </div>
 
       <div className="mt-4 flex flex-col gap-2">
+        <ShareResultButton
+          correct={correct}
+          total={total}
+          headline={passed ? "Prospěl jsi" : "Zatím neprospěl"}
+        />
         <Link to="/">
           <Button full>Zpět na přehled</Button>
         </Link>

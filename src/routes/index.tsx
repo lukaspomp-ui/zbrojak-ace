@@ -6,7 +6,7 @@ import {
   ChevronRight,
   Crown,
   FileText,
-  Loader2,
+  Flame,
   Lock,
   type LucideIcon,
   Settings,
@@ -16,6 +16,9 @@ import {
   Timer,
 } from "lucide-react";
 import { ProgressRing } from "@/components/ProgressRing";
+import { ScopeReticle } from "@/components/ScopeReticle";
+import { RankBadge } from "@/components/RankBadge";
+import { Loading } from "@/components/Loading";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -28,6 +31,8 @@ import {
 } from "@/hooks/use-exam-data";
 import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
+import { readinessVerdict, streakLabel } from "@/lib/copy";
+import { computeStreak } from "@/lib/streak";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -65,13 +70,7 @@ function Dashboard() {
   const isPremium = profile?.is_premium === true;
   const loading = !ready || !questions || !subjects;
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
   const pool = availableQuestions(questions, isPremium);
   const masteredCount = (progress ?? []).filter(
@@ -81,6 +80,7 @@ function Dashboard() {
   const wrongCount = (progress ?? []).filter(
     (p) => !p.mastered && p.times_wrong > 0,
   ).length;
+  const streak = computeStreak(progress ?? []);
   const examAttemptsLeft = isPremium
     ? Infinity
     : Math.max(0, FREE_EXAM_ATTEMPTS - (profile?.exam_attempts_used ?? 0));
@@ -88,7 +88,7 @@ function Dashboard() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
       <header className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           {app?.logo_url ? (
             <img
               src={app.logo_url}
@@ -100,20 +100,23 @@ function Dashboard() {
               <Target className="h-5 w-5" />
             </span>
           )}
-          <div>
-            <h1 className="text-[17px] font-bold leading-tight">
+          <div className="min-w-0">
+            <h1 className="truncate text-[17px] font-extrabold leading-tight">
               {app?.name ?? "Příprava na zkoušku"}
             </h1>
-            <p className="text-xs text-muted-foreground">
-              {isPremium ? "Premium" : "Free verze"}
-            </p>
+            <div className="mt-1 flex items-center gap-2">
+              <RankBadge mastered={masteredCount} />
+              {!isPremium && (
+                <span className="text-[11px] text-muted-foreground">Free</span>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {!isPremium && (
             <Link
               to="/premium"
-              className="tint-primary flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold"
+              className="tint-primary flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-bold"
             >
               <Crown className="h-3.5 w-3.5" />
               Premium
@@ -122,32 +125,58 @@ function Dashboard() {
           <Link
             to="/profil"
             aria-label="Můj profil"
-            className="rounded-full bg-card p-2.5 text-muted-foreground"
+            className="card-surface rounded-full p-2.5 text-muted-foreground"
           >
             <Settings className="h-4 w-4" />
           </Link>
         </div>
       </header>
 
+      {/* Hero: the scope reticle aims at the readiness ring */}
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card-surface flex items-center gap-5 p-5"
+        className="card-surface relative overflow-hidden p-5"
       >
-        <ProgressRing value={percent} />
-        <div className="min-w-0">
-          <p className="text-sm font-semibold">Tvůj pokrok</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Zvládnuto {masteredCount} z {pool.length} otázek
-            {!isPremium && questions.length > FREE_QUESTION_LIMIT
-              ? ` · free ${FREE_QUESTION_LIMIT}`
-              : ""}
-          </p>
-          {wrongCount > 0 && (
-            <p className="mt-2 text-xs font-medium text-destructive">
-              {wrongCount} otázek k opravě
+        <ScopeReticle
+          className="pointer-events-none absolute -right-16 -top-14 h-64 w-64 text-primary"
+          opacity={0.16}
+        />
+        <div className="relative flex items-center gap-5">
+          <div className="relative shrink-0">
+            <ScopeReticle
+              className="pointer-events-none absolute -inset-4 text-primary"
+              opacity={0.3}
+            />
+            <ProgressRing value={percent} label="připravenost" />
+          </div>
+          <div className="min-w-0">
+            <p className="label-tick">Připravenost na zkoušku</p>
+            <p className="mt-2 text-lg font-extrabold leading-tight">
+              {readinessVerdict(percent)}
             </p>
-          )}
+            <p className="num mt-1 text-xs leading-relaxed text-muted-foreground">
+              Zvládnuto {masteredCount} z {pool.length} otázek
+              {!isPremium && questions.length > FREE_QUESTION_LIMIT
+                ? ` · free ${FREE_QUESTION_LIMIT}`
+                : ""}
+            </p>
+            {wrongCount > 0 && (
+              <p className="num mt-2 text-xs font-semibold text-destructive">
+                {wrongCount} otázek k opravě
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="brass-rule my-4" />
+        <div className="flex items-center justify-between gap-3">
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+            <Flame className="h-3.5 w-3.5 text-primary" />
+            {streak > 0 ? streakLabel(streak) : "Dnes ještě bez zásahu"}
+          </span>
+          <span className="num text-xs font-bold text-brass">
+            {Math.round(percent)} %
+          </span>
         </div>
       </motion.section>
 
@@ -164,19 +193,6 @@ function Dashboard() {
           Spustit ostrý test
           {!isPremium && examAttemptsLeft <= 0 && <Lock className="h-4 w-4" />}
         </Button>
-        <Button
-          variant="outline"
-          full
-          onClick={() =>
-            isPremium
-              ? navigate({ to: "/kviz", search: { mode: "mistakes" } })
-              : navigate({ to: "/premium" })
-          }
-        >
-          <Sparkles className="h-4 w-4 text-primary" />
-          Procvičit mé chyby
-          {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
-        </Button>
         {!isPremium && (
           <p className="text-center text-[11px] text-muted-foreground">
             {examAttemptsLeft > 0
@@ -184,10 +200,34 @@ function Dashboard() {
               : "Zkušební ostrý test jsi využil"}
           </p>
         )}
+
+        <div className="grid grid-cols-3 gap-3">
+          <Tile
+            label="Mé chyby"
+            icon={Sparkles}
+            locked={!isPremium}
+            onClick={() =>
+              isPremium
+                ? navigate({ to: "/kviz", search: { mode: "mistakes" } })
+                : navigate({ to: "/premium" })
+            }
+          />
+          <Tile
+            label="Statistiky"
+            icon={BarChart3}
+            onClick={() => navigate({ to: "/statistiky" })}
+          />
+          <Tile
+            label="Dokumenty"
+            icon={FileText}
+            onClick={() => navigate({ to: "/dokumenty" })}
+          />
+        </div>
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold text-muted-foreground">
+        <h2 className="label-tick">
+          <span className="h-2 w-2 rounded-full bg-brass" />
           Okruhy k procvičení
         </h2>
         {subjects.map((subject, i) => {
@@ -199,6 +239,9 @@ function Dashboard() {
               p.mastered &&
               subjectQuestions.some((q) => q.id === p.question_id),
           ).length;
+          const pct = subjectQuestions.length
+            ? Math.round((mastered / subjectQuestions.length) * 100)
+            : 0;
           return (
             <motion.div
               key={subject.id}
@@ -215,11 +258,20 @@ function Dashboard() {
                   <BookOpen className="h-4.5 w-4.5" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-semibold">
+                  <span className="block truncate text-[15px] font-bold">
                     {subject.name}
                   </span>
-                  <span className="block text-xs text-muted-foreground">
+                  <span className="num block text-xs text-muted-foreground">
                     {mastered} / {subjectQuestions.length} zvládnuto
+                  </span>
+                  <span className="mt-2 block h-1 overflow-hidden rounded-full bg-elevated">
+                    <span
+                      className="block h-full rounded-full"
+                      style={{
+                        width: `${pct}%`,
+                        backgroundColor: "var(--primary)",
+                      }}
+                    />
                   </span>
                 </span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -230,7 +282,10 @@ function Dashboard() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold text-muted-foreground">Studium</h2>
+        <h2 className="label-tick">
+          <span className="h-2 w-2 rounded-full bg-brass" />
+          Studium
+        </h2>
         <StudyLink
           to="/dokumenty"
           icon={FileText}
@@ -263,6 +318,31 @@ function Dashboard() {
   );
 }
 
+function Tile({
+  label,
+  icon: Icon,
+  onClick,
+  locked,
+}: {
+  label: string;
+  icon: LucideIcon;
+  onClick: () => void;
+  locked?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="card-surface flex flex-col items-center gap-2 px-2 py-4 text-center transition-transform active:scale-[0.97]"
+    >
+      <span className="tint-primary flex h-9 w-9 items-center justify-center rounded-lg">
+        {locked ? <Lock className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
+      </span>
+      <span className="text-[12px] font-bold leading-tight">{label}</span>
+    </button>
+  );
+}
+
 function StudyLink({
   to,
   icon: Icon,
@@ -280,7 +360,7 @@ function StudyLink({
         <Icon className="h-4.5 w-4.5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[15px] font-semibold">{title}</span>
+        <span className="block truncate text-[15px] font-bold">{title}</span>
         <span className="block text-xs text-muted-foreground">{subtitle}</span>
       </span>
       <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />

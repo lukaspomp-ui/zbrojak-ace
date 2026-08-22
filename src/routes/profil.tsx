@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -9,12 +9,16 @@ import {
   LogOut,
   Trash2,
   UserPlus,
+  Volume2,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { ChangePasswordModal } from "@/components/ChangePasswordModal";
 import { ProgressRing } from "@/components/ProgressRing";
+import { RankBadge } from "@/components/RankBadge";
+import { Loading } from "@/components/Loading";
+import { setSoundsEnabled, soundsEnabled } from "@/lib/sound";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useAppQuery,
@@ -63,14 +67,11 @@ function ProfilePage() {
   const [changing, setChanging] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
+  const [sounds, setSounds] = useState(false);
 
-  if (!ready) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
+  useEffect(() => setSounds(soundsEnabled()), []);
+
+  if (!ready) return <Loading />;
 
   const isPremium = profile?.is_premium === true;
   const pool = availableQuestions(questions ?? [], isPremium);
@@ -186,6 +187,41 @@ function ProfilePage() {
               </div>
             </div>
           </motion.section>
+
+          <RankBadge mastered={masteredCount} detailed />
+
+          <button
+            type="button"
+            onClick={() => {
+              const next = !sounds;
+              setSounds(next);
+              setSoundsEnabled(next);
+            }}
+            className="card-surface flex items-center gap-3 p-4 text-left"
+          >
+            <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
+              <Volume2 className="h-4 w-4" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-bold">Zvuky</span>
+              <span className="block text-xs text-muted-foreground">
+                Jemné efekty při odpovídání
+              </span>
+            </span>
+            <span
+              className={cn(
+                "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+                sounds ? "bg-primary" : "bg-elevated",
+              )}
+            >
+              <span
+                className={cn(
+                  "absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all",
+                  sounds ? "left-[22px]" : "left-0.5",
+                )}
+              />
+            </span>
+          </button>
 
           <section className="flex flex-col gap-2.5">
             <Button variant="outline" full onClick={() => setChanging(true)}>

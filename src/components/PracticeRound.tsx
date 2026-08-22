@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loading } from "./Loading";
 import { QuizRunner } from "./QuizRunner";
 import { PremiumTeaser } from "./PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
@@ -52,11 +52,7 @@ export function PracticeRound({
   }, [questions, progress, isPremium, subjectId, round]);
 
   if (!ready || !userId || !set || !progress) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <Loading full={false} line="Nabíjím otázky…" />;
   }
 
   if (set.length === 0) {

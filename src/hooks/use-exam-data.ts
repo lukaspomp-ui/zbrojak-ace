@@ -16,11 +16,17 @@ import {
 import { DEV_OPEN } from "@/lib/app-config";
 import { useAuth } from "./use-auth";
 
-/** Applies the tenant's primary color to the design system at runtime. */
+/**
+ * Exposes the tenant's brand color as `--tenant-primary`. The design system's
+ * blaze-orange `--primary` stays intact so the visual identity is consistent.
+ */
 export function useAppTheme(app: AppRow | null | undefined) {
   useEffect(() => {
     if (!app?.primary_color) return;
-    document.documentElement.style.setProperty("--primary", app.primary_color);
+    document.documentElement.style.setProperty(
+      "--tenant-primary",
+      app.primary_color,
+    );
   }, [app?.primary_color]);
 }
 

@@ -14,10 +14,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Button } from "./Button";
+import { BullseyeStamp, BulletHole } from "./HitFeedback";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
+import { hitLabel, missLabel } from "@/lib/copy";
+import { playClick, playHit, playMiss } from "@/lib/sound";
 import {
   recordAnswer,
   type AnswerKey,
@@ -59,6 +62,12 @@ export function QuizRunner({
   const [reporting, setReporting] = useState(false);
   const [explanationOpen, setExplanationOpen] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(EXAM_DURATION_SECONDS);
+  /** Playful practice-mode feedback (cosmetic only). */
+  const [wasCorrect, setWasCorrect] = useState<boolean | null>(null);
+  const [feedbackLabel, setFeedbackLabel] = useState("");
+  const [hitStreak, setHitStreak] = useState(0);
+  const hitTotal = useRef(0);
+  const missTotal = useRef(0);
 
   const progressMap = useRef(
     new Map(progress.map((p) => [p.question_id, p])),
@@ -95,10 +104,22 @@ export function QuizRunner({
   async function pick(answerId: AnswerKey) {
     if (selectedId || !question) return;
     setSelectedId(answerId);
+    playClick();
     const answer = question.answers.find((a) => a.id === answerId);
     const wasCorrect = !!answer?.is_correct;
     if (wasCorrect) setCorrectCount((c) => c + 1);
     if (!wasCorrect) setExplanationOpen(true);
+    // Cosmetic feedback — practice mode only, the exam stays blind.
+    setWasCorrect(wasCorrect);
+    if (wasCorrect) {
+      setFeedbackLabel(hitLabel(hitTotal.current++));
+      setHitStreak((s) => s + 1);
+      playHit();
+    } else {
+      setFeedbackLabel(missLabel(missTotal.current++));
+      setHitStreak(0);
+      playMiss();
+    }
     try {
       const next = await recordAnswer(
         userId,
@@ -115,6 +136,7 @@ export function QuizRunner({
   function next() {
     setSelectedId(null);
     setExplanationOpen(false);
+    setWasCorrect(null);
     if (index + 1 >= total) {
       setFinished(true);
     } else {
@@ -211,7 +233,12 @@ export function QuizRunner({
             )}
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div
+            className={cn(
+              "flex flex-col gap-2.5",
+              wasCorrect === false && "animate-recoil",
+            )}
+          >
             {question.answers.map((answer) => {
               const isPicked = selectedId === answer.id;
               const reveal = !!selectedId;
@@ -244,6 +271,27 @@ export function QuizRunner({
                     {showWrong && <X className="h-3 w-3" />}
                   </span>
                   <span className="leading-snug">{answer.text}</span>
+                  {showCorrect && (
+                    <span className="animate-stamp relative ml-auto flex shrink-0 items-center gap-1.5 text-success">
+                      <BullseyeStamp className="h-6 w-6" />
+                      <span className="text-[11px] font-extrabold uppercase tracking-wide">
+                        {isPicked ? feedbackLabel : "Správně"}
+                      </span>
+                      {isPicked && (
+                        <span className="animate-ten num absolute -top-4 right-0 text-sm font-extrabold text-success">
+                          10
+                        </span>
+                      )}
+                    </span>
+                  )}
+                  {showWrong && (
+                    <span className="animate-stamp ml-auto flex shrink-0 items-center gap-1.5 text-destructive">
+                      <BulletHole className="h-7 w-7" />
+                      <span className="text-[11px] font-extrabold uppercase tracking-wide">
+                        {feedbackLabel}
+                      </span>
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -303,6 +351,19 @@ export function QuizRunner({
           </Button>
         )}
       </div>
+
+      <AnimatePresence>
+        {hitStreak >= 3 && selectedId && (
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 14 }}
+            className="tint-brass pointer-events-none fixed inset-x-0 bottom-24 z-40 mx-auto w-fit rounded-full px-4 py-2 text-xs font-extrabold"
+          >
+            Sériová palba! {hitStreak} zásahů v řadě
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {reporting && (
         <ReportModal

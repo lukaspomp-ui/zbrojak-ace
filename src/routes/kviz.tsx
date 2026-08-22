@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loading } from "@/components/Loading";
 import { z } from "zod";
 import { QuizRunner } from "@/components/QuizRunner";
 import { ExamRunner } from "@/components/ExamRunner";
@@ -126,11 +126,7 @@ function QuizPage() {
 
 
   if (!ready || !userId || !set || !profile || !progress) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (blocked) {

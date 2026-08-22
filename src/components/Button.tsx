@@ -10,12 +10,12 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-primary text-primary-foreground shadow-lg shadow-black/30 active:scale-[0.98]",
+  primary: "btn-blaze active:scale-[0.98]",
   outline:
-    "border border-border bg-card text-foreground active:scale-[0.98] hover:bg-elevated",
+    "card-surface text-foreground active:scale-[0.98] hover:bg-elevated",
   ghost: "text-muted-foreground hover:text-foreground",
-  danger: "bg-destructive text-destructive-foreground active:scale-[0.98]",
+  danger:
+    "bg-destructive text-destructive-foreground shadow-lg shadow-black/40 active:scale-[0.98]",
 };
 
 export function Button({
@@ -29,7 +29,7 @@ export function Button({
     <button
       {...rest}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-[15px] font-semibold transition-all disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-[15px] font-bold tracking-tight transition-all disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         full && "w-full",
         className,
