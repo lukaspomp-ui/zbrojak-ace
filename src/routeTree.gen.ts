@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DokumentyRouteImport } from './routes/dokumenty'
 import { Route as KvizRouteImport } from './routes/kviz'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PrihlaseniRouteImport } from './routes/prihlaseni'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -33,6 +34,11 @@ const DokumentyRoute = DokumentyRouteImport.update({
 const KvizRoute = KvizRouteImport.update({
   id: '/kviz',
   path: '/kviz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PremiumRoute = PremiumRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dokumenty': typeof DokumentyRoute
   '/kviz': typeof KvizRoute
+  '/onboarding': typeof OnboardingRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
   '/profil': typeof ProfilRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dokumenty': typeof DokumentyRoute
   '/kviz': typeof KvizRoute
+  '/onboarding': typeof OnboardingRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
   '/profil': typeof ProfilRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dokumenty': typeof DokumentyRoute
   '/kviz': typeof KvizRoute
+  '/onboarding': typeof OnboardingRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
   '/profil': typeof ProfilRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dokumenty'
     | '/kviz'
+    | '/onboarding'
     | '/premium'
     | '/prihlaseni'
     | '/profil'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dokumenty'
     | '/kviz'
+    | '/onboarding'
     | '/premium'
     | '/prihlaseni'
     | '/profil'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dokumenty'
     | '/kviz'
+    | '/onboarding'
     | '/premium'
     | '/prihlaseni'
     | '/profil'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DokumentyRoute: typeof DokumentyRoute
   KvizRoute: typeof KvizRoute
+  OnboardingRoute: typeof OnboardingRoute
   PremiumRoute: typeof PremiumRoute
   PrihlaseniRoute: typeof PrihlaseniRoute
   ProfilRoute: typeof ProfilRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/kviz'
       fullPath: '/kviz'
       preLoaderRoute: typeof KvizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/premium': {
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DokumentyRoute: DokumentyRoute,
   KvizRoute: KvizRoute,
+  OnboardingRoute: OnboardingRoute,
   PremiumRoute: PremiumRoute,
   PrihlaseniRoute: PrihlaseniRoute,
   ProfilRoute: ProfilRoute,
