@@ -84,7 +84,8 @@ function Dashboard() {
   const { data: profile } = useProfileQuery();
   const { data: progress } = useProgressQuery();
   useAppTheme(app);
-  const { group, select } = useLicenseGroup();
+  const { group } = useLicenseGroup();
+
 
   const isPremium = profile?.is_premium === true;
   const loading = !ready || !questions || !subjects;
