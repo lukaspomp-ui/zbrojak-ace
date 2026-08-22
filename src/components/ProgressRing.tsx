@@ -1,16 +1,28 @@
 import { motion } from "framer-motion";
 
+/**
+ * Readiness ring. Fills progressively on load like loading a magazine
+ * (stepped keyframes), with tabular numbers in the middle.
+ */
 export function ProgressRing({
   value,
   size = 132,
+  label = "zvládnuto",
 }: {
   value: number;
   size?: number;
+  label?: string;
 }) {
   const stroke = 11;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const clamped = Math.max(0, Math.min(100, value));
+  const target = circumference - (clamped / 100) * circumference;
+  const steps = 6;
+  const keyframes = Array.from({ length: steps + 1 }, (_, i) => {
+    const pct = (clamped * i) / steps;
+    return circumference - (pct / 100) * circumference;
+  });
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -20,7 +32,7 @@ export function ProgressRing({
           cy={size / 2}
           r={radius}
           strokeWidth={stroke}
-          className="stroke-elevated"
+          stroke="rgba(255,255,255,0.08)"
           fill="none"
         />
         <motion.circle
@@ -33,18 +45,20 @@ export function ProgressRing({
           fill="none"
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
-          animate={{
-            strokeDashoffset: circumference - (clamped / 100) * circumference,
+          animate={{ strokeDashoffset: [...keyframes, target] }}
+          transition={{ duration: 1.1, ease: "easeOut", times: undefined }}
+          style={{
+            filter:
+              "drop-shadow(0 0 6px color-mix(in oklab, var(--primary) 55%, transparent))",
           }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold tabular-nums">
+        <span className="num text-3xl font-extrabold">
           {Math.round(clamped)}%
         </span>
-        <span className="text-[11px] uppercase tracking-widest text-muted-foreground">
-          zvládnuto
+        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          {label}
         </span>
       </div>
     </div>

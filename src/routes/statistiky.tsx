@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Flame,
   History,
-  Loader2,
   Target,
   TrendingUp,
   X,
@@ -22,7 +21,10 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { availableQuestions, QUESTIONS, type Progress } from "@/lib/data";
+import { availableQuestions, QUESTIONS } from "@/lib/data";
+import { computeStreak } from "@/lib/streak";
+import { EMPTY_HISTORY, readinessVerdict, streakLabel } from "@/lib/copy";
+import { Loading } from "@/components/Loading";
 import { getExamHistory, type ExamAttempt } from "@/lib/exam-history";
 import { cn } from "@/lib/utils";
 
@@ -51,30 +53,6 @@ export const Route = createFileRoute("/statistiky")({
   component: StatsPage,
 });
 
-/** Consecutive days with at least one answered question, ending today/yesterday. */
-function computeStreak(progress: Progress[]): number {
-  const days = new Set(
-    progress
-      .map((p) => p.last_answered_at)
-      .filter((d): d is string => !!d)
-      .map((d) => new Date(d).toISOString().slice(0, 10)),
-  );
-  if (days.size === 0) return 0;
-  const today = new Date();
-  const key = (d: Date) => d.toISOString().slice(0, 10);
-  const cursor = new Date(today);
-  if (!days.has(key(cursor))) {
-    cursor.setDate(cursor.getDate() - 1);
-    if (!days.has(key(cursor))) return 0;
-  }
-  let streak = 0;
-  while (days.has(key(cursor))) {
-    streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return streak;
-}
-
 function StatsPage() {
   const { ready } = useAuth();
   const { data: app } = useAppQuery();
@@ -89,13 +67,7 @@ function StatsPage() {
 
   const isPremium = profile?.is_premium === true;
 
-  if (!ready || !questions || !subjects || !progress) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
-  }
+  if (!ready || !questions || !subjects || !progress) return <Loading />;
 
   const pool = availableQuestions(questions, isPremium);
   const inPool = (id: number) => pool.some((q) => q.id === id);
@@ -159,10 +131,13 @@ function StatsPage() {
         animate={{ opacity: 1, y: 0 }}
         className="card-surface flex items-center gap-5 p-5"
       >
-        <ProgressRing value={readiness} />
+        <ProgressRing value={readiness} label="připravenost" />
         <div className="min-w-0">
-          <p className="text-sm font-semibold">Připravenost na zkoušku</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          <p className="label-tick">Připravenost na zkoušku</p>
+          <p className="mt-2 text-base font-extrabold">
+            {readinessVerdict(readiness)}
+          </p>
+          <p className="num mt-1 text-xs leading-relaxed text-muted-foreground">
             Zvládnuto {masteredCount} z {pool.length} otázek
           </p>
         </div>
@@ -172,10 +147,10 @@ function StatsPage() {
         <div className="card-surface p-4">
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Flame className="h-3.5 w-3.5 text-primary" />
-            Série
+            Na střelnici
           </span>
-          <p className="mt-1 text-xl font-bold tabular-nums">
-            {streak} {streak === 1 ? "den" : streak >= 5 || streak === 0 ? "dní" : "dny"}
+          <p className="num mt-1 text-sm font-extrabold leading-snug">
+            {streak > 0 ? streakLabel(streak) : "Zatím bez série"}
           </p>
         </div>
         <div className="card-surface p-4">
@@ -206,7 +181,7 @@ function StatsPage() {
         </h2>
         {history.length === 0 ? (
           <p className="card-surface p-4 text-sm text-muted-foreground">
-            Zatím jsi nedokončil žádný ostrý test. Po odevzdání se sem uloží.
+            {EMPTY_HISTORY}
           </p>
         ) : (
           <>
