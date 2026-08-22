@@ -124,6 +124,16 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (router.state.location.pathname === "/onboarding") return;
+    if (!hasChosenLicenseGroup()) {
+      navigate({ to: "/onboarding", replace: true });
+    }
+  }, [router.state.location.pathname, navigate]);
 
   return (
     <QueryClientProvider client={queryClient}>
