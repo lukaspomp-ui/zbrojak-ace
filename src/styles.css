@@ -70,6 +70,30 @@
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.14);
   --ring: var(--primary);
+  --hud-vignette: rgba(0, 0, 0, 0.75);
+}
+
+/* Light theme — warm off-white, soft shadows, same blaze/brass accents. */
+html.light {
+  --background: #f4f1ea;
+  --background-deep: #eee9e0;
+  --background-lift: #ffffff;
+  --foreground: #1b1b21;
+  --card: rgba(255, 255, 255, 0.78);
+  --card-foreground: #1b1b21;
+  --elevated: rgba(20, 18, 30, 0.08);
+  --popover: #ffffff;
+  --popover-foreground: #1b1b21;
+  --brass: #b07d2e;
+  --secondary: rgba(20, 18, 30, 0.05);
+  --secondary-foreground: #1b1b21;
+  --muted: rgba(20, 18, 30, 0.05);
+  --muted-foreground: #6b6b74;
+  --accent: rgba(20, 18, 30, 0.06);
+  --accent-foreground: #1b1b21;
+  --border: rgba(20, 18, 30, 0.1);
+  --input: rgba(20, 18, 30, 0.16);
+  --hud-vignette: rgba(20, 18, 30, 0.04);
 }
 
 @layer base {
