@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState, type ReactNode } from "react";
+import { ChevronDown, Star } from "lucide-react";
 import {
   Archive,
   BarChart3,
