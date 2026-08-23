@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Star } from "lucide-react";
 import {
   BarChart3,
   BookOpen,
+  ChevronDown,
   ChevronRight,
   Crown,
   FileText,
@@ -15,6 +16,7 @@ import {
   SpellCheck,
   Timer,
 } from "lucide-react";
+import { useState } from "react";
 
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
