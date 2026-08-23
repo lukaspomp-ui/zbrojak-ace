@@ -57,7 +57,8 @@ export function ExamRunner({
   title?: string;
 }) {
   const queryClient = useQueryClient();
-  const passCorrect = useLicenseGroup().group.passCorrect;
+  const { group } = useLicenseGroup();
+  const passCorrect = group.passCorrect;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
