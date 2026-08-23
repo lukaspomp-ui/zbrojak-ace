@@ -15,6 +15,7 @@ import { Route as KvizRouteImport } from './routes/kviz'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PrihlaseniRouteImport } from './routes/prihlaseni'
+import { Route as ProchazetRouteImport } from './routes/prochazet'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ResetHeslaRouteImport } from './routes/reset-hesla'
 import { Route as SlovnicekRouteImport } from './routes/slovnicek'
@@ -51,6 +52,11 @@ const PrihlaseniRoute = PrihlaseniRouteImport.update({
   path: '/prihlaseni',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProchazetRoute = ProchazetRouteImport.update({
+  id: '/prochazet',
+  path: '/prochazet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfilRoute = ProfilRouteImport.update({
   id: '/profil',
   path: '/profil',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
+  '/prochazet': typeof ProchazetRoute
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
+  '/prochazet': typeof ProchazetRoute
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/premium': typeof PremiumRoute
   '/prihlaseni': typeof PrihlaseniRoute
+  '/prochazet': typeof ProchazetRoute
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/premium'
     | '/prihlaseni'
+    | '/prochazet'
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/premium'
     | '/prihlaseni'
+    | '/prochazet'
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/premium'
     | '/prihlaseni'
+    | '/prochazet'
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PremiumRoute: typeof PremiumRoute
   PrihlaseniRoute: typeof PrihlaseniRoute
+  ProchazetRoute: typeof ProchazetRoute
   ProfilRoute: typeof ProfilRoute
   ResetHeslaRoute: typeof ResetHeslaRoute
   SlovnicekRoute: typeof SlovnicekRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrihlaseniRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prochazet': {
+      id: '/prochazet'
+      path: '/prochazet'
+      fullPath: '/prochazet'
+      preLoaderRoute: typeof ProchazetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profil': {
       id: '/profil'
       path: '/profil'
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PremiumRoute: PremiumRoute,
   PrihlaseniRoute: PrihlaseniRoute,
+  ProchazetRoute: ProchazetRoute,
   ProfilRoute: ProfilRoute,
   ResetHeslaRoute: ResetHeslaRoute,
   SlovnicekRoute: SlovnicekRoute,
