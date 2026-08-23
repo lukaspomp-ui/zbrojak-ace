@@ -281,11 +281,7 @@ function Dashboard() {
         })}
       </CollapsibleSection>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="label-tick">
-          <span className="h-2 w-2 rounded-full bg-brass" />
-          Studium
-        </h2>
+      <CollapsibleSection title="Studium" icon={Sparkles}>
         <StudyLink
           to="/dokumenty"
           icon={FileText}
@@ -328,7 +324,7 @@ function Dashboard() {
           </span>
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </Link>
-      </section>
+      </CollapsibleSection>
 
       {isGuest && (
         <Link
