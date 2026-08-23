@@ -311,13 +311,10 @@ function Dashboard() {
             </motion.div>
           );
         })}
-      </section>
+      </CollapsibleSection>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="label-tick">
-          <span className="h-2 w-2 rounded-full bg-brass" />
-          Studium
-        </h2>
+      <CollapsibleSection title="Studium" icon={Sparkles}>
+
         <StudyLink
           to="/dokumenty"
           icon={FileText}
