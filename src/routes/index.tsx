@@ -371,6 +371,60 @@ function Dashboard() {
   );
 }
 
+/** Rozbalovací sekce — hlavička s ikonou a šipkou, obsah se plynule rozbalí. */
+function CollapsibleSection({
+  title,
+  icon: Icon,
+  defaultOpen,
+  children,
+}: {
+  title: string;
+  icon: LucideIcon;
+  defaultOpen?: boolean;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(!!defaultOpen);
+  return (
+    <section className="flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="card-surface flex items-center gap-3 p-4 text-left transition-transform active:scale-[0.99]"
+      >
+        <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
+          <Icon className="h-4.5 w-4.5" />
+        </span>
+        <span className="min-w-0 flex-1 text-[15px] font-extrabold">
+          {title}
+        </span>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="shrink-0 text-muted-foreground"
+        >
+          <ChevronDown className="h-4 w-4" />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-3">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
+
 function Tile({
   label,
   icon: Icon,
