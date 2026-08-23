@@ -4,7 +4,7 @@
  * Purely decorative — sits behind all content and never intercepts taps.
  */
 const CROSSHAIR = encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44"><g stroke="#ffffff" stroke-width="1" stroke-linecap="round"><path d="M22 17.5v9M17.5 22h9"/></g></svg>`,
+  `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44"><g stroke="#808080" stroke-width="1" stroke-linecap="round"><path d="M22 17.5v9M17.5 22h9"/></g></svg>`,
 );
 
 export function HudBackground() {
@@ -14,7 +14,7 @@ export function HudBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, #101015 0%, #0c0c10 45%, #0a0a0d 100%)",
+            "linear-gradient(180deg, var(--background-lift) 0%, var(--background) 45%, var(--background-deep) 100%)",
         }}
       />
       {/* warm spotlight glow at the top */}
@@ -40,7 +40,7 @@ export function HudBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 30%, transparent 40%, rgba(0,0,0,0.75) 100%)",
+            "radial-gradient(120% 80% at 50% 30%, transparent 40%, var(--hud-vignette) 100%)",
         }}
       />
     </div>
