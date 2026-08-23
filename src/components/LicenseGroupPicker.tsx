@@ -1,28 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Archive,
-  Briefcase,
-  Check,
-  Medal,
-  PawPrint,
-  Shield,
-  type LucideIcon,
-} from "lucide-react";
+import { Check } from "lucide-react";
 
+import { GroupEmblem } from "@/components/GroupEmblem";
 import {
   DEFAULT_GROUP,
   LICENSE_GROUPS,
   type LicenseGroupId,
 } from "@/lib/license-group";
-
-const GROUP_ICONS: Record<string, LucideIcon> = {
-  Archive,
-  Medal,
-  PawPrint,
-  Briefcase,
-  Shield,
-};
 
 export function LicenseGroupPicker({
   initialId,
@@ -43,7 +28,6 @@ export function LicenseGroupPicker({
   return (
     <div className="flex flex-col gap-3">
       {LICENSE_GROUPS.map((g, i) => {
-        const Icon = GROUP_ICONS[g.iconName];
         const active = selected === g.id;
         return (
           <motion.button
@@ -60,9 +44,7 @@ export function LicenseGroupPicker({
                 : "card-surface flex items-center gap-4 p-4 text-left"
             }
           >
-            <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
-              <Icon className="h-4.5 w-4.5" />
-            </span>
+            <GroupEmblem id={g.id} className="h-11 w-11 shrink-0" />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-[15px] font-bold">
                 {g.id} — {g.purpose}
