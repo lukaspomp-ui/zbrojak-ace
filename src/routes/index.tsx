@@ -1,32 +1,25 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState, type ReactNode } from "react";
-import { ChevronDown, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 import {
-  Archive,
   BarChart3,
   BookOpen,
-  Briefcase,
   ChevronRight,
   Crown,
-
   FileText,
   Flame,
   Lock,
   type LucideIcon,
-  Medal,
-  PawPrint,
   Settings,
-  Shield,
   Sparkles,
   SpellCheck,
-  Target,
   Timer,
 } from "lucide-react";
 
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { RankBadge } from "@/components/RankBadge";
+import { GroupEmblem } from "@/components/GroupEmblem";
 import { Loading } from "@/components/Loading";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
@@ -43,16 +36,6 @@ import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
 import { useLicenseGroup } from "@/lib/license-group";
-
-
-const GROUP_ICONS: Record<string, LucideIcon> = {
-  Archive,
-  Medal,
-  PawPrint,
-  Briefcase,
-  Shield,
-};
-
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -109,43 +92,17 @@ function Dashboard() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
-      <header className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          {app?.logo_url ? (
-            <img
-              src={app.logo_url}
-              alt={app.name}
-              className="h-10 w-10 rounded-xl object-cover"
-            />
-          ) : (
-            <span className="tint-primary flex h-10 w-10 items-center justify-center rounded-xl">
-              <Target className="h-5 w-5" />
-            </span>
-          )}
-          <div className="min-w-0">
-            <h1 className="truncate text-[17px] font-extrabold leading-tight">
-              {app?.name ?? "Příprava na zkoušku"}
-            </h1>
-            <div className="mt-1 flex items-center gap-2">
-              <RankBadge mastered={masteredCount} />
-              <GroupBadge group={group} />
-              {!isPremium && (
-                <span className="text-[11px] text-muted-foreground">Free</span>
-              )}
-            </div>
-          </div>
-
+      <header className="flex items-start gap-3">
+        <GroupEmblem id={group.id} className="h-14 w-14 shrink-0" />
+        <div className="min-w-0 flex-1 pt-1">
+          <h1 className="truncate text-xl font-extrabold leading-tight">
+            Skupina {group.id}
+          </h1>
+          <p className="truncate text-xs text-muted-foreground">
+            {group.purpose} · {group.passCorrect}/30
+          </p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          {!isPremium && (
-            <Link
-              to="/premium"
-              className="tint-primary flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-bold"
-            >
-              <Crown className="h-3.5 w-3.5" />
-              Premium
-            </Link>
-          )}
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
           <Link
             to="/profil"
             aria-label="Můj profil"
@@ -153,6 +110,16 @@ function Dashboard() {
           >
             <Settings className="h-4 w-4" />
           </Link>
+          <RankBadge mastered={masteredCount} />
+          {!isPremium && (
+            <Link
+              to="/premium"
+              className="tint-primary flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
+            >
+              <Crown className="h-3 w-3" />
+              Premium
+            </Link>
+          )}
         </div>
       </header>
 
@@ -252,8 +219,11 @@ function Dashboard() {
         </div>
       </section>
 
-      <CollapsibleSection title="Okruhy k procvičení" icon={BookOpen} defaultOpen>
-
+      <section className="flex flex-col gap-3">
+        <h2 className="label-tick">
+          <span className="h-2 w-2 rounded-full bg-brass" />
+          Okruhy k procvičení
+        </h2>
         {subjects.map((subject, i) => {
           const subjectQuestions = pool.filter(
             (q) => q.subject_id === subject.id,
@@ -311,10 +281,13 @@ function Dashboard() {
             </motion.div>
           );
         })}
-      </CollapsibleSection>
+      </section>
 
-      <CollapsibleSection title="Studium" icon={Sparkles}>
-
+      <section className="flex flex-col gap-3">
+        <h2 className="label-tick">
+          <span className="h-2 w-2 rounded-full bg-brass" />
+          Studium
+        </h2>
         <StudyLink
           to="/dokumenty"
           icon={FileText}
@@ -357,7 +330,7 @@ function Dashboard() {
           </span>
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </Link>
-      </CollapsibleSection>
+      </section>
 
       {isGuest && (
         <Link
@@ -370,60 +343,6 @@ function Dashboard() {
     </main>
   );
 }
-
-/** Rozbalovací sekce — hlavička s ikonou a šipkou, obsah se plynule rozbalí. */
-function CollapsibleSection({
-  title,
-  icon: Icon,
-  defaultOpen,
-  children,
-}: {
-  title: string;
-  icon: LucideIcon;
-  defaultOpen?: boolean;
-  children: ReactNode;
-}) {
-  const [open, setOpen] = useState(!!defaultOpen);
-  return (
-    <section className="flex flex-col gap-3">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="card-surface flex items-center gap-3 p-4 text-left transition-transform active:scale-[0.99]"
-      >
-        <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
-          <Icon className="h-4.5 w-4.5" />
-        </span>
-        <span className="min-w-0 flex-1 text-[15px] font-extrabold">
-          {title}
-        </span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="shrink-0 text-muted-foreground"
-        >
-          <ChevronDown className="h-4 w-4" />
-        </motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            className="overflow-hidden"
-          >
-            <div className="flex flex-col gap-3">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
-  );
-}
-
 
 function Tile({
   label,
@@ -475,13 +394,5 @@ function StudyLink({
   );
 }
 
-function GroupBadge({ group }: { group: ReturnType<typeof useLicenseGroup>["group"] }) {
-  const Icon = GROUP_ICONS[group.iconName];
-  return (
-    <span className="tint-primary flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold">
-      <Icon className="h-3 w-3" />
-      {group.id}
-    </span>
-  );
-}
+
 

@@ -15,6 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../hooks/use-auth";
 import { HudBackground } from "../components/HudBackground";
+import { BottomNav } from "../components/BottomNav";
 import { hasChosenLicenseGroup } from "../lib/license-group";
 import { applyTheme, getThemeMode } from "../lib/theme";
 
@@ -146,12 +147,21 @@ function RootComponent() {
     return () => media.removeEventListener?.("change", onSystem);
   }, []);
 
+  const pathname = router.state.location.pathname;
+  const hideNav =
+    pathname === "/onboarding" ||
+    pathname === "/prihlaseni" ||
+    pathname === "/reset-hesla";
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <HudBackground />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <div className={hideNav ? undefined : "pb-[76px]"}>
+          <Outlet />
+        </div>
+        {!hideNav && <BottomNav />}
       </AuthProvider>
       <Toaster theme="dark" position="top-center" />
     </QueryClientProvider>
