@@ -197,14 +197,11 @@ export function ExamRunner({
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="truncate text-sm font-semibold">{title}</p>
-            <span className="shrink-0 rounded-full border border-secondary/40 bg-secondary/10 px-2 py-0.5 text-[11px] font-bold tabular-nums text-secondary">
-              Skupina {group.id} · {passCorrect}/{total}
-            </span>
-          </div>
+          <p className="truncate text-sm font-semibold">
+            {title} · Skupina {group.id}
+          </p>
           <p className="text-xs text-muted-foreground tabular-nums">
-            Otázka {index + 1} / {total} · zodpovězeno {answeredCount}
+            Otázka {index + 1} / {total} · k úspěchu {passCorrect}/30
           </p>
         </div>
         <span
