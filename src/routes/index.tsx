@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 import {
   Archive,
   BarChart3,
@@ -259,14 +260,15 @@ function Dashboard() {
           const subjectQuestions = pool.filter(
             (q) => q.subject_id === subject.id,
           );
-          const mastered = (progress ?? []).filter(
-            (p) =>
-              p.mastered &&
-              subjectQuestions.some((q) => q.id === p.question_id),
+          const total = subjectQuestions.length;
+          const rows = (progress ?? []).filter((p) =>
+            subjectQuestions.some((q) => q.id === p.question_id),
+          );
+          const mastered = rows.filter((p) => p.mastered).length;
+          const wrong = rows.filter(
+            (p) => !p.mastered && p.times_wrong > 0,
           ).length;
-          const pct = subjectQuestions.length
-            ? Math.round((mastered / subjectQuestions.length) * 100)
-            : 0;
+          const nove = Math.max(0, total - mastered - wrong);
           return (
             <motion.div
               key={subject.id}
@@ -287,14 +289,21 @@ function Dashboard() {
                     {subject.name}
                   </span>
                   <span className="num block text-xs text-muted-foreground">
-                    {mastered} / {subjectQuestions.length} zvládnuto
+                    {mastered} zvládnuto · {wrong} chybných · {nove} nových
                   </span>
-                  <span className="mt-2 block h-1 overflow-hidden rounded-full bg-elevated">
+                  <span className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-elevated">
                     <span
-                      className="block h-full rounded-full"
+                      className="block h-full"
                       style={{
-                        width: `${pct}%`,
-                        backgroundColor: "var(--primary)",
+                        width: `${total ? (mastered / total) * 100 : 0}%`,
+                        backgroundColor: "var(--success)",
+                      }}
+                    />
+                    <span
+                      className="block h-full"
+                      style={{
+                        width: `${total ? (wrong / total) * 100 : 0}%`,
+                        backgroundColor: "var(--destructive)",
                       }}
                     />
                   </span>
@@ -329,6 +338,30 @@ function Dashboard() {
           title="Statistiky"
           subtitle="Připravenost a slabá místa"
         />
+        <StudyLink
+          to="/prochazet"
+          icon={BookOpen}
+          title="Procházet otázky"
+          subtitle="Otázky i se správnými odpověďmi"
+        />
+        <Link
+          to="/kviz"
+          search={{ mode: "favorites" }}
+          className="card-surface flex items-center gap-4 p-4"
+        >
+          <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
+            <Star className="h-4.5 w-4.5" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[15px] font-bold">
+              Oblíbené otázky
+            </span>
+            <span className="block text-xs text-muted-foreground">
+              Otázky označené hvězdičkou
+            </span>
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+        </Link>
       </section>
 
       {isGuest && (
@@ -374,7 +407,7 @@ function StudyLink({
   title,
   subtitle,
 }: {
-  to: "/dokumenty" | "/slovnicek" | "/statistiky";
+  to: "/dokumenty" | "/slovnicek" | "/statistiky" | "/prochazet";
   icon: LucideIcon;
   title: string;
   subtitle: string;
