@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Flag,
   RotateCcw,
+  Star,
   Timer,
   Trophy,
   X,
@@ -18,6 +19,7 @@ import { BullseyeStamp, BulletHole } from "./HitFeedback";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/lib/favorites";
 import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
 import { hitLabel, missLabel } from "@/lib/copy";
 import { playClick, playHit, playMiss } from "@/lib/sound";
@@ -55,6 +57,7 @@ export function QuizRunner({
   embedded?: boolean;
 }) {
   const queryClient = useQueryClient();
+  const { isFavorite, toggle: toggleFavorite } = useFavorites();
   const [index, setIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<AnswerKey | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -221,9 +224,26 @@ export function QuizRunner({
           className="flex flex-col gap-4"
         >
           <div className="card-surface p-5">
-            <h1 className="text-[17px] font-semibold leading-snug">
-              {question.text}
-            </h1>
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="text-[17px] font-semibold leading-snug">
+                {question.text}
+              </h1>
+              <button
+                type="button"
+                onClick={() => toggleFavorite(question.id)}
+                aria-label="Oblíbená otázka"
+                className="shrink-0"
+              >
+                <Star
+                  className={cn(
+                    "h-5 w-5",
+                    isFavorite(question.id)
+                      ? "fill-current text-brass"
+                      : "text-muted-foreground",
+                  )}
+                />
+              </button>
+            </div>
             {question.images.length > 0 && (
               <div className="mt-4 flex flex-col gap-3">
                 {question.images.map((src) => (
