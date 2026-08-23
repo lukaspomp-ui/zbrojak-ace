@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Star } from "lucide-react";
 import {
   BarChart3,
   BookOpen,
+  ChevronDown,
   ChevronRight,
   Crown,
   FileText,
@@ -15,6 +16,7 @@ import {
   SpellCheck,
   Timer,
 } from "lucide-react";
+import { useState } from "react";
 
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
@@ -219,11 +221,7 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="label-tick">
-          <span className="h-2 w-2 rounded-full bg-brass" />
-          Okruhy k procvičení
-        </h2>
+      <CollapsibleSection title="Okruhy k procvičení" icon={BookOpen} defaultOpen>
         {subjects.map((subject, i) => {
           const subjectQuestions = pool.filter(
             (q) => q.subject_id === subject.id,
@@ -281,13 +279,9 @@ function Dashboard() {
             </motion.div>
           );
         })}
-      </section>
+      </CollapsibleSection>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="label-tick">
-          <span className="h-2 w-2 rounded-full bg-brass" />
-          Studium
-        </h2>
+      <CollapsibleSection title="Studium" icon={Sparkles}>
         <StudyLink
           to="/dokumenty"
           icon={FileText}
@@ -330,7 +324,7 @@ function Dashboard() {
           </span>
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </Link>
-      </section>
+      </CollapsibleSection>
 
       {isGuest && (
         <Link
@@ -391,6 +385,55 @@ function StudyLink({
       </span>
       <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
     </Link>
+  );
+}
+
+function CollapsibleSection({
+  title,
+  icon: Icon,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  icon: LucideIcon;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <section className="flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="label-tick flex w-full items-center justify-between"
+        aria-expanded={open}
+      >
+        <span className="flex items-center gap-2">
+          <Icon className="h-4 w-4 text-brass" />
+          {title}
+        </span>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="flex flex-col gap-3 overflow-hidden"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
   );
 }
 
