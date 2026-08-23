@@ -19,6 +19,7 @@ import {
   FREE_EXAM_ATTEMPTS,
   PRACTICE_ROUND_SIZE,
 } from "@/lib/app-config";
+import { getFavorites } from "@/lib/favorites";
 import {
   availableQuestions,
   consumeExamAttempt,
@@ -27,7 +28,7 @@ import {
 } from "@/lib/data";
 
 const searchSchema = z.object({
-  mode: z.enum(["exam", "mistakes", "subject"]).default("subject"),
+  mode: z.enum(["exam", "mistakes", "subject", "favorites"]).default("subject"),
   subjectId: z.string().optional(),
 });
 
@@ -108,6 +109,12 @@ function QuizPage() {
         .map((p) => pool.find((q) => q.id === p.question_id))
         .filter((q): q is Question => !!q);
     }
+    if (mode === "favorites") {
+      const favs = getFavorites();
+      return favs
+        .map((id) => questions.find((q) => q.id === id))
+        .filter((q): q is Question => !!q);
+    }
     // Subject practice: a fresh random round, avoiding an exact repeat.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
     if (subjectPool.length <= PRACTICE_ROUND_SIZE) return shuffle(subjectPool);
@@ -167,7 +174,9 @@ function QuizPage() {
   const title =
     mode === "mistakes"
       ? "Mé chyby"
-      : (subjects?.find((s) => s.id === subjectId)?.name ?? "Procvičování");
+      : mode === "favorites"
+        ? "Oblíbené otázky"
+        : (subjects?.find((s) => s.id === subjectId)?.name ?? "Procvičování");
 
   return (
     <main className="mx-auto w-full max-w-md px-5 pt-6">
