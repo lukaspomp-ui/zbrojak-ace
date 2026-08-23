@@ -406,12 +406,14 @@ function CollapsibleSection({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="label-tick flex w-full items-center justify-between"
+        className="card-surface flex w-full items-center justify-between p-4"
         aria-expanded={open}
       >
         <span className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-brass" />
-          {title}
+          <span className="tint-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-lg">
+            <Icon className="h-4 w-4" />
+          </span>
+          <span className="text-[15px] font-bold">{title}</span>
         </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
