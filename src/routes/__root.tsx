@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../hooks/use-auth";
 import { HudBackground } from "../components/HudBackground";
 import { hasChosenLicenseGroup } from "../lib/license-group";
+import { applyTheme, getThemeMode } from "../lib/theme";
 
 
 function NotFoundComponent() {
@@ -134,6 +135,16 @@ function RootComponent() {
       navigate({ to: "/onboarding", replace: true });
     }
   }, [router.state.location.pathname, navigate]);
+
+  useEffect(() => {
+    applyTheme();
+    const media = window.matchMedia("(prefers-color-scheme: light)");
+    const onSystem = () => {
+      if (getThemeMode() === "system") applyTheme("system");
+    };
+    media.addEventListener?.("change", onSystem);
+    return () => media.removeEventListener?.("change", onSystem);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

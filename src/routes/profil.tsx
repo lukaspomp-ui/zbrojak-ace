@@ -35,6 +35,8 @@ import { availableQuestions } from "@/lib/data";
 import { deleteAccount } from "@/lib/account.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/lib/theme";
+import { Monitor, Moon, Sun } from "lucide-react";
 
 export const Route = createFileRoute("/profil")({
   ssr: false,
@@ -63,6 +65,7 @@ function ProfilePage() {
   const queryClient = useQueryClient();
   const { ready, session, isGuest } = useAuth();
   const { group, select } = useLicenseGroup();
+  const { mode: themeMode, setMode: setThemeMode } = useTheme();
   const { data: app } = useAppQuery();
   const { data: profile } = useProfileQuery();
   const { data: questions } = useQuestionsQuery();
@@ -247,6 +250,34 @@ function ProfilePage() {
               />
             </span>
           </button>
+
+          <section className="flex flex-col gap-2.5">
+            <p className="text-xs text-muted-foreground">Vzhled</p>
+            <div className="grid grid-cols-3 gap-2">
+              {(
+                [
+                  ["light", "Světlý", Sun],
+                  ["dark", "Tmavý", Moon],
+                  ["system", "Podle systému", Monitor],
+                ] as const
+              ).map(([value, label, Icon]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setThemeMode(value)}
+                  className={cn(
+                    "flex flex-col items-center gap-1.5 rounded-xl border p-3 text-center text-[11px] font-semibold leading-tight transition-colors",
+                    themeMode === value
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-card text-muted-foreground",
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </button>
+              ))}
+            </div>
+          </section>
 
           <section className="flex flex-col gap-2.5">
             <Button variant="outline" full onClick={() => setChanging(true)}>
