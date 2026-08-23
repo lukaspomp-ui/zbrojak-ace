@@ -357,7 +357,7 @@ function Dashboard() {
           </span>
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </Link>
-      </section>
+      </CollapsibleSection>
 
       {isGuest && (
         <Link
