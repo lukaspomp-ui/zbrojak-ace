@@ -221,11 +221,7 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="label-tick">
-          <span className="h-2 w-2 rounded-full bg-brass" />
-          Okruhy k procvičení
-        </h2>
+      <CollapsibleSection title="Okruhy k procvičení" icon={BookOpen} defaultOpen>
         {subjects.map((subject, i) => {
           const subjectQuestions = pool.filter(
             (q) => q.subject_id === subject.id,
@@ -283,7 +279,7 @@ function Dashboard() {
             </motion.div>
           );
         })}
-      </section>
+      </CollapsibleSection>
 
       <section className="flex flex-col gap-3">
         <h2 className="label-tick">
