@@ -97,7 +97,8 @@ function QuizPage() {
     if (!questions || !progress) return null;
     const pool = availableQuestions(questions, isPremium);
     if (mode === "exam") {
-      return shuffle(pool).slice(0, EXAM_QUESTION_COUNT);
+      // Ostrý test se vždy losuje z celé databáze otázek (bez free limitu).
+      return shuffle(questions).slice(0, EXAM_QUESTION_COUNT);
     }
     if (mode === "mistakes") {
       const wrong = progress

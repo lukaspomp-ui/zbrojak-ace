@@ -57,7 +57,8 @@ export function ExamRunner({
   title?: string;
 }) {
   const queryClient = useQueryClient();
-  const passCorrect = useLicenseGroup().group.passCorrect;
+  const { group } = useLicenseGroup();
+  const passCorrect = group.passCorrect;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
@@ -196,7 +197,12 @@ export function ExamRunner({
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold">{title}</p>
+          <div className="flex items-center gap-2">
+            <p className="truncate text-sm font-semibold">{title}</p>
+            <span className="shrink-0 rounded-full border border-secondary/40 bg-secondary/10 px-2 py-0.5 text-[11px] font-bold tabular-nums text-secondary">
+              Skupina {group.id} · {passCorrect}/{total}
+            </span>
+          </div>
           <p className="text-xs text-muted-foreground tabular-nums">
             Otázka {index + 1} / {total} · zodpovězeno {answeredCount}
           </p>
