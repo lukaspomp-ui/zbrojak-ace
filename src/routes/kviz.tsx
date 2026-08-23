@@ -97,7 +97,7 @@ function QuizPage() {
     if (!questions || !progress) return null;
     const pool = availableQuestions(questions, isPremium);
     if (mode === "exam") {
-      // Ostrý test se vždy losuje z celé databáze otázek (bez free limitu).
+      // Zákon: 30 otázek losovaných z celého souboru (ne z omezené sady).
       return shuffle(questions).slice(0, EXAM_QUESTION_COUNT);
     }
     if (mode === "mistakes") {
