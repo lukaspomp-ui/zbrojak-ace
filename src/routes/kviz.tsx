@@ -70,26 +70,15 @@ function QuizPage() {
   const attemptCharged = useRef(false);
   const [blocked, setBlocked] = useState(false);
 
-  // Gate premium features against profiles.is_premium
+  // Free verze: okruhy k procvičení, statistiky a Mé chyby.
+  // Premium: ostrý test a oblíbené otázky.
   useEffect(() => {
     if (!profile) return;
-    if (mode === "mistakes" && !isPremium) setBlocked(true);
-    if (
-      mode === "exam" &&
-      !isPremium &&
-      (profile.exam_attempts_used ?? 0) >= FREE_EXAM_ATTEMPTS
-    ) {
+    if ((mode === "exam" || mode === "favorites") && !isPremium) {
       setBlocked(true);
     }
   }, [profile, isPremium, mode]);
 
-  // Consume the free trial exam attempt once
-  useEffect(() => {
-    if (mode !== "exam" || !profile || !userId || isPremium) return;
-    if (attemptCharged.current || blocked) return;
-    attemptCharged.current = true;
-    void consumeExamAttempt(userId, profile.exam_attempts_used ?? 0);
-  }, [mode, profile, userId, isPremium, blocked]);
 
   const [round, setRound] = useState(0);
   const lastRoundIds = useRef<number[]>([]);
