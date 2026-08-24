@@ -1,19 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  BarChart3,
-  Flame,
-  History,
-  Target,
-  TrendingUp,
-  X,
-} from "lucide-react";
+import { BarChart3, Flame, History, Target, TrendingUp, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { PageHeader, SectionLabel } from "@/components/PageHeader";
 import { AnswerReview } from "@/components/AnswerReview";
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
-import { PremiumTeaser } from "@/components/PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useAppQuery,
@@ -76,32 +68,21 @@ function StatsPage() {
 
   const pool = availableQuestions(questions, isPremium);
   const inPool = (id: number) => pool.some((q) => q.id === id);
-  const masteredCount = progress.filter(
-    (p) => p.mastered && inPool(p.question_id),
-  ).length;
-  const readiness = pool.length
-    ? Math.round((masteredCount / pool.length) * 100)
-    : 0;
+  const masteredCount = progress.filter((p) => p.mastered && inPool(p.question_id)).length;
+  const readiness = pool.length ? Math.round((masteredCount / pool.length) * 100) : 0;
   const streak = computeStreak(progress);
 
   const accuracy = getAccuracy();
   const perSubject = subjects.map((subject) => {
     const total = pool.filter((q) => q.subject_id === subject.id).length;
     const mastered = progress.filter(
-      (p) =>
-        p.mastered &&
-        pool.some((q) => q.id === p.question_id && q.subject_id === subject.id),
+      (p) => p.mastered && pool.some((q) => q.id === p.question_id && q.subject_id === subject.id),
     ).length;
     const wrong = progress
-      .filter((p) =>
-        pool.some((q) => q.id === p.question_id && q.subject_id === subject.id),
-      )
+      .filter((p) => pool.some((q) => q.id === p.question_id && q.subject_id === subject.id))
       .reduce((sum, p) => sum + p.times_wrong, 0);
     const acc = accuracy[subject.id];
-    const uspesnost =
-      acc && acc.answered
-        ? Math.round((acc.correct / acc.answered) * 100)
-        : null;
+    const uspesnost = acc && acc.answered ? Math.round((acc.correct / acc.answered) * 100) : null;
     return {
       ...subject,
       total,
@@ -116,9 +97,7 @@ function StatsPage() {
     .filter((s) => s.total > 0)
     .sort(
       (a, b) =>
-        (a.uspesnost ?? 101) - (b.uspesnost ?? 101) ||
-        b.wrong - a.wrong ||
-        a.percent - b.percent,
+        (a.uspesnost ?? 101) - (b.uspesnost ?? 101) || b.wrong - a.wrong || a.percent - b.percent,
     )[0];
 
   const weakQuestions = progress
@@ -152,9 +131,7 @@ function StatsPage() {
         </div>
         <div className="relative min-w-0">
           <p className="label-tick">Připravenost na zkoušku</p>
-          <p className="mt-2 text-base font-extrabold">
-            {readinessVerdict(readiness)}
-          </p>
+          <p className="mt-2 text-base font-extrabold">{readinessVerdict(readiness)}</p>
           <p className="num mt-1 text-xs leading-relaxed text-muted-foreground">
             Zvládnuto {masteredCount} z {pool.length} otázek
           </p>
@@ -176,9 +153,7 @@ function StatsPage() {
             <Target className="h-3.5 w-3.5 text-primary" />
             Zvládnuto
           </span>
-          <p className="mt-1 text-xl font-bold num">
-            {masteredCount} otázek
-          </p>
+          <p className="mt-1 text-xl font-bold num">{masteredCount} otázek</p>
         </div>
       </section>
 
@@ -215,9 +190,7 @@ function StatsPage() {
           Historie testů
         </SectionLabel>
         {history.length === 0 ? (
-          <p className="card-surface p-4 text-sm text-muted-foreground">
-            {EMPTY_HISTORY}
-          </p>
+          <p className="card-surface p-4 text-sm text-muted-foreground">{EMPTY_HISTORY}</p>
         ) : (
           <>
             {history.length >= 2 && (
@@ -240,18 +213,13 @@ function StatsPage() {
                   const passY = 40 - (group.passCorrect / 30) * 40;
                   const pts = trend
                     .map((a, i) => {
-                      const x =
-                        trend.length > 1 ? (i / (trend.length - 1)) * 100 : 0;
+                      const x = trend.length > 1 ? (i / (trend.length - 1)) * 100 : 0;
                       const pct = a.total ? (a.correct / a.total) * 100 : 0;
                       return `${x},${40 - (pct / 100) * 40}`;
                     })
                     .join(" ");
                   return (
-                    <svg
-                      viewBox="0 0 100 40"
-                      preserveAspectRatio="none"
-                      className="h-24 w-full"
-                    >
+                    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-24 w-full">
                       <line
                         x1="0"
                         y1={passY}
@@ -287,8 +255,7 @@ function StatsPage() {
                 >
                   <div className="min-w-0">
                     <p className="text-sm font-semibold num">
-                      {a.correct}/{a.total}{" "}
-                      <span className="text-muted-foreground">({pct} %)</span>
+                      {a.correct}/{a.total} <span className="text-muted-foreground">({pct} %)</span>
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
                       {new Date(a.date).toLocaleString("cs-CZ", {
@@ -317,83 +284,74 @@ function StatsPage() {
         )}
       </section>
 
-      {isPremium ? (
-        <>
-          <section className="flex flex-col gap-2.5">
-            <SectionLabel>Úspěšnost po okruzích</SectionLabel>
-            {perSubject.map((s) => (
-              <Link
-                key={s.id}
-                to="/okruh/$subjectId"
-                params={{ subjectId: s.id }}
-                className="card-surface block p-4"
-              >
-                <span className="flex items-baseline justify-between gap-2">
-                  <span className="truncate text-[15px] font-semibold">
-                    {s.name}
-                  </span>
-                  <span className="shrink-0 text-xs text-muted-foreground num">
-                    Hotovo {s.percent}%
-                  </span>
+      <>
+        <section className="flex flex-col gap-2.5">
+          <SectionLabel>Úspěšnost po okruzích</SectionLabel>
+          {perSubject.map((s) => (
+            <Link
+              key={s.id}
+              to="/okruh/$subjectId"
+              params={{ subjectId: s.id }}
+              className="card-surface block p-4"
+            >
+              <span className="flex items-baseline justify-between gap-2">
+                <span className="truncate text-[15px] font-semibold">{s.name}</span>
+                <span className="shrink-0 text-xs text-muted-foreground num">
+                  Hotovo {s.percent}%
                 </span>
-                <span className="mt-2.5 flex items-center gap-3">
-                  <span className="block h-1.5 flex-1 overflow-hidden rounded-full bg-elevated">
-                    <motion.span
-                      className="block h-full rounded-full"
-                      style={{ backgroundColor: "var(--primary)" }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${s.percent}%` }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </span>
-                  {s.uspesnost !== null && (
-                    <span
-                      className={cn(
-                        "num shrink-0 text-xs font-semibold",
-                        s.uspesnost >= 80 ? "text-success" : "text-brass",
-                      )}
-                    >
-                      {s.uspesnost}% úsp.
-                    </span>
-                  )}
+              </span>
+              <span className="mt-2.5 flex items-center gap-3">
+                <span className="block h-1.5 flex-1 overflow-hidden rounded-full bg-elevated">
+                  <motion.span
+                    className="block h-full rounded-full"
+                    style={{ backgroundColor: "var(--primary)" }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${s.percent}%` }}
+                    transition={{ duration: 0.4 }}
+                  />
                 </span>
-              </Link>
-            ))}
-          </section>
+                {s.uspesnost !== null && (
+                  <span
+                    className={cn(
+                      "num shrink-0 text-xs font-semibold",
+                      s.uspesnost >= 80 ? "text-success" : "text-brass",
+                    )}
+                  >
+                    {s.uspesnost}% úsp.
+                  </span>
+                )}
+              </span>
+            </Link>
+          ))}
+        </section>
 
-          <section className="flex flex-col gap-2.5">
-            <SectionLabel>Slabá místa</SectionLabel>
-            {weakQuestions.length === 0 ? (
-              <p className="card-surface p-4 text-sm text-muted-foreground">
-                Zatím žádné chyby — pokračuj v procvičování.
-              </p>
-            ) : (
-              <>
-                {weakQuestions.map(({ progress: p, question }) => (
-                  <div key={p.question_id} className="card-surface p-4">
-                    <p className="text-sm leading-snug">{question.text}</p>
-                    <p className="mt-1.5 text-xs font-medium text-destructive">
-                      {p.times_wrong}× chybně
-                    </p>
-                  </div>
-                ))}
-                <Link
-                  to="/kviz"
-                  search={{ mode: "mistakes" }}
-                  className="tint-primary rounded-2xl px-4 py-3 text-center text-sm font-semibold"
-                >
-                  Procvičit mé chyby
-                </Link>
-              </>
-            )}
-          </section>
-        </>
-      ) : (
-        <PremiumTeaser
-          title="Kompletní statistiky jsou v Premium"
-          text="Premium ukáže úspěšnost po jednotlivých okruzích a tvá slabá místa s otázkami k opravě."
-        />
-      )}
+        <section className="flex flex-col gap-2.5">
+          <SectionLabel>Slabá místa</SectionLabel>
+          {weakQuestions.length === 0 ? (
+            <p className="card-surface p-4 text-sm text-muted-foreground">
+              Zatím žádné chyby — pokračuj v procvičování.
+            </p>
+          ) : (
+            <>
+              {weakQuestions.map(({ progress: p, question }) => (
+                <div key={p.question_id} className="card-surface p-4">
+                  <p className="text-sm leading-snug">{question.text}</p>
+                  <p className="mt-1.5 text-xs font-medium text-destructive">
+                    {p.times_wrong}× chybně
+                  </p>
+                </div>
+              ))}
+              <Link
+                to="/kviz"
+                search={{ mode: "mistakes" }}
+                className="tint-primary rounded-2xl px-4 py-3 text-center text-sm font-semibold"
+              >
+                Procvičit mé chyby
+              </Link>
+            </>
+          )}
+        </section>
+      </>
       {openAttempt && (
         <div className="fixed inset-0 z-50 flex flex-col bg-background">
           <div className="flex items-center gap-3 border-b border-border px-5 py-4">

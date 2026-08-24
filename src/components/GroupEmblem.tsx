@@ -6,9 +6,7 @@ function EmblemSymbol({ id }: { id: LicenseGroupId }) {
   const s = { fill: "none", stroke: "#ff9d3d", strokeWidth: 2 } as const;
   switch (id) {
     case "A": // sběratelské — drahokam
-      return (
-        <path d="M23 12 L31 20 L23 34 L15 20 Z" {...s} strokeLinejoin="round" />
-      );
+      return <path d="M23 12 L31 20 L23 34 L15 20 Z" {...s} strokeLinejoin="round" />;
     case "B": // sportovní — terč
       return (
         <>
@@ -47,13 +45,7 @@ function EmblemSymbol({ id }: { id: LicenseGroupId }) {
 }
 
 /** Distinct crest-style logo for each licence group (A–E). */
-export function GroupEmblem({
-  id,
-  className,
-}: {
-  id: LicenseGroupId;
-  className?: string;
-}) {
+export function GroupEmblem({ id, className }: { id: LicenseGroupId; className?: string }) {
   const gid = `ge-${id}`;
   return (
     <svg
@@ -68,12 +60,7 @@ export function GroupEmblem({
           <stop offset="1" stopColor="#ff6a00" />
         </linearGradient>
       </defs>
-      <path
-        d={SHIELD}
-        fill="var(--background-lift)"
-        stroke={`url(#${gid})`}
-        strokeWidth="2"
-      />
+      <path d={SHIELD} fill="var(--background-lift)" stroke={`url(#${gid})`} strokeWidth="2" />
       <EmblemSymbol id={id} />
     </svg>
   );

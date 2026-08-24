@@ -1,8 +1,8 @@
 /**
- * TEMPORARY TESTING FLAG — set back to false to restore login + paywall.
- * true = no sign-in screen (local guest session) and every user is Premium.
+ * TEMPORARY TESTING FLAG — set to true to skip login + force Premium.
+ * false = reálné rozdělení Free / Premium.
  */
-export const DEV_OPEN = true;
+export const DEV_OPEN = false;
 
 /** Multi-tenant configuration. One codebase, many exam apps. */
 export const CURRENT_APP_ID: string =
@@ -34,8 +34,9 @@ export const PAYWALL_COPY = {
   price: "299 Kč jednorázově",
   benefits: [
     "Neomezená databáze všech otázek",
-    "Chytrý algoritmus na opakování chyb",
-    "Kompletní vysvětlení paragrafů",
+    "Ostrý test na 30 otázek s časomírou",
+    "Dokumenty ke stažení a slovníček pojmů",
+    "Procházení otázek a oblíbené",
     "Garance aktualizace pro rok 2026",
   ],
 };

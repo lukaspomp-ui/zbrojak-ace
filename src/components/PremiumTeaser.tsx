@@ -16,9 +16,7 @@ export function PremiumTeaser({
         <Crown className="h-5 w-5" />
       </span>
       <h3 className="mt-3 text-[15px] font-semibold">{title}</h3>
-      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-        {text}
-      </p>
+      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{text}</p>
       <Link to="/premium" className="mt-4 block">
         <Button full>Zobrazit Premium</Button>
       </Link>

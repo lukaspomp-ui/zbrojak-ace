@@ -14,8 +14,7 @@ export const Route = createFileRoute("/reset-hesla")({
       { title: "Obnovit heslo — Zbrojní průkaz 2026" },
       {
         name: "description",
-        content:
-          "Nastav si nové heslo ke svému účtu v přípravě na zbrojní průkaz 2026.",
+        content: "Nastav si nové heslo ke svému účtu v přípravě na zbrojní průkaz 2026.",
       },
       { property: "og:title", content: "Obnovit heslo — Zbrojní průkaz 2026" },
       {
@@ -50,11 +49,7 @@ function ResetPasswordPage() {
       toast.success("Heslo bylo změněno.");
       navigate({ to: "/" });
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : "Heslo se nepovedlo změnit. Zkus to znovu.",
-      );
+      toast.error(err instanceof Error ? err.message : "Heslo se nepovedlo změnit. Zkus to znovu.");
     } finally {
       setBusy(false);
     }
@@ -78,9 +73,7 @@ function ResetPasswordPage() {
         onSubmit={submit}
         className="card-surface flex flex-col gap-3 p-5"
       >
-        <label className="text-xs font-semibold text-muted-foreground">
-          Nové heslo
-        </label>
+        <label className="text-xs font-semibold text-muted-foreground">Nové heslo</label>
         <div className="flex items-center gap-2 rounded-xl border border-input bg-elevated px-3">
           <KeyRound className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
@@ -95,9 +88,7 @@ function ResetPasswordPage() {
           />
         </div>
 
-        <label className="text-xs font-semibold text-muted-foreground">
-          Nové heslo znovu
-        </label>
+        <label className="text-xs font-semibold text-muted-foreground">Nové heslo znovu</label>
         <div className="flex items-center gap-2 rounded-xl border border-input bg-elevated px-3">
           <KeyRound className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
@@ -112,11 +103,7 @@ function ResetPasswordPage() {
           />
         </div>
 
-        {mismatch && (
-          <p className="text-xs font-medium text-destructive">
-            Hesla se neshodují.
-          </p>
-        )}
+        {mismatch && <p className="text-xs font-medium text-destructive">Hesla se neshodují.</p>}
 
         <Button full type="submit" disabled={busy || mismatch} className="mt-2">
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}

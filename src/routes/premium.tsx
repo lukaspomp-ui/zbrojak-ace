@@ -6,11 +6,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
-import {
-  useAppQuery,
-  useAppTheme,
-  useProfileQuery,
-} from "@/hooks/use-exam-data";
+import { useAppQuery, useAppTheme, useProfileQuery } from "@/hooks/use-exam-data";
 import { PAYWALL_COPY } from "@/lib/app-config";
 import { unlockPremium } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,9 +64,7 @@ function Paywall() {
       if (error) throw error;
       await purchase();
     } catch (e) {
-      toast.error(
-        e instanceof Error ? e.message : "Registrace se nepovedla.",
-      );
+      toast.error(e instanceof Error ? e.message : "Registrace se nepovedla.");
     } finally {
       setBusy(false);
     }
@@ -137,9 +131,7 @@ function Paywall() {
         <span className="tint-primary flex h-12 w-12 items-center justify-center rounded-2xl">
           <Crown className="h-5 w-5" />
         </span>
-        <h1 className="mt-2 text-[26px] font-extrabold leading-tight">
-          {PAYWALL_COPY.headline}
-        </h1>
+        <h1 className="mt-2 text-[26px] font-extrabold leading-tight">{PAYWALL_COPY.headline}</h1>
         <p className="text-sm text-muted-foreground">{PAYWALL_COPY.sub}</p>
       </motion.section>
 

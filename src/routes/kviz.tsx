@@ -14,18 +14,9 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import {
-  EXAM_QUESTION_COUNT,
-  FREE_EXAM_ATTEMPTS,
-  PRACTICE_ROUND_SIZE,
-} from "@/lib/app-config";
+import { EXAM_QUESTION_COUNT, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
 import { getFavorites } from "@/lib/favorites";
-import {
-  availableQuestions,
-  consumeExamAttempt,
-  shuffle,
-  type Question,
-} from "@/lib/data";
+import { availableQuestions, shuffle, type Question } from "@/lib/data";
 
 const searchSchema = z.object({
   mode: z.enum(["exam", "mistakes", "subject", "favorites"]).default("subject"),
@@ -67,29 +58,16 @@ function QuizPage() {
   useAppTheme(app);
 
   const isPremium = profile?.is_premium === true;
-  const attemptCharged = useRef(false);
   const [blocked, setBlocked] = useState(false);
 
-  // Gate premium features against profiles.is_premium
+  // Free verze: okruhy k procvičení, statistiky a Mé chyby.
+  // Premium: ostrý test a oblíbené otázky.
   useEffect(() => {
     if (!profile) return;
-    if (mode === "mistakes" && !isPremium) setBlocked(true);
-    if (
-      mode === "exam" &&
-      !isPremium &&
-      (profile.exam_attempts_used ?? 0) >= FREE_EXAM_ATTEMPTS
-    ) {
+    if ((mode === "exam" || mode === "favorites") && !isPremium) {
       setBlocked(true);
     }
   }, [profile, isPremium, mode]);
-
-  // Consume the free trial exam attempt once
-  useEffect(() => {
-    if (mode !== "exam" || !profile || !userId || isPremium) return;
-    if (attemptCharged.current || blocked) return;
-    attemptCharged.current = true;
-    void consumeExamAttempt(userId, profile.exam_attempts_used ?? 0);
-  }, [mode, profile, userId, isPremium, blocked]);
 
   const [round, setRound] = useState(0);
   const lastRoundIds = useRef<number[]>([]);
@@ -111,9 +89,7 @@ function QuizPage() {
     }
     if (mode === "favorites") {
       const favs = getFavorites();
-      return favs
-        .map((id) => questions.find((q) => q.id === id))
-        .filter((q): q is Question => !!q);
+      return favs.map((id) => questions.find((q) => q.id === id)).filter((q): q is Question => !!q);
     }
     // Subject practice: a fresh random round, avoiding an exact repeat.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
@@ -122,16 +98,16 @@ function QuizPage() {
     const fresh = subjectPool.filter((q) => !previous.includes(q.id));
     const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
     if (picked.length < PRACTICE_ROUND_SIZE) {
-      const filler = shuffle(
-        subjectPool.filter((q) => !picked.some((p) => p.id === q.id)),
-      ).slice(0, PRACTICE_ROUND_SIZE - picked.length);
+      const filler = shuffle(subjectPool.filter((q) => !picked.some((p) => p.id === q.id))).slice(
+        0,
+        PRACTICE_ROUND_SIZE - picked.length,
+      );
       picked.push(...filler);
     }
     lastRoundIds.current = picked.map((q) => q.id);
     return shuffle(picked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, progress, isPremium, mode, subjectId, round]);
-
 
   if (!ready || !userId || !set || !profile || !progress) {
     return <Loading />;
@@ -143,7 +119,7 @@ function QuizPage() {
         <div className="card-surface p-6 text-center">
           <h1 className="text-lg font-bold">Tato část je v Premium</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Odemkni kompletní databázi a procvičování chyb.
+            Ostrý test a oblíbené otázky jsou součástí Premium.
           </p>
           <div className="mt-5 flex flex-col gap-2">
             <Button full onClick={() => navigate({ to: "/premium" })}>
@@ -161,14 +137,7 @@ function QuizPage() {
   }
 
   if (mode === "exam") {
-    return (
-      <ExamRunner
-        questions={set}
-        userId={userId}
-        progress={progress}
-        title="Ostrý test"
-      />
-    );
+    return <ExamRunner questions={set} userId={userId} progress={progress} title="Ostrý test" />;
   }
 
   const title =
@@ -186,9 +155,7 @@ function QuizPage() {
         title={title}
         userId={userId}
         progress={progress}
-        {...(mode === "subject"
-          ? { onNextRound: () => setRound((r) => r + 1) }
-          : {})}
+        {...(mode === "subject" ? { onNextRound: () => setRound((r) => r + 1) } : {})}
         key={`${mode}-${subjectId ?? ""}-${round}`}
       />
     </main>

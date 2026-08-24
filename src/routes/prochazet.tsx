@@ -3,7 +3,8 @@ import { Check, ListChecks, Search, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { ZoomableImage } from "@/components/ZoomableImage";
-import { useAppQuery, useAppTheme } from "@/hooks/use-exam-data";
+import { PremiumTeaser } from "@/components/PremiumTeaser";
+import { useAppQuery, useAppTheme, useProfileQuery } from "@/hooks/use-exam-data";
 import { QUESTIONS, SUBJECTS } from "@/lib/data";
 import { useFavorites } from "@/lib/favorites";
 import { cn } from "@/lib/utils";
@@ -15,8 +16,7 @@ export const Route = createFileRoute("/prochazet")({
       { title: "Procházet otázky — Zbrojní průkaz 2026" },
       {
         name: "description",
-        content:
-          "Projdi si testové otázky i se správnými odpověďmi bez časového limitu.",
+        content: "Projdi si testové otázky i se správnými odpověďmi bez časového limitu.",
       },
     ],
   }),
@@ -27,7 +27,9 @@ const PAGE = 30;
 
 function BrowsePage() {
   const { data: app } = useAppQuery();
+  const { data: profile } = useProfileQuery();
   useAppTheme(app);
+  const isPremium = profile?.is_premium === true;
   const { favorites, isFavorite, toggle } = useFavorites();
   const [subjectId, setSubjectId] = useState<string>(SUBJECTS[0]?.id ?? "");
   const [onlyFavs, setOnlyFavs] = useState(false);
@@ -48,6 +50,18 @@ function BrowsePage() {
   }, [subjectId, onlyFavs, query, favorites]);
 
   const shown = filtered.slice(0, limit);
+
+  if (!isPremium) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
+        <PageHeader title="Procházet otázky" eyebrow="Studium" icon={ListChecks} />
+        <PremiumTeaser
+          title="Procházení otázek je v Premium"
+          text="Free verze obsahuje okruhy k procvičení, statistiky a Mé chyby. Premium odemkne procházení otázek i oblíbené."
+        />
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
@@ -112,9 +126,7 @@ function BrowsePage() {
           {shown.map((question) => (
             <li key={question.id} className="card-surface p-4">
               <div className="flex items-start justify-between gap-3">
-                <h2 className="text-[15px] font-semibold leading-snug">
-                  {question.text}
-                </h2>
+                <h2 className="text-[15px] font-semibold leading-snug">{question.text}</h2>
                 <button
                   type="button"
                   onClick={() => toggle(question.id)}
@@ -124,9 +136,7 @@ function BrowsePage() {
                   <Star
                     className={cn(
                       "h-5 w-5",
-                      isFavorite(question.id)
-                        ? "fill-current text-brass"
-                        : "text-muted-foreground",
+                      isFavorite(question.id) ? "fill-current text-brass" : "text-muted-foreground",
                     )}
                   />
                 </button>
@@ -144,9 +154,7 @@ function BrowsePage() {
                     key={a.id}
                     className={cn(
                       "flex items-start gap-2 rounded-xl border px-3 py-2 text-[13px] leading-snug",
-                      a.is_correct
-                        ? "border-success bg-success/15"
-                        : "border-border",
+                      a.is_correct ? "border-success bg-success/15" : "border-border",
                     )}
                   >
                     {a.is_correct ? (

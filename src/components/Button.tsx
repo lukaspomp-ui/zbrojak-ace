@@ -11,20 +11,13 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<Variant, string> = {
   primary: "btn-blaze active:scale-[0.98]",
-  outline:
-    "card-surface text-foreground active:scale-[0.98] hover:bg-elevated",
+  outline: "card-surface text-foreground active:scale-[0.98] hover:bg-elevated",
   ghost: "text-muted-foreground hover:text-foreground",
   danger:
     "bg-destructive text-destructive-foreground shadow-lg shadow-black/40 active:scale-[0.98]",
 };
 
-export function Button({
-  variant = "primary",
-  full,
-  className,
-  children,
-  ...rest
-}: Props) {
+export function Button({ variant = "primary", full, className, children, ...rest }: Props) {
   return (
     <button
       {...rest}

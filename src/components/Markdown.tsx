@@ -2,13 +2,7 @@ import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 
 /** Read-only markdown study content, styled for the dark mobile layout. */
-export function Markdown({
-  children,
-  className,
-}: {
-  children: string;
-  className?: string;
-}) {
+export function Markdown({ children, className }: { children: string; className?: string }) {
   return (
     <div
       className={cn(

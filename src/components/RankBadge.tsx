@@ -32,9 +32,7 @@ export function RankBadge({
     <div className={cn("card-surface p-4", className)}>
       <div className="flex items-center justify-between gap-3">
         <span className="label-tick">Hodnost</span>
-        <span className="text-brass num text-xs font-semibold">
-          {mastered} zvládnuto
-        </span>
+        <span className="text-brass num text-xs font-semibold">{mastered} zvládnuto</span>
       </div>
       <p className="mt-2 text-lg font-extrabold text-brass">{current.name}</p>
       <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-elevated">

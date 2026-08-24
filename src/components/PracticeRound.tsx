@@ -3,11 +3,7 @@ import { Loading } from "./Loading";
 import { QuizRunner } from "./QuizRunner";
 import { PremiumTeaser } from "./PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
-import {
-  useProfileQuery,
-  useProgressQuery,
-  useQuestionsQuery,
-} from "@/hooks/use-exam-data";
+import { useProfileQuery, useProgressQuery, useQuestionsQuery } from "@/hooks/use-exam-data";
 import { PRACTICE_ROUND_SIZE } from "@/lib/app-config";
 import { availableQuestions, shuffle, type Question } from "@/lib/data";
 
@@ -15,13 +11,7 @@ import { availableQuestions, shuffle, type Question } from "@/lib/data";
  * The existing 5-random-question practice round, unchanged in behaviour,
  * reusable inside the subject tabs.
  */
-export function PracticeRound({
-  subjectId,
-  title,
-}: {
-  subjectId: string;
-  title: string;
-}) {
+export function PracticeRound({ subjectId, title }: { subjectId: string; title: string }) {
   const { ready, userId } = useAuth();
   const { data: questions } = useQuestionsQuery();
   const { data: profile } = useProfileQuery();
@@ -33,17 +23,16 @@ export function PracticeRound({
 
   const set = useMemo<Question[] | null>(() => {
     if (!questions || !progress) return null;
-    const pool = availableQuestions(questions, isPremium).filter(
-      (q) => q.subject_id === subjectId,
-    );
+    const pool = availableQuestions(questions, isPremium).filter((q) => q.subject_id === subjectId);
     if (pool.length <= PRACTICE_ROUND_SIZE) return shuffle(pool);
     const previous = lastRoundIds.current;
     const fresh = pool.filter((q) => !previous.includes(q.id));
     const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
     if (picked.length < PRACTICE_ROUND_SIZE) {
-      const filler = shuffle(
-        pool.filter((q) => !picked.some((p) => p.id === q.id)),
-      ).slice(0, PRACTICE_ROUND_SIZE - picked.length);
+      const filler = shuffle(pool.filter((q) => !picked.some((p) => p.id === q.id))).slice(
+        0,
+        PRACTICE_ROUND_SIZE - picked.length,
+      );
       picked.push(...filler);
     }
     lastRoundIds.current = picked.map((q) => q.id);

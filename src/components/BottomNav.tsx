@@ -21,8 +21,7 @@ export function BottomNav() {
     >
       <div className="mx-auto flex max-w-md items-stretch justify-around px-2 py-1.5">
         {ITEMS.map(({ to, label, icon: Icon }) => {
-          const active =
-            to === "/" ? pathname === "/" : pathname.startsWith(to);
+          const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
           return (
             <Link
               key={to}

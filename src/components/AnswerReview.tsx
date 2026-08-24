@@ -23,20 +23,13 @@ export function AnswerReview({
         const answered = chosen !== undefined;
         const ok = answered && chosen === correctId;
         return (
-          <div
-            key={q.id}
-            className="border-t border-border pt-4 first:border-0 first:pt-0"
-          >
+          <div key={q.id} className="border-t border-border pt-4 first:border-0 first:pt-0">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-muted-foreground">
-                Otázka {i + 1}
-              </span>
+              <span className="text-xs font-semibold text-muted-foreground">Otázka {i + 1}</span>
               <span
                 className={cn(
                   "flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold",
-                  ok
-                    ? "bg-success/20 text-success"
-                    : "bg-destructive/20 text-destructive",
+                  ok ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive",
                 )}
               >
                 {ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}

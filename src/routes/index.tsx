@@ -33,7 +33,7 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
+import { FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
@@ -52,8 +52,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Zbrojní průkaz 2026 — testy a procvičování" },
       {
         property: "og:description",
-        content:
-          "Ostré testy, chytré opakování chyb a kompletní vysvětlení paragrafů.",
+        content: "Ostré testy, chytré opakování chyb a kompletní vysvětlení paragrafů.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -73,7 +72,6 @@ function Dashboard() {
   useAppTheme(app);
   const { group } = useLicenseGroup();
 
-
   const isPremium = profile?.is_premium === true;
   const loading = !ready || !questions || !subjects;
 
@@ -84,22 +82,15 @@ function Dashboard() {
     (p) => p.mastered && pool.some((q) => q.id === p.question_id),
   ).length;
   const percent = pool.length ? (masteredCount / pool.length) * 100 : 0;
-  const wrongCount = (progress ?? []).filter(
-    (p) => !p.mastered && p.times_wrong > 0,
-  ).length;
+  const wrongCount = (progress ?? []).filter((p) => !p.mastered && p.times_wrong > 0).length;
   const streak = computeStreak(progress ?? []);
-  const examAttemptsLeft = isPremium
-    ? Infinity
-    : Math.max(0, FREE_EXAM_ATTEMPTS - (profile?.exam_attempts_used ?? 0));
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
       <header className="flex items-start gap-3">
         <GroupEmblem id={group.id} className="h-14 w-14 shrink-0" />
         <div className="min-w-0 flex-1 pt-1">
-          <h1 className="truncate text-xl font-extrabold leading-tight">
-            Skupina {group.id}
-          </h1>
+          <h1 className="truncate text-xl font-extrabold leading-tight">Skupina {group.id}</h1>
           <p className="truncate text-xs text-muted-foreground">
             {group.purpose} · {group.passCorrect}/30
           </p>
@@ -145,9 +136,7 @@ function Dashboard() {
           </div>
           <div className="min-w-0">
             <p className="label-tick">Připravenost na zkoušku</p>
-            <p className="mt-2 text-lg font-extrabold leading-tight">
-              {readinessVerdict(percent)}
-            </p>
+            <p className="mt-2 text-lg font-extrabold leading-tight">{readinessVerdict(percent)}</p>
             <p className="num mt-1 text-xs leading-relaxed text-muted-foreground">
               Zvládnuto {masteredCount} z {pool.length} otázek
               {!isPremium && questions.length > FREE_QUESTION_LIMIT
@@ -167,33 +156,26 @@ function Dashboard() {
             <Flame className="h-3.5 w-3.5 text-primary" />
             {streak > 0 ? streakLabel(streak) : "Dnes ještě bez zásahu"}
           </span>
-          <span className="num text-xs font-bold text-brass">
-            {Math.round(percent)} %
-          </span>
+          <span className="num text-xs font-bold text-brass">{Math.round(percent)} %</span>
         </div>
       </motion.section>
 
       <section className="flex flex-col gap-3">
-
-
-
         <Button
           full
           onClick={() =>
-            examAttemptsLeft > 0
+            isPremium
               ? navigate({ to: "/kviz", search: { mode: "exam" } })
               : navigate({ to: "/premium" })
           }
         >
           <Timer className="h-4 w-4" />
           Spustit ostrý test
-          {!isPremium && examAttemptsLeft <= 0 && <Lock className="h-4 w-4" />}
+          {!isPremium && <Lock className="h-4 w-4" />}
         </Button>
         {!isPremium && (
           <p className="text-center text-[11px] text-muted-foreground">
-            {examAttemptsLeft > 0
-              ? `Zbývá ${examAttemptsLeft} zkušební ostrý test`
-              : "Zkušební ostrý test jsi využil"}
+            Ostrý test je součástí Premium
           </p>
         )}
 
@@ -201,39 +183,26 @@ function Dashboard() {
           <Tile
             label="Mé chyby"
             icon={Sparkles}
-            locked={!isPremium}
-            onClick={() =>
-              isPremium
-                ? navigate({ to: "/kviz", search: { mode: "mistakes" } })
-                : navigate({ to: "/premium" })
-            }
+            onClick={() => navigate({ to: "/kviz", search: { mode: "mistakes" } })}
           />
           <Tile
             label="Statistiky"
             icon={BarChart3}
             onClick={() => navigate({ to: "/statistiky" })}
           />
-          <Tile
-            label="Dokumenty"
-            icon={FileText}
-            onClick={() => navigate({ to: "/dokumenty" })}
-          />
+          <Tile label="Dokumenty" icon={FileText} onClick={() => navigate({ to: "/dokumenty" })} />
         </div>
       </section>
 
       <CollapsibleSection title="Okruhy k procvičení" icon={BookOpen} defaultOpen>
         {subjects.map((subject, i) => {
-          const subjectQuestions = pool.filter(
-            (q) => q.subject_id === subject.id,
-          );
+          const subjectQuestions = pool.filter((q) => q.subject_id === subject.id);
           const total = subjectQuestions.length;
           const rows = (progress ?? []).filter((p) =>
             subjectQuestions.some((q) => q.id === p.question_id),
           );
           const mastered = rows.filter((p) => p.mastered).length;
-          const wrong = rows.filter(
-            (p) => !p.mastered && p.times_wrong > 0,
-          ).length;
+          const wrong = rows.filter((p) => !p.mastered && p.times_wrong > 0).length;
           const nove = Math.max(0, total - mastered - wrong);
           return (
             <motion.div
@@ -251,9 +220,7 @@ function Dashboard() {
                   <BookOpen className="h-4.5 w-4.5" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[15px] font-bold">
-                    {subject.name}
-                  </span>
+                  <span className="block truncate text-[15px] font-bold">{subject.name}</span>
                   <span className="num block text-xs text-muted-foreground">
                     {mastered} zvládnuto · {wrong} chybných · {nove} nových
                   </span>
@@ -287,12 +254,14 @@ function Dashboard() {
           icon={FileText}
           title="Dokumenty"
           subtitle="Materiály ke stažení"
+          locked={!isPremium}
         />
         <StudyLink
           to="/slovnicek"
           icon={SpellCheck}
           title="Slovníček"
           subtitle="Pojmy a jejich vysvětlení"
+          locked={!isPremium}
         />
         <StudyLink
           to="/statistiky"
@@ -305,32 +274,27 @@ function Dashboard() {
           icon={BookOpen}
           title="Procházet otázky"
           subtitle="Otázky i se správnými odpověďmi"
+          locked={!isPremium}
         />
         <Link
-          to="/kviz"
-          search={{ mode: "favorites" }}
+          to={isPremium ? "/kviz" : "/premium"}
+          search={isPremium ? { mode: "favorites" } : undefined}
           className="card-surface flex items-center gap-4 p-4"
         >
           <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
             <Star className="h-4.5 w-4.5" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[15px] font-bold">
-              Oblíbené otázky
-            </span>
-            <span className="block text-xs text-muted-foreground">
-              Otázky označené hvězdičkou
-            </span>
+            <span className="block truncate text-[15px] font-bold">Oblíbené otázky</span>
+            <span className="block text-xs text-muted-foreground">Otázky označené hvězdičkou</span>
           </span>
+          {!isPremium && <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />}
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </Link>
       </CollapsibleSection>
 
       {isGuest && (
-        <Link
-          to="/prihlaseni"
-          className="text-center text-xs text-muted-foreground underline"
-        >
+        <Link to="/prihlaseni" className="text-center text-xs text-muted-foreground underline">
           Zkoušíš jako host — zaregistrovat se a nepřijít o pokrok
         </Link>
       )}
@@ -368,14 +332,16 @@ function StudyLink({
   icon: Icon,
   title,
   subtitle,
+  locked,
 }: {
   to: "/dokumenty" | "/slovnicek" | "/statistiky" | "/prochazet";
   icon: LucideIcon;
   title: string;
   subtitle: string;
+  locked?: boolean;
 }) {
   return (
-    <Link to={to} className="card-surface flex items-center gap-4 p-4">
+    <Link to={locked ? "/premium" : to} className="card-surface flex items-center gap-4 p-4">
       <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
         <Icon className="h-4.5 w-4.5" />
       </span>
@@ -383,6 +349,7 @@ function StudyLink({
         <span className="block truncate text-[15px] font-bold">{title}</span>
         <span className="block text-xs text-muted-foreground">{subtitle}</span>
       </span>
+      {locked && <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />}
       <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
     </Link>
   );
@@ -415,10 +382,7 @@ function CollapsibleSection({
           </span>
           <span className="text-[15px] font-bold">{title}</span>
         </span>
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </motion.span>
       </button>
@@ -438,6 +402,3 @@ function CollapsibleSection({
     </section>
   );
 }
-
-
-

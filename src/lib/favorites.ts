@@ -8,9 +8,7 @@ function read(): number[] {
   try {
     const raw = window.localStorage.getItem(KEY);
     const arr = raw ? (JSON.parse(raw) as unknown) : [];
-    return Array.isArray(arr)
-      ? arr.filter((x): x is number => typeof x === "number")
-      : [];
+    return Array.isArray(arr) ? arr.filter((x): x is number => typeof x === "number") : [];
   } catch {
     return [];
   }
@@ -31,9 +29,7 @@ export function getFavorites(): number[] {
 
 export function toggleFavorite(id: number): number[] {
   const cur = read();
-  const next = cur.includes(id)
-    ? cur.filter((x) => x !== id)
-    : [...cur, id];
+  const next = cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id];
   write(next);
   return next;
 }

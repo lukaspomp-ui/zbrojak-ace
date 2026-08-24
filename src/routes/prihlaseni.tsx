@@ -47,10 +47,9 @@ function LoginPage() {
     setBusy(true);
     try {
       if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(
-          email.trim(),
-          { redirectTo: `${window.location.origin}/reset-hesla` },
-        );
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: `${window.location.origin}/reset-hesla`,
+        });
         if (error) throw error;
         toast.success("Odkaz pro obnovení hesla jsme poslali na e-mail.");
         setMode("signin");
@@ -78,20 +77,14 @@ function LoginPage() {
         navigate({ to: "/" });
       }
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Něco se nepovedlo. Zkus to znovu.",
-      );
+      toast.error(err instanceof Error ? err.message : "Něco se nepovedlo. Zkus to znovu.");
     } finally {
       setBusy(false);
     }
   }
 
   const title =
-    mode === "forgot"
-      ? "Obnovit heslo"
-      : mode === "signup"
-        ? "Vytvořit účet"
-        : "Přihlášení";
+    mode === "forgot" ? "Obnovit heslo" : mode === "signup" ? "Vytvořit účet" : "Přihlášení";
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-5 py-10 safe-bottom">
@@ -130,18 +123,14 @@ function LoginPage() {
 
         {mode !== "forgot" && (
           <>
-            <label className="text-xs font-semibold text-muted-foreground">
-              Heslo
-            </label>
+            <label className="text-xs font-semibold text-muted-foreground">Heslo</label>
             <div className="flex items-center gap-2 rounded-xl border border-input bg-elevated px-3">
               <KeyRound className="h-4 w-4 shrink-0 text-muted-foreground" />
               <input
                 type="password"
                 required
                 minLength={6}
-                autoComplete={
-                  mode === "signup" ? "new-password" : "current-password"
-                }
+                autoComplete={mode === "signup" ? "new-password" : "current-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -152,11 +141,7 @@ function LoginPage() {
         )}
 
         <Button full type="submit" disabled={busy} className="mt-2">
-          {busy ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <LogIn className="h-4 w-4" />
-          )}
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
           {mode === "forgot"
             ? "Obnovit heslo"
             : mode === "signup"
@@ -177,19 +162,11 @@ function LoginPage() {
 
       <div className="text-center text-xs text-muted-foreground">
         {mode === "signup" ? (
-          <button
-            type="button"
-            onClick={() => setMode("signin")}
-            className="underline"
-          >
+          <button type="button" onClick={() => setMode("signin")} className="underline">
             Už máš účet? Přihlas se
           </button>
         ) : (
-          <button
-            type="button"
-            onClick={() => setMode("signup")}
-            className="underline"
-          >
+          <button type="button" onClick={() => setMode("signup")} className="underline">
             Nemáš účet? Zaregistrovat se
           </button>
         )}

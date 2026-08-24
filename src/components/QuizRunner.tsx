@@ -24,12 +24,7 @@ import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
 import { hitLabel, missLabel } from "@/lib/copy";
 import { playClick, playHit, playMiss } from "@/lib/sound";
 import { recordAccuracy } from "@/lib/accuracy";
-import {
-  recordAnswer,
-  type AnswerKey,
-  type Progress,
-  type Question,
-} from "@/lib/data";
+import { recordAnswer, type AnswerKey, type Progress, type Question } from "@/lib/data";
 
 export type QuizMode = "practice" | "exam";
 
@@ -72,9 +67,7 @@ export function QuizRunner({
   const hitTotal = useRef(0);
   const missTotal = useRef(0);
 
-  const progressMap = useRef(
-    new Map(progress.map((p) => [p.question_id, p])),
-  ).current;
+  const progressMap = useRef(new Map(progress.map((p) => [p.question_id, p]))).current;
 
   useEffect(() => {
     if (mode !== "exam" || finished) return;
@@ -184,9 +177,7 @@ export function QuizRunner({
           </Link>
         )}
         <div className="min-w-0 flex-1">
-          {!embedded && (
-            <p className="truncate text-sm font-semibold">{title}</p>
-          )}
+          {!embedded && <p className="truncate text-sm font-semibold">{title}</p>}
           <p className="text-xs text-muted-foreground tabular-nums">
             {index + 1} / {total}
           </p>
@@ -224,9 +215,7 @@ export function QuizRunner({
         >
           <div className="card-surface p-5">
             <div className="flex items-start justify-between gap-3">
-              <h1 className="text-[17px] font-semibold leading-snug">
-                {question.text}
-              </h1>
+              <h1 className="text-[17px] font-semibold leading-snug">{question.text}</h1>
               <button
                 type="button"
                 onClick={() => toggleFavorite(question.id)}
@@ -236,9 +225,7 @@ export function QuizRunner({
                 <Star
                   className={cn(
                     "h-5 w-5",
-                    isFavorite(question.id)
-                      ? "fill-current text-brass"
-                      : "text-muted-foreground",
+                    isFavorite(question.id) ? "fill-current text-brass" : "text-muted-foreground",
                   )}
                 />
               </button>
@@ -252,12 +239,7 @@ export function QuizRunner({
             )}
           </div>
 
-          <div
-            className={cn(
-              "flex flex-col gap-2.5",
-              wasCorrect === false && "animate-recoil",
-            )}
-          >
+          <div className={cn("flex flex-col gap-2.5", wasCorrect === false && "animate-recoil")}>
             {question.answers.map((answer) => {
               const isPicked = selectedId === answer.id;
               const reveal = !!selectedId;
@@ -272,8 +254,7 @@ export function QuizRunner({
                   className={cn(
                     "flex items-start gap-3 rounded-2xl border p-4 text-left text-[15px] transition-colors",
                     "border-border bg-card",
-                    showCorrect &&
-                      "border-success bg-success/15 text-foreground",
+                    showCorrect && "border-success bg-success/15 text-foreground",
                     showWrong && "border-destructive bg-destructive/15",
                     !reveal && "active:scale-[0.99]",
                   )}
@@ -282,8 +263,7 @@ export function QuizRunner({
                     className={cn(
                       "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border text-[11px]",
                       showCorrect && "border-success bg-success text-success-foreground",
-                      showWrong &&
-                        "border-destructive bg-destructive text-destructive-foreground",
+                      showWrong && "border-destructive bg-destructive text-destructive-foreground",
                     )}
                   >
                     {showCorrect && <Check className="h-3 w-3" />}
@@ -365,11 +345,7 @@ export function QuizRunner({
       </AnimatePresence>
 
       {reporting && (
-        <ReportModal
-          userId={userId}
-          questionId={question.id}
-          onClose={() => setReporting(false)}
-        />
+        <ReportModal userId={userId} questionId={question.id} onClose={() => setReporting(false)} />
       )}
     </div>
   );
@@ -403,11 +379,7 @@ function ResultCard({
             : "bg-success/20 text-success",
         )}
       >
-        {mode === "exam" && !passed ? (
-          <X className="h-8 w-8" />
-        ) : (
-          <Trophy className="h-8 w-8" />
-        )}
+        {mode === "exam" && !passed ? <X className="h-8 w-8" /> : <Trophy className="h-8 w-8" />}
       </span>
       <div>
         <h1 className="text-xl font-bold">
