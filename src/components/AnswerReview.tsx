@@ -53,7 +53,8 @@ export function AnswerReview({
             )}
             <div className="mt-2 flex flex-col gap-1.5">
               {q.answers.map((a) => {
-                const isChosenWrong = a.id === chosen && !a.is_correct;
+                const isChosen = a.id === chosen;
+                const isChosenWrong = isChosen && !a.is_correct;
                 return (
                   <div
                     key={a.id}
@@ -64,6 +65,7 @@ export function AnswerReview({
                         : isChosenWrong
                           ? "border-destructive bg-destructive/15"
                           : "border-border",
+                      isChosen && "ring-1 ring-inset ring-current",
                     )}
                   >
                     {a.is_correct ? (
@@ -73,7 +75,12 @@ export function AnswerReview({
                     ) : (
                       <span className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                     )}
-                    <span>{a.text}</span>
+                    <span className="flex-1">{a.text}</span>
+                    {isChosen && (
+                      <span className="shrink-0 rounded-full bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                        Tvá odpověď
+                      </span>
+                    )}
                   </div>
                 );
               })}
