@@ -20,8 +20,7 @@ let ctx: AudioContext | null = null;
 function audio(): AudioContext | null {
   if (typeof window === "undefined") return null;
   const AC: Ctor | undefined =
-    window.AudioContext ??
-    (window as unknown as { webkitAudioContext?: Ctor }).webkitAudioContext;
+    window.AudioContext ?? (window as unknown as { webkitAudioContext?: Ctor }).webkitAudioContext;
   if (!AC) return null;
   ctx ??= new AC();
   if (ctx.state === "suspended") void ctx.resume();

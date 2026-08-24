@@ -14,10 +14,7 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import {
-  EXAM_QUESTION_COUNT,
-  PRACTICE_ROUND_SIZE,
-} from "@/lib/app-config";
+import { EXAM_QUESTION_COUNT, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
 import { getFavorites } from "@/lib/favorites";
 import { availableQuestions, shuffle, type Question } from "@/lib/data";
 
@@ -72,7 +69,6 @@ function QuizPage() {
     }
   }, [profile, isPremium, mode]);
 
-
   const [round, setRound] = useState(0);
   const lastRoundIds = useRef<number[]>([]);
 
@@ -93,9 +89,7 @@ function QuizPage() {
     }
     if (mode === "favorites") {
       const favs = getFavorites();
-      return favs
-        .map((id) => questions.find((q) => q.id === id))
-        .filter((q): q is Question => !!q);
+      return favs.map((id) => questions.find((q) => q.id === id)).filter((q): q is Question => !!q);
     }
     // Subject practice: a fresh random round, avoiding an exact repeat.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
@@ -104,16 +98,16 @@ function QuizPage() {
     const fresh = subjectPool.filter((q) => !previous.includes(q.id));
     const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
     if (picked.length < PRACTICE_ROUND_SIZE) {
-      const filler = shuffle(
-        subjectPool.filter((q) => !picked.some((p) => p.id === q.id)),
-      ).slice(0, PRACTICE_ROUND_SIZE - picked.length);
+      const filler = shuffle(subjectPool.filter((q) => !picked.some((p) => p.id === q.id))).slice(
+        0,
+        PRACTICE_ROUND_SIZE - picked.length,
+      );
       picked.push(...filler);
     }
     lastRoundIds.current = picked.map((q) => q.id);
     return shuffle(picked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, progress, isPremium, mode, subjectId, round]);
-
 
   if (!ready || !userId || !set || !profile || !progress) {
     return <Loading />;
@@ -143,14 +137,7 @@ function QuizPage() {
   }
 
   if (mode === "exam") {
-    return (
-      <ExamRunner
-        questions={set}
-        userId={userId}
-        progress={progress}
-        title="Ostrý test"
-      />
-    );
+    return <ExamRunner questions={set} userId={userId} progress={progress} title="Ostrý test" />;
   }
 
   const title =
@@ -168,9 +155,7 @@ function QuizPage() {
         title={title}
         userId={userId}
         progress={progress}
-        {...(mode === "subject"
-          ? { onNextRound: () => setRound((r) => r + 1) }
-          : {})}
+        {...(mode === "subject" ? { onNextRound: () => setRound((r) => r + 1) } : {})}
         key={`${mode}-${subjectId ?? ""}-${round}`}
       />
     </main>

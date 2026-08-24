@@ -22,11 +22,7 @@ export function ChangePasswordModal({ onClose }: { onClose: () => void }) {
       toast.success("Heslo bylo změněno.");
       onClose();
     } catch (err) {
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : "Heslo se nepovedlo změnit. Zkus to znovu.",
-      );
+      toast.error(err instanceof Error ? err.message : "Heslo se nepovedlo změnit. Zkus to znovu.");
     } finally {
       setBusy(false);
     }
@@ -48,9 +44,7 @@ export function ChangePasswordModal({ onClose }: { onClose: () => void }) {
           <h2 className="text-base font-semibold">Změnit heslo</h2>
         </div>
 
-        <label className="text-xs font-semibold text-muted-foreground">
-          Nové heslo
-        </label>
+        <label className="text-xs font-semibold text-muted-foreground">Nové heslo</label>
         <input
           type="password"
           value={password}
@@ -58,9 +52,7 @@ export function ChangePasswordModal({ onClose }: { onClose: () => void }) {
           placeholder="••••••••"
           className="mb-3 mt-1 w-full rounded-xl border border-input bg-elevated p-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary"
         />
-        <label className="text-xs font-semibold text-muted-foreground">
-          Nové heslo znovu
-        </label>
+        <label className="text-xs font-semibold text-muted-foreground">Nové heslo znovu</label>
         <input
           type="password"
           value={again}
@@ -69,9 +61,7 @@ export function ChangePasswordModal({ onClose }: { onClose: () => void }) {
           className="mt-1 w-full rounded-xl border border-input bg-elevated p-3 text-sm outline-none placeholder:text-muted-foreground focus:border-primary"
         />
         {mismatch && (
-          <p className="mt-2 text-xs font-medium text-destructive">
-            Hesla se neshodují.
-          </p>
+          <p className="mt-2 text-xs font-medium text-destructive">Hesla se neshodují.</p>
         )}
 
         <div className="mt-4 flex gap-2">

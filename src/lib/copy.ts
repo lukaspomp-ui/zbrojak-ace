@@ -5,8 +5,7 @@ export const MISS_LABELS = ["Vedle", "Mimo terč", "Šupa do plotu"];
 
 export const LOADING_LINES = ["Nabíjím otázky…", "Čistím hlaveň…"];
 
-export const EMPTY_HISTORY =
-  "Zatím jsi nebyl na střelnici — dej si první ostrý test.";
+export const EMPTY_HISTORY = "Zatím jsi nebyl na střelnici — dej si první ostrý test.";
 
 export const EXAM_PASS_LINE = "Terč sejmutý — zbroják máš v kapse.";
 export const EXAM_FAIL_LINE = "Ještě pár ran na sucho.";

@@ -3,11 +3,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
 import { GroupEmblem } from "@/components/GroupEmblem";
-import {
-  DEFAULT_GROUP,
-  LICENSE_GROUPS,
-  type LicenseGroupId,
-} from "@/lib/license-group";
+import { DEFAULT_GROUP, LICENSE_GROUPS, type LicenseGroupId } from "@/lib/license-group";
 
 export function LicenseGroupPicker({
   initialId,
@@ -16,9 +12,7 @@ export function LicenseGroupPicker({
   initialId?: LicenseGroupId;
   onChange?: (id: LicenseGroupId) => void;
 }) {
-  const [selected, setSelected] = useState<LicenseGroupId>(
-    initialId ?? DEFAULT_GROUP,
-  );
+  const [selected, setSelected] = useState<LicenseGroupId>(initialId ?? DEFAULT_GROUP);
 
   function pick(id: LicenseGroupId) {
     setSelected(id);

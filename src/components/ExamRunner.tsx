@@ -1,14 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  Flag,
-  LayoutGrid,
-  Timer,
-  Trophy,
-  X,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Flag, LayoutGrid, Timer, Trophy, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -23,13 +14,7 @@ import { useLicenseGroup } from "@/lib/license-group";
 import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
 import { recordAccuracy } from "@/lib/accuracy";
 import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
-import {
-  recordAnswer,
-  SUBJECTS,
-  type AnswerKey,
-  type Progress,
-  type Question,
-} from "@/lib/data";
+import { recordAnswer, SUBJECTS, type AnswerKey, type Progress, type Question } from "@/lib/data";
 
 type Answers = Record<number, AnswerKey>;
 
@@ -79,15 +64,11 @@ export function ExamRunner({
     submitting.current = true;
     const progressMap = new Map(progress.map((p) => [p.question_id, p]));
     const nameById = new Map(SUBJECTS.map((s) => [s.id, s.name]));
-    const secMap = new Map<
-      string,
-      { name: string; correct: number; total: number }
-    >();
+    const secMap = new Map<string, { name: string; correct: number; total: number }>();
     let correct = 0;
     for (const q of questions) {
       const chosen = answers[q.id];
-      const wasCorrect =
-        !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
+      const wasCorrect = !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
       if (wasCorrect) correct++;
       recordAccuracy(q.subject_id, wasCorrect);
       const entry = secMap.get(q.subject_id) ?? {
@@ -99,12 +80,7 @@ export function ExamRunner({
       if (wasCorrect) entry.correct++;
       secMap.set(q.subject_id, entry);
       try {
-        const next = await recordAnswer(
-          userId,
-          q.id,
-          wasCorrect,
-          progressMap.get(q.id),
-        );
+        const next = await recordAnswer(userId, q.id, wasCorrect, progressMap.get(q.id));
         progressMap.set(q.id, next);
       } catch {
         /* progress is best-effort; never block submission */
@@ -208,9 +184,7 @@ export function ExamRunner({
         <span
           className={cn(
             "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold tabular-nums",
-            secondsLeft < 60
-              ? "bg-destructive/20 text-destructive"
-              : "tint-primary",
+            secondsLeft < 60 ? "bg-destructive/20 text-destructive" : "tint-primary",
           )}
         >
           <Timer className="h-4 w-4" />
@@ -247,9 +221,7 @@ export function ExamRunner({
               className="flex flex-col gap-4"
             >
               <div className="card-surface p-5">
-                <h1 className="text-[17px] font-semibold leading-snug">
-                  {question.text}
-                </h1>
+                <h1 className="text-[17px] font-semibold leading-snug">{question.text}</h1>
                 {question.images.length > 0 && (
                   <div className="mt-4 flex flex-col gap-3">
                     {question.images.map((src) => (
@@ -314,11 +286,7 @@ export function ExamRunner({
                     Předchozí
                   </Button>
                   {index + 1 < total ? (
-                    <Button
-                      onClick={() =>
-                        setIndex((i) => Math.min(total - 1, i + 1))
-                      }
-                    >
+                    <Button onClick={() => setIndex((i) => Math.min(total - 1, i + 1))}>
                       Další
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -383,8 +351,7 @@ export function ExamRunner({
           >
             <h2 className="text-lg font-bold">Odevzdat test?</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Máš {total - answeredCount} nezodpovězených otázek. Počítají se
-              jako chybné.
+              Máš {total - answeredCount} nezodpovězených otázek. Počítají se jako chybné.
             </p>
             <div className="mt-5 flex flex-col gap-2">
               <Button
@@ -396,11 +363,7 @@ export function ExamRunner({
               >
                 Odevzdat
               </Button>
-              <Button
-                variant="outline"
-                full
-                onClick={() => setConfirmSubmit(false)}
-              >
+              <Button variant="outline" full onClick={() => setConfirmSubmit(false)}>
                 Zpět k testu
               </Button>
             </div>
@@ -409,11 +372,7 @@ export function ExamRunner({
       )}
 
       {reporting && (
-        <ReportModal
-          userId={userId}
-          questionId={question.id}
-          onClose={() => setReporting(false)}
-        />
+        <ReportModal userId={userId} questionId={question.id} onClose={() => setReporting(false)} />
       )}
     </main>
   );
@@ -474,13 +433,7 @@ function Navigator({
 
 type SectionResult = { name: string; correct: number; total: number };
 
-function ExamResult({
-  questions,
-  answers,
-}: {
-  questions: Question[];
-  answers: Answers;
-}) {
+function ExamResult({ questions, answers }: { questions: Question[]; answers: Answers }) {
   const total = questions.length;
   const nameById = new Map(SUBJECTS.map((s) => [s.id, s.name]));
   const bySubject = new Map<string, SectionResult>();
@@ -488,8 +441,7 @@ function ExamResult({
 
   for (const q of questions) {
     const chosen = answers[q.id];
-    const ok =
-      !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
+    const ok = !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
     if (ok) correct++;
     const entry =
       bySubject.get(q.subject_id) ??
@@ -503,9 +455,7 @@ function ExamResult({
   const { group } = useLicenseGroup();
   const passCorrect = group.passCorrect;
   const passed = correct >= passCorrect;
-  const sections = SUBJECTS.map((s) => bySubject.get(s.id)).filter(
-    (x): x is SectionResult => !!x,
-  );
+  const sections = SUBJECTS.map((s) => bySubject.get(s.id)).filter((x): x is SectionResult => !!x);
 
   return (
     <main className="mx-auto w-full max-w-md px-5 pt-6 safe-bottom">
@@ -517,24 +467,20 @@ function ExamResult({
         <span
           className={cn(
             "flex h-16 w-16 items-center justify-center rounded-full",
-            passed
-              ? "bg-success/20 text-success"
-              : "bg-destructive/20 text-destructive",
+            passed ? "bg-success/20 text-success" : "bg-destructive/20 text-destructive",
           )}
         >
           {passed ? <Trophy className="h-8 w-8" /> : <X className="h-8 w-8" />}
         </span>
         <div>
-          <h1 className="text-xl font-extrabold">
-            {passed ? EXAM_PASS_LINE : EXAM_FAIL_LINE}
-          </h1>
+          <h1 className="text-xl font-extrabold">{passed ? EXAM_PASS_LINE : EXAM_FAIL_LINE}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Správně {correct} z {total} otázek ({percent} %) · k úspěchu je
-            potřeba {passCorrect} z {total} bodů
+            Správně {correct} z {total} otázek ({percent} %) · k úspěchu je potřeba {passCorrect} z{" "}
+            {total} bodů
           </p>
           <p className="mt-2 text-xs text-muted-foreground">
-            Hodnoceno pro {group.scope === "obecne" ? "obecné" : "rozšířené"}{" "}
-            oprávnění (skupina {group.id})
+            Hodnoceno pro {group.scope === "obecne" ? "obecné" : "rozšířené"} oprávnění (skupina{" "}
+            {group.id})
           </p>
         </div>
       </motion.div>

@@ -48,15 +48,12 @@ export function ProgressRing({
           animate={{ strokeDashoffset: [...keyframes, target] }}
           transition={{ duration: 1.1, ease: "easeOut", times: undefined }}
           style={{
-            filter:
-              "drop-shadow(0 0 6px color-mix(in oklab, var(--primary) 55%, transparent))",
+            filter: "drop-shadow(0 0 6px color-mix(in oklab, var(--primary) 55%, transparent))",
           }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="num text-3xl font-extrabold">
-          {Math.round(clamped)}%
-        </span>
+        <span className="num text-3xl font-extrabold">{Math.round(clamped)}%</span>
         <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           {label}
         </span>

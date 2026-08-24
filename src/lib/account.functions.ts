@@ -9,9 +9,7 @@ export const deleteAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const userId = context.userId;
-    const { supabaseAdmin } = await import(
-      "@/integrations/supabase/client.server"
-    );
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     await supabaseAdmin.from("user_progress").delete().eq("user_id", userId);
     await supabaseAdmin.from("question_reports").delete().eq("user_id", userId);

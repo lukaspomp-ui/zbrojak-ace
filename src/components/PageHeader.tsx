@@ -33,9 +33,7 @@ export function PageHeader({
       )}
       <div className="min-w-0 flex-1">
         {eyebrow && <p className="label-tick">{eyebrow}</p>}
-        <h1 className="truncate text-[17px] font-extrabold leading-tight">
-          {title}
-        </h1>
+        <h1 className="truncate text-[17px] font-extrabold leading-tight">{title}</h1>
       </div>
       {right}
     </header>

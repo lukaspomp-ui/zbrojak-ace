@@ -4,11 +4,7 @@ import { motion } from "framer-motion";
 import { Loading } from "@/components/Loading";
 import { PageHeader } from "@/components/PageHeader";
 import { PracticeRound } from "@/components/PracticeRound";
-import {
-  useAppQuery,
-  useAppTheme,
-  useSubjectsQuery,
-} from "@/hooks/use-exam-data";
+import { useAppQuery, useAppTheme, useSubjectsQuery } from "@/hooks/use-exam-data";
 
 export const Route = createFileRoute("/okruh/$subjectId")({
   ssr: false,
@@ -17,8 +13,7 @@ export const Route = createFileRoute("/okruh/$subjectId")({
       { title: "Okruh — Zbrojní průkaz 2026" },
       {
         name: "description",
-        content:
-          "Procvičování otázek ke každému okruhu zkoušky ze zbrojního průkazu.",
+        content: "Procvičování otázek ke každému okruhu zkoušky ze zbrojního průkazu.",
       },
       { property: "og:title", content: "Okruh — Zbrojní průkaz 2026" },
       {
@@ -44,11 +39,7 @@ function SubjectDetail() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
-      <PageHeader
-        title={subject?.name ?? "Okruh"}
-        eyebrow="Okruh k procvičení"
-        icon={BookOpen}
-      />
+      <PageHeader title={subject?.name ?? "Okruh"} eyebrow="Okruh k procvičení" icon={BookOpen} />
 
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -56,10 +47,7 @@ function SubjectDetail() {
         transition={{ duration: 0.2 }}
         className="flex flex-col gap-3"
       >
-        <PracticeRound
-          subjectId={subjectId}
-          title={subject?.name ?? "Procvičování"}
-        />
+        <PracticeRound subjectId={subjectId} title={subject?.name ?? "Procvičování"} />
       </motion.div>
     </main>
   );

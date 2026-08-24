@@ -46,8 +46,7 @@ export const Route = createFileRoute("/profil")({
       { title: "Můj profil — Zbrojní průkaz 2026" },
       {
         name: "description",
-        content:
-          "Spravuj svůj účet, heslo a sleduj svůj pokrok v přípravě na zbrojní průkaz 2026.",
+        content: "Spravuj svůj účet, heslo a sleduj svůj pokrok v přípravě na zbrojní průkaz 2026.",
       },
       { property: "og:title", content: "Můj profil — Zbrojní průkaz 2026" },
       {
@@ -89,9 +88,7 @@ function ProfilePage() {
   const masteredCount = (progress ?? []).filter(
     (p) => p.mastered && pool.some((q) => q.id === p.question_id),
   ).length;
-  const percent = pool.length
-    ? Math.round((masteredCount / pool.length) * 100)
-    : 0;
+  const percent = pool.length ? Math.round((masteredCount / pool.length) * 100) : 0;
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -149,8 +146,7 @@ function ProfilePage() {
           <div>
             <h2 className="text-base font-bold">Zkoušíš jako host</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Zaregistruj se a svůj pokrok budeš mít uložený na všech
-              zařízeních.
+              Zaregistruj se a svůj pokrok budeš mít uložený na všech zařízeních.
             </p>
           </div>
           <div className="flex w-full flex-col gap-2">
@@ -179,16 +175,12 @@ function ProfilePage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">E-mail</p>
-                  <p className="truncate text-[15px] font-semibold">
-                    {session?.user.email ?? "—"}
-                  </p>
+                  <p className="truncate text-[15px] font-semibold">{session?.user.email ?? "—"}</p>
                 </div>
                 <span
                   className={cn(
                     "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
-                    isPremium
-                      ? "tint-primary"
-                      : "bg-elevated text-muted-foreground",
+                    isPremium ? "tint-primary" : "bg-elevated text-muted-foreground",
                   )}
                 >
                   {isPremium && <Crown className="h-3.5 w-3.5" />}
@@ -297,20 +289,11 @@ function ProfilePage() {
               <KeyRound className="h-4 w-4" />
               Změnit heslo
             </Button>
-            <Button
-              variant="outline"
-              full
-              onClick={() => setConfirmSignOut(true)}
-            >
+            <Button variant="outline" full onClick={() => setConfirmSignOut(true)}>
               <LogOut className="h-4 w-4" />
               Odhlásit se
             </Button>
-            <Button
-              variant="danger"
-              full
-              onClick={removeAccount}
-              disabled={deleting}
-            >
+            <Button variant="danger" full onClick={removeAccount} disabled={deleting}>
               {deleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
@@ -339,9 +322,7 @@ function ProfilePage() {
               <LogOut className="h-5 w-5" />
             </span>
             <h2 className="mt-4 text-lg font-bold">Opravdu odhlásit?</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Budeš se muset znovu přihlásit.
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">Budeš se muset znovu přihlásit.</p>
             <div className="mt-5 flex flex-col gap-2">
               <Button
                 variant="danger"
@@ -353,11 +334,7 @@ function ProfilePage() {
               >
                 Odhlásit se
               </Button>
-              <Button
-                variant="outline"
-                full
-                onClick={() => setConfirmSignOut(false)}
-              >
+              <Button variant="outline" full onClick={() => setConfirmSignOut(false)}>
                 Zrušit
               </Button>
             </div>
@@ -386,20 +363,13 @@ function ProfilePage() {
               </p>
             </div>
             <div className="mt-5">
-              <LicenseGroupPicker
-                initialId={selectedGroup}
-                onChange={setSelectedGroup}
-              />
+              <LicenseGroupPicker initialId={selectedGroup} onChange={setSelectedGroup} />
             </div>
             <div className="mt-5 flex flex-col gap-2">
               <Button full onClick={confirmGroupChange}>
                 Potvrdit
               </Button>
-              <Button
-                variant="outline"
-                full
-                onClick={() => setChangingGroup(false)}
-              >
+              <Button variant="outline" full onClick={() => setChangingGroup(false)}>
                 Zrušit
               </Button>
             </div>

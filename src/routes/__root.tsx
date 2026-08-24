@@ -19,16 +19,13 @@ import { BottomNav } from "../components/BottomNav";
 import { hasChosenLicenseGroup } from "../lib/license-group";
 import { applyTheme, getThemeMode } from "../lib/theme";
 
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-6xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-lg font-semibold">Stránka nenalezena</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Tuto stránku jsme nenašli.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Tuto stránku jsme nenašli.</p>
         <div className="mt-6">
           <Link
             to="/"
@@ -84,8 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       {
         name: "viewport",
-        content:
-          "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1",
       },
       { name: "theme-color", content: "#0a0a0d" },
     ],
@@ -149,9 +145,7 @@ function RootComponent() {
 
   const pathname = router.state.location.pathname;
   const hideNav =
-    pathname === "/onboarding" ||
-    pathname === "/prihlaseni" ||
-    pathname === "/reset-hesla";
+    pathname === "/onboarding" || pathname === "/prihlaseni" || pathname === "/reset-hesla";
 
   return (
     <QueryClientProvider client={queryClient}>

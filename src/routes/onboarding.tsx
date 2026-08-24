@@ -13,7 +13,6 @@ import {
   type LicenseGroupId,
 } from "@/lib/license-group";
 
-
 export const Route = createFileRoute("/onboarding")({
   ssr: false,
   head: () => ({
@@ -49,7 +48,6 @@ function Onboarding() {
     navigate({ to: "/", replace: true });
   };
 
-
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-8 px-5 py-8 safe-bottom">
       <motion.div
@@ -64,12 +62,9 @@ function Onboarding() {
         <span className="tint-primary mx-auto flex h-16 w-16 items-center justify-center rounded-2xl">
           <Target className="h-8 w-8" />
         </span>
-        <h1 className="relative mt-5 text-2xl font-extrabold leading-tight">
-          Vyber svou skupinu
-        </h1>
+        <h1 className="relative mt-5 text-2xl font-extrabold leading-tight">Vyber svou skupinu</h1>
         <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
-          Podle skupiny nastavíme hranici úspěchu. Otázky jsou pro všechny
-          stejné.
+          Podle skupiny nastavíme hranici úspěchu. Otázky jsou pro všechny stejné.
         </p>
       </motion.div>
 

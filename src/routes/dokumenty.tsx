@@ -77,9 +77,7 @@ function DocumentsPage() {
   }
 
   const allowed = new Set(
-    (isPremium ? documents : documents.slice(0, FREE_DOCUMENT_LIMIT)).map(
-      (d) => d.id,
-    ),
+    (isPremium ? documents : documents.slice(0, FREE_DOCUMENT_LIMIT)).map((d) => d.id),
   );
 
   return (
@@ -92,20 +90,13 @@ function DocumentsPage() {
         </div>
       )}
 
-      {general.length > 0 && (
-        <DocumentGroup title="Obecné" docs={general} allowed={allowed} />
-      )}
+      {general.length > 0 && <DocumentGroup title="Obecné" docs={general} allowed={allowed} />}
 
       {(subjects ?? []).map((subject) => {
         const docs = bySubject.get(subject.id);
         if (!docs?.length) return null;
         return (
-          <DocumentGroup
-            key={subject.id}
-            title={subject.name}
-            docs={docs}
-            allowed={allowed}
-          />
+          <DocumentGroup key={subject.id} title={subject.name} docs={docs} allowed={allowed} />
         );
       })}
 
@@ -138,13 +129,7 @@ function DocumentGroup({
   );
 }
 
-function DocumentCard({
-  doc,
-  locked,
-}: {
-  doc: DocumentRow;
-  locked: boolean;
-}) {
+function DocumentCard({ doc, locked }: { doc: DocumentRow; locked: boolean }) {
   const [opening, setOpening] = useState(false);
 
   async function open() {
@@ -170,11 +155,7 @@ function DocumentCard({
       className="card-surface flex items-start gap-4 p-4 text-left active:scale-[0.99]"
     >
       <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
-        {locked ? (
-          <Lock className="h-4 w-4" />
-        ) : (
-          <FileText className="h-4 w-4" />
-        )}
+        {locked ? <Lock className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-[15px] font-semibold">{doc.title}</span>
@@ -184,9 +165,7 @@ function DocumentCard({
           </span>
         )}
       </span>
-      {opening && (
-        <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
-      )}
+      {opening && <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />}
     </button>
   );
 }

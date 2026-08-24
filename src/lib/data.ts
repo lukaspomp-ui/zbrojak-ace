@@ -139,17 +139,11 @@ export async function reportQuestion(
 }
 
 export async function unlockPremium(userId: string): Promise<void> {
-  const { error } = await supabase
-    .from("profiles")
-    .update({ is_premium: true })
-    .eq("id", userId);
+  const { error } = await supabase.from("profiles").update({ is_premium: true }).eq("id", userId);
   if (error) throw error;
 }
 
-export async function consumeExamAttempt(
-  userId: string,
-  used: number,
-): Promise<void> {
+export async function consumeExamAttempt(userId: string, used: number): Promise<void> {
   const { error } = await supabase
     .from("profiles")
     .update({ exam_attempts_used: used + 1 })
@@ -159,7 +153,6 @@ export async function consumeExamAttempt(
 
 /* ---------- Educational content (data-driven per app_id) ---------- */
 
-
 export async function fetchDocuments(): Promise<DocumentRow[]> {
   const { data, error } = await supabase
     .from("documents")
@@ -167,9 +160,11 @@ export async function fetchDocuments(): Promise<DocumentRow[]> {
     .eq("app_id", CURRENT_APP_ID)
     .order("sort_order");
   if (error) throw error;
-  return ((data ?? []) as unknown as (Omit<DocumentRow, "subject_id"> & {
-    subject_key: string | null;
-  })[]).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
+  return (
+    (data ?? []) as unknown as (Omit<DocumentRow, "subject_id"> & {
+      subject_key: string | null;
+    })[]
+  ).map(({ subject_key, ...rest }) => ({ ...rest, subject_id: subject_key }));
 }
 
 /**
@@ -179,9 +174,7 @@ export async function fetchDocuments(): Promise<DocumentRow[]> {
 export async function resolveDocumentUrl(fileUrl: string): Promise<string> {
   if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
   const path = fileUrl.replace(/^\/+/, "");
-  const { data, error } = await supabase.storage
-    .from("documents")
-    .createSignedUrl(path, 3600);
+  const { data, error } = await supabase.storage.from("documents").createSignedUrl(path, 3600);
   if (error || !data?.signedUrl) throw error ?? new Error("Soubor nenalezen");
   return data.signedUrl;
 }

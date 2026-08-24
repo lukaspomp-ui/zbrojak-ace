@@ -89,9 +89,6 @@ export function getSubject(id: string): Subject | undefined {
 }
 
 /** Questions available to the user: free tier = first N by official number. */
-export function availableQuestions(
-  questions: Question[],
-  isPremium: boolean,
-): Question[] {
+export function availableQuestions(questions: Question[], isPremium: boolean): Question[] {
   return isPremium ? questions : questions.slice(0, FREE_QUESTION_LIMIT);
 }
