@@ -14,6 +14,7 @@ type RawFile = {
     spravne: string;
     obrazek: string | null;
     obrazky: string[] | null;
+    vysvetleni?: string;
   }[];
 };
 
@@ -67,7 +68,7 @@ export const QUESTIONS: Question[] = [...file.otazky]
     id: q.cislo,
     subject_id: subjectIdByName.get(q.okruh) ?? SUBJECTS[0]!.id,
     text: q.otazka,
-    explanation: "",
+    explanation: q.vysvetleni ?? "",
     images: imagesOf(q),
     sort_order: q.cislo,
     answers: (["A", "B", "C"] as AnswerKey[]).map((key) => ({
