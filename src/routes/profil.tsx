@@ -169,50 +169,62 @@ function ProfilePage() {
           <motion.section
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="card-surface flex flex-col gap-4 p-5"
+            className="card-surface relative overflow-hidden p-5"
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">E-mail</p>
-                <p className="truncate text-[15px] font-semibold">
-                  {session?.user.email ?? "—"}
-                </p>
+            <ScopeReticle
+              className="pointer-events-none absolute -right-16 -top-14 h-64 w-64 text-primary"
+              opacity={0.16}
+            />
+            <div className="relative flex flex-col gap-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">E-mail</p>
+                  <p className="truncate text-[15px] font-semibold">
+                    {session?.user.email ?? "—"}
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
+                    isPremium
+                      ? "tint-primary"
+                      : "bg-elevated text-muted-foreground",
+                  )}
+                >
+                  {isPremium && <Crown className="h-3.5 w-3.5" />}
+                  {isPremium ? "Premium" : "Free"}
+                </span>
               </div>
-              <span
-                className={cn(
-                  "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
-                  isPremium
-                    ? "tint-primary"
-                    : "bg-elevated text-muted-foreground",
-                )}
-              >
-                {isPremium && <Crown className="h-3.5 w-3.5" />}
-                {isPremium ? "Premium" : "Free"}
-              </span>
-            </div>
 
-            <div className="flex items-center justify-between border-t border-border pt-4">
-              <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">Skupina zbrojního průkazu</p>
-                <p className="text-[15px] font-semibold">
-                  {group.id} — {group.purpose}
-                </p>
-                <p className="num text-xs text-muted-foreground">
-                  {group.scopeLabel} · {group.passCorrect} z 30
-                </p>
+              <div className="flex items-center justify-between border-t border-border pt-4">
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">Skupina zbrojního průkazu</p>
+                  <p className="text-[15px] font-semibold">
+                    {group.id} — {group.purpose}
+                  </p>
+                  <p className="num text-xs text-muted-foreground">
+                    {group.scopeLabel} · {group.passCorrect} z 30
+                  </p>
+                </div>
+                <Button variant="outline" onClick={openGroupPicker}>
+                  Změnit
+                </Button>
               </div>
-              <Button variant="outline" onClick={openGroupPicker}>
-                Změnit
-              </Button>
-            </div>
 
-            <div className="flex items-center gap-5 border-t border-border pt-4">
-              <ProgressRing value={percent} />
-              <div className="min-w-0">
-                <p className="text-sm font-semibold">Tvůj pokrok</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Zvládnuto {masteredCount} z {pool.length} otázek ({percent} %)
-                </p>
+              <div className="flex items-center gap-5 border-t border-border pt-4">
+                <div className="relative shrink-0">
+                  <ScopeReticle
+                    className="pointer-events-none absolute -inset-4 text-primary"
+                    opacity={0.3}
+                  />
+                  <ProgressRing value={percent} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">Tvůj pokrok</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Zvládnuto {masteredCount} z {pool.length} otázek ({percent} %)
+                  </p>
+                </div>
               </div>
             </div>
           </motion.section>
