@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, KeyRound, Loader2, LogIn, Mail } from "lucide-react";
+import { Apple, ArrowLeft, KeyRound, Loader2, LogIn, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useAppQuery, useAppTheme } from "@/hooks/use-exam-data";
+
 
 export const Route = createFileRoute("/prihlaseni")({
   ssr: false,
@@ -83,6 +85,29 @@ function LoginPage() {
     }
   }
 
+  async function signInWithApple() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error("Přihlášení přes Apple se nepovedlo.");
+        return;
+      }
+      if (result.redirected) return;
+      toast.success("Přihlášeno.");
+      navigate({ to: "/" });
+    } catch {
+      toast.error("Přihlášení přes Apple se nepovedlo.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+
+
   const title =
     mode === "forgot" ? "Obnovit heslo" : mode === "signup" ? "Vytvořit účet" : "Přihlášení";
 
@@ -159,6 +184,24 @@ function LoginPage() {
           </button>
         )}
       </motion.form>
+
+      {mode !== "forgot" && (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              nebo
+            </span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <Button full variant="outline" type="button" disabled={busy} onClick={signInWithApple}>
+            <Apple className="h-4 w-4" />
+            Pokračovat s Apple
+          </Button>
+        </div>
+      )}
+
+
 
       <div className="text-center text-xs text-muted-foreground">
         {mode === "signup" ? (
