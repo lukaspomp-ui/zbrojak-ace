@@ -34,8 +34,9 @@ export const PAYWALL_COPY = {
   price: "299 Kč jednorázově",
   benefits: [
     "Neomezená databáze všech otázek",
-    "Chytrý algoritmus na opakování chyb",
-    "Kompletní vysvětlení paragrafů",
+    "Ostrý test na 30 otázek s časomírou",
+    "Dokumenty ke stažení a slovníček pojmů",
+    "Procházení otázek a oblíbené",
     "Garance aktualizace pro rok 2026",
   ],
 };
