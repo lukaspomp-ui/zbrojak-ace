@@ -20,6 +20,7 @@ import { ChangePasswordModal } from "@/components/ChangePasswordModal";
 import { LicenseGroupPicker } from "@/components/LicenseGroupPicker";
 import { ProgressRing } from "@/components/ProgressRing";
 import { RankBadge } from "@/components/RankBadge";
+import { ScopeReticle } from "@/components/ScopeReticle";
 import { Loading } from "@/components/Loading";
 import { setSoundsEnabled, soundsEnabled } from "@/lib/sound";
 import { useAuth } from "@/hooks/use-auth";
