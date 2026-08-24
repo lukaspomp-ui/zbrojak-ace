@@ -16,16 +16,10 @@ import {
 } from "@/hooks/use-exam-data";
 import {
   EXAM_QUESTION_COUNT,
-  FREE_EXAM_ATTEMPTS,
   PRACTICE_ROUND_SIZE,
 } from "@/lib/app-config";
 import { getFavorites } from "@/lib/favorites";
-import {
-  availableQuestions,
-  consumeExamAttempt,
-  shuffle,
-  type Question,
-} from "@/lib/data";
+import { availableQuestions, shuffle, type Question } from "@/lib/data";
 
 const searchSchema = z.object({
   mode: z.enum(["exam", "mistakes", "subject", "favorites"]).default("subject"),
@@ -67,7 +61,6 @@ function QuizPage() {
   useAppTheme(app);
 
   const isPremium = profile?.is_premium === true;
-  const attemptCharged = useRef(false);
   const [blocked, setBlocked] = useState(false);
 
   // Free verze: okruhy k procvičení, statistiky a Mé chyby.
@@ -132,7 +125,7 @@ function QuizPage() {
         <div className="card-surface p-6 text-center">
           <h1 className="text-lg font-bold">Tato část je v Premium</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Odemkni kompletní databázi a procvičování chyb.
+            Ostrý test a oblíbené otázky jsou součástí Premium.
           </p>
           <div className="mt-5 flex flex-col gap-2">
             <Button full onClick={() => navigate({ to: "/premium" })}>
