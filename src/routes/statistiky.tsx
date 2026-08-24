@@ -317,8 +317,7 @@ function StatsPage() {
         )}
       </section>
 
-      {isPremium ? (
-        <>
+      <>
           <section className="flex flex-col gap-2.5">
             <SectionLabel>Úspěšnost po okruzích</SectionLabel>
             {perSubject.map((s) => (
@@ -387,13 +386,7 @@ function StatsPage() {
               </>
             )}
           </section>
-        </>
-      ) : (
-        <PremiumTeaser
-          title="Kompletní statistiky jsou v Premium"
-          text="Premium ukáže úspěšnost po jednotlivých okruzích a tvá slabá místa s otázkami k opravě."
-        />
-      )}
+      </>
       {openAttempt && (
         <div className="fixed inset-0 z-50 flex flex-col bg-background">
           <div className="flex items-center gap-3 border-b border-border px-5 py-4">
