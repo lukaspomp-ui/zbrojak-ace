@@ -576,11 +576,6 @@ function ExamResult({
       </div>
 
       <div className="mt-4 flex flex-col gap-2">
-        <ShareResultButton
-          correct={correct}
-          total={total}
-          headline={passed ? "Prospěl jsi" : "Zatím neprospěl"}
-        />
         <Link to="/">
           <Button full>Zpět na přehled</Button>
         </Link>
