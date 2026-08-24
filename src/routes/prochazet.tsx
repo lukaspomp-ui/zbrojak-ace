@@ -3,7 +3,12 @@ import { Check, ListChecks, Search, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { ZoomableImage } from "@/components/ZoomableImage";
-import { useAppQuery, useAppTheme } from "@/hooks/use-exam-data";
+import { PremiumTeaser } from "@/components/PremiumTeaser";
+import {
+  useAppQuery,
+  useAppTheme,
+  useProfileQuery,
+} from "@/hooks/use-exam-data";
 import { QUESTIONS, SUBJECTS } from "@/lib/data";
 import { useFavorites } from "@/lib/favorites";
 import { cn } from "@/lib/utils";
@@ -27,7 +32,9 @@ const PAGE = 30;
 
 function BrowsePage() {
   const { data: app } = useAppQuery();
+  const { data: profile } = useProfileQuery();
   useAppTheme(app);
+  const isPremium = profile?.is_premium === true;
   const { favorites, isFavorite, toggle } = useFavorites();
   const [subjectId, setSubjectId] = useState<string>(SUBJECTS[0]?.id ?? "");
   const [onlyFavs, setOnlyFavs] = useState(false);
@@ -48,6 +55,22 @@ function BrowsePage() {
   }, [subjectId, onlyFavs, query, favorites]);
 
   const shown = filtered.slice(0, limit);
+
+  if (!isPremium) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
+        <PageHeader
+          title="Procházet otázky"
+          eyebrow="Studium"
+          icon={ListChecks}
+        />
+        <PremiumTeaser
+          title="Procházení otázek je v Premium"
+          text="Free verze obsahuje okruhy k procvičení, statistiky a Mé chyby. Premium odemkne procházení otázek i oblíbené."
+        />
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">

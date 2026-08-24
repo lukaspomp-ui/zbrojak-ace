@@ -52,6 +52,18 @@ function DocumentsPage() {
 
   if (!documents) return <Loading />;
 
+  if (!isPremium) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 pt-8 safe-bottom">
+        <PageHeader title="Dokumenty" eyebrow="Studium" icon={FileText} />
+        <PremiumTeaser
+          title="Dokumenty jsou v Premium"
+          text="Free verze obsahuje okruhy k procvičení, statistiky a Mé chyby. Premium odemkne dokumenty ke stažení."
+        />
+      </main>
+    );
+  }
+
   const bySubject = new Map<string, DocumentRow[]>();
   const general: DocumentRow[] = [];
   for (const doc of documents) {

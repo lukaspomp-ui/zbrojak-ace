@@ -3,10 +3,12 @@ import { Search, SpellCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Loading } from "@/components/Loading";
 import { PageHeader } from "@/components/PageHeader";
+import { PremiumTeaser } from "@/components/PremiumTeaser";
 import {
   useAppQuery,
   useAppTheme,
   useGlossaryQuery,
+  useProfileQuery,
 } from "@/hooks/use-exam-data";
 
 export const Route = createFileRoute("/slovnicek")({
@@ -37,7 +39,9 @@ export const Route = createFileRoute("/slovnicek")({
 function GlossaryPage() {
   const { data: app } = useAppQuery();
   const { data: terms } = useGlossaryQuery();
+  const { data: profile } = useProfileQuery();
   useAppTheme(app);
+  const isPremium = profile?.is_premium === true;
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -50,6 +54,18 @@ function GlossaryPage() {
   }, [terms, query]);
 
   if (!terms) return <Loading />;
+
+  if (!isPremium) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
+        <PageHeader title="Slovníček" eyebrow="Studium" icon={SpellCheck} />
+        <PremiumTeaser
+          title="Slovníček je v Premium"
+          text="Free verze obsahuje okruhy k procvičení, statistiky a Mé chyby. Premium odemkne slovníček pojmů."
+        />
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-5 pt-8 safe-bottom">
