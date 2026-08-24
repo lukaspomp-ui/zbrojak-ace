@@ -92,10 +92,7 @@ export function getSubject(id: string): Subject | undefined {
  * Questions available to the user. Free tier gets FREE_QUESTION_LIMIT otázek
  * rozdělených napříč všemi okruhy, aby se dal procvičit každý okruh.
  */
-export function availableQuestions(
-  questions: Question[],
-  isPremium: boolean,
-): Question[] {
+export function availableQuestions(questions: Question[], isPremium: boolean): Question[] {
   if (isPremium) return questions;
   const bySubject = new Map<string, Question[]>();
   for (const q of questions) {
