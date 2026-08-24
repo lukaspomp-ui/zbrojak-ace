@@ -33,7 +33,7 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
+import { FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
@@ -88,9 +88,6 @@ function Dashboard() {
     (p) => !p.mastered && p.times_wrong > 0,
   ).length;
   const streak = computeStreak(progress ?? []);
-  const examAttemptsLeft = isPremium
-    ? Infinity
-    : Math.max(0, FREE_EXAM_ATTEMPTS - (profile?.exam_attempts_used ?? 0));
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
@@ -180,20 +177,18 @@ function Dashboard() {
         <Button
           full
           onClick={() =>
-            examAttemptsLeft > 0
+            isPremium
               ? navigate({ to: "/kviz", search: { mode: "exam" } })
               : navigate({ to: "/premium" })
           }
         >
           <Timer className="h-4 w-4" />
           Spustit ostrý test
-          {!isPremium && examAttemptsLeft <= 0 && <Lock className="h-4 w-4" />}
+          {!isPremium && <Lock className="h-4 w-4" />}
         </Button>
         {!isPremium && (
           <p className="text-center text-[11px] text-muted-foreground">
-            {examAttemptsLeft > 0
-              ? `Zbývá ${examAttemptsLeft} zkušební ostrý test`
-              : "Zkušební ostrý test jsi využil"}
+            Ostrý test je součástí Premium
           </p>
         )}
 
@@ -201,12 +196,7 @@ function Dashboard() {
           <Tile
             label="Mé chyby"
             icon={Sparkles}
-            locked={!isPremium}
-            onClick={() =>
-              isPremium
-                ? navigate({ to: "/kviz", search: { mode: "mistakes" } })
-                : navigate({ to: "/premium" })
-            }
+            onClick={() => navigate({ to: "/kviz", search: { mode: "mistakes" } })}
           />
           <Tile
             label="Statistiky"
@@ -287,12 +277,14 @@ function Dashboard() {
           icon={FileText}
           title="Dokumenty"
           subtitle="Materiály ke stažení"
+          locked={!isPremium}
         />
         <StudyLink
           to="/slovnicek"
           icon={SpellCheck}
           title="Slovníček"
           subtitle="Pojmy a jejich vysvětlení"
+          locked={!isPremium}
         />
         <StudyLink
           to="/statistiky"
@@ -305,10 +297,11 @@ function Dashboard() {
           icon={BookOpen}
           title="Procházet otázky"
           subtitle="Otázky i se správnými odpověďmi"
+          locked={!isPremium}
         />
         <Link
-          to="/kviz"
-          search={{ mode: "favorites" }}
+          to={isPremium ? "/kviz" : "/premium"}
+          search={isPremium ? { mode: "favorites" } : undefined}
           className="card-surface flex items-center gap-4 p-4"
         >
           <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
@@ -322,6 +315,9 @@ function Dashboard() {
               Otázky označené hvězdičkou
             </span>
           </span>
+          {!isPremium && (
+            <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />
+          )}
           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
         </Link>
       </CollapsibleSection>
@@ -368,14 +364,19 @@ function StudyLink({
   icon: Icon,
   title,
   subtitle,
+  locked,
 }: {
   to: "/dokumenty" | "/slovnicek" | "/statistiky" | "/prochazet";
   icon: LucideIcon;
   title: string;
   subtitle: string;
+  locked?: boolean;
 }) {
   return (
-    <Link to={to} className="card-surface flex items-center gap-4 p-4">
+    <Link
+      to={locked ? "/premium" : to}
+      className="card-surface flex items-center gap-4 p-4"
+    >
       <span className="tint-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
         <Icon className="h-4.5 w-4.5" />
       </span>
@@ -383,6 +384,7 @@ function StudyLink({
         <span className="block truncate text-[15px] font-bold">{title}</span>
         <span className="block text-xs text-muted-foreground">{subtitle}</span>
       </span>
+      {locked && <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />}
       <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
     </Link>
   );
