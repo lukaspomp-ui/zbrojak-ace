@@ -15,7 +15,6 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "./Button";
 import { AnswerReview } from "./AnswerReview";
 import { RangeCountdown } from "./RangeCountdown";
-import { ShareResultButton } from "./ShareResultButton";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
@@ -576,11 +575,6 @@ function ExamResult({
       </div>
 
       <div className="mt-4 flex flex-col gap-2">
-        <ShareResultButton
-          correct={correct}
-          total={total}
-          headline={passed ? "Prospěl jsi" : "Zatím neprospěl"}
-        />
         <Link to="/">
           <Button full>Zpět na přehled</Button>
         </Link>
