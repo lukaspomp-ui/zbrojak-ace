@@ -85,6 +85,29 @@ function LoginPage() {
     }
   }
 
+  async function signInWithApple() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error("Přihlášení přes Apple se nepovedlo.");
+        return;
+      }
+      if (result.redirected) return;
+      toast.success("Přihlášeno.");
+      navigate({ to: "/" });
+    } catch {
+      toast.error("Přihlášení přes Apple se nepovedlo.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+
+
   const title =
     mode === "forgot" ? "Obnovit heslo" : mode === "signup" ? "Vytvořit účet" : "Přihlášení";
 
