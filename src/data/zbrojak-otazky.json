@@ -72,7 +72,8 @@
    "C": "hlavní část zbraně, součást zbraně umožňující samočinnou střelbu, tlumič hluku výstřelu nebo noktovizor.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Regulovanými součástmi zbraně jsou hlavní část zbraně, součást umožňující samočinnou střelbu, polotovar hlavní části zbraně, tlumič hluku výstřelu a nadlimitní zásobník. Odpovědi A i C mají nepřesný výčet. Zdroj: zákon č. 90/2024 Sb., o zbraních a střelivu."
   },
   {
    "cislo": 7,
@@ -105,7 +106,8 @@
    "C": "střelivo.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Střelivo mezi regulované součásti zbraně nepatří — regulovanými součástmi jsou části a doplňky zbraně (hlavní část, tlumič, nadlimitní zásobník, polotovar hlavní části, součást pro samočinnou střelbu), nikoli náboje. Zdroj: zákon č. 90/2024 Sb."
   },
   {
    "cislo": 10,
@@ -127,7 +129,8 @@
    "C": "úsťová zařízení, například tlumiče plamene.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Mezi regulované součásti patří i nadlimitní zásobník a tzv. bump-fire pažba (umožňuje rychlopalbu). Sklopné pažby a ramenní opěry ani úsťová zařízení jako tlumiče plamene sem nepatří. Zdroj: zákon č. 90/2024 Sb."
   },
   {
    "cislo": 12,
@@ -2250,7 +2253,8 @@
    "C": "důvodem jejího vydání nemůže být rekonstruování historických bitev nebo obdobných událostí.",
    "spravne": "A",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Pro výjimku kategorie R2 nebo S2 podle § 48 platí, že důvody pro její vydání mohou být také stejné jako důvody pro vydání výjimky kategorie R1 nebo S1. Zdroj: § 48 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 205,
@@ -3306,7 +3310,8 @@
    "C": "10 let ode dne jejich zápisu do evidenčního soupisu.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Údaje o osobě, které držitel zbrojní licence zbraň nebo regulovanou součást předal či na niž ji převedl, se uchovávají 10 let ode dne jejich zápisu do evidenčního soupisu. Zdroj: § 75 odst. 3 písm. c) zákona č. 90/2024 Sb."
   },
   {
    "cislo": 301,
@@ -3328,7 +3333,8 @@
    "C": "údaje identifikující každou součást zbraně kategorie NO.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Do centrálního registru zbraní se podle § 76 odst. 2 nezapisují údaje identifikující každou jednotlivou součást zbraně kategorie NO. Zdroj: § 76 odst. 2 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 303,
@@ -3372,7 +3378,8 @@
    "C": "je nesmí sama přenechat jiné osobě.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Osoba, které byly zbraň nebo střelivo přenechány podle § 78 odst. 1, je nesmí sama přenechat další osobě. Zdroj: § 78 odst. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 307,
@@ -3691,7 +3698,8 @@
    "C": "v souladu s pokyny stanovenými pro zabezpečení výrobcem zbraně nebo střeliva.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Uložené zbraně a střelivo je třeba zabezpečit s ohledem na jejich povahu a místní podmínky tak, aby bylo zabráněno jejich zneužití, ztrátě, odcizení nebo zašantročení. Nejde o utajení místa uložení ani jen o pokyny výrobce. Zdroj: zákon č. 90/2024 Sb."
   },
   {
    "cislo": 336,
@@ -4043,7 +4051,8 @@
    "C": "držitel zapsané autorizace, jde-li o znehodnocení nebo zhotovení řezu zbraně kategorie PO. 87",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Znehodnotit palnou zbraň nebo zhotovit její řez smí držitel zbrojní licence skupiny ZL1. Nestačí být pouze hlavním držitelem zbraně. Zdroj: zákon č. 90/2024 Sb."
   },
   {
    "cislo": 368,
@@ -4131,7 +4140,8 @@
    "C": "které jsou vojenským materiálem podle zákona o zahraničním obchodu s vojenským materiálem. 89",
    "spravne": "A",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Přeshraniční přemístění zbraně podle § 97 a násl. se týká zbraní podléhajících registraci, zbraní kategorie PO a palných zbraní kategorie NO. Zdroj: § 97 a násl. zákona č. 90/2024 Sb."
   },
   {
    "cislo": 376,
@@ -4186,7 +4196,8 @@
    "C": "je oprávněn současně přepravit střelivo pro takovou zbraň v množství odpovídajícím účelu dočasného použití.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Kdo v ČR dočasně používá zbraň dočasně přeshraničně přemístěnou podle § 97 a násl., je oprávněn současně přepravit i střelivo pro tuto zbraň v množství odpovídajícím účelu dočasného použití. Zdroj: § 97 a násl. zákona č. 90/2024 Sb."
   },
   {
    "cislo": 381,
@@ -4945,7 +4956,8 @@
    "C": "která byla označena v souladu s doporučením Českého střeleckého svazu.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Povinnost označení identifikačními údaji podle § 86 se netýká zbraně, která byla přede dnem nabytí účinnosti zákona uvedena na trh a platně ověřena, pokud tehdy ověřování podléhala. Zdroj: § 86 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 450,
@@ -4956,7 +4968,8 @@
    "C": "zbraň, jejíž funkce je odvozena od okamžitého uvolnění potenciální mechanické energie akumulované ve střelném prachu; za palnou zbraň se považují také jiné předměty, na které se vztahuje tento zákon a které lze na palnou zbraň upravit, zejména poplašné a signalizační 108 zbraně, akustické a salutní zbraně a zbraňové systémy založené na principu laseru, vyzařování částic nebo energie.",
    "spravne": "A",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Palná zbraň je zbraň, jejíž funkce je odvozena od okamžitého uvolnění chemické energie; za palnou zbraň se považují i další předměty, na které zákon tento režim vztahuje. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 451,
@@ -4967,7 +4980,8 @@
    "C": "akustická zbraň.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Definici palné zbraně splňuje i akustická zbraň. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 452,
@@ -4978,7 +4992,8 @@
    "C": "zbraň, jejíž funkce je odvozena od okamžitého uvolnění chemické energie.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Definici palné zbraně nesplňuje zbraň, jejíž funkce je odvozena od energie stlačeného vzduchu nebo jiného plynu — to je plynová, nikoli palná zbraň. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 453,
@@ -4989,7 +5004,8 @@
    "C": "plynová zbraň.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Definici palné zbraně nesplňuje plynová zbraň (funguje na stlačený vzduch/plyn, ne na uvolnění chemické energie). Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 454,
@@ -5011,7 +5027,8 @@
    "C": "tlaku plynů vznikajících při výbušném hoření střelného prachu. 109",
    "spravne": "A",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Plynová zbraň je zbraň, jejíž funkce je odvozena od okamžitého uvolnění energie stlačeného vzduchu nebo jiného plynu. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 456,
@@ -5022,7 +5039,8 @@
    "C": "palná zbraň, jejíž délka v nejkratším funkčním stavu nepřesahuje 600 mm nebo jejíž délka hlavně nepřesahuje 300 mm.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Krátká palná zbraň je zbraň, jejíž délka v nejkratším funkčním stavu nepřesahuje 600 mm nebo jejíž délka hlavně nepřesahuje 300 mm. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 457,
@@ -5033,7 +5051,8 @@
    "C": "bez ohledu na délku hlavně taková zbraň nebude vzhledem k celkové délce nikdy považována za krátkou.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Zbraň o celkové délce 620 mm je krátkou palnou zbraní tehdy, je-li délka její hlavně 200 mm (tedy nepřesahuje 300 mm). Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 458,
@@ -5044,7 +5063,8 @@
    "C": "palná zbraň, jejíž délka v nejkratším funkčním stavu činí 550 mm.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Dlouhá palná zbraň je například zbraň s hlavní délky 610 mm — přesahuje meze krátké zbraně. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 459,
@@ -5055,7 +5075,8 @@
    "C": "palná zbraň s hlavní délky alespoň 300 mm.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Dlouhá palná zbraň je vždy taková palná zbraň, která není krátkou zbraní. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 460,
@@ -5066,7 +5087,8 @@
    "C": "dlouhá samonabíjecí palná zbraň, jejíž zásobník nebo nábojová schránka a nábojová komora nemohou dohromady pojmout více než 3 náboje a jsou odnímatelné, nebo u níž není zaručeno, že nemůže být přeměněna běžně dostupnými nástroji na zbraň, jejíž zásobník nebo nábojová schránka a nábojová komora mohou dohromady pojmout více než 3 náboje.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Samočinná (automatická) palná zbraň se opětovně nabíjí energií předchozího výstřelu a její konstrukce umožňuje více výstřelů na jedno stisknutí spouště. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 461,
@@ -5077,7 +5099,8 @@
    "C": "využitím energie předchozího výstřelu a jejíž konstrukce umožňuje více výstřelů na jedno stisknutí spouště.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Samočinnou zbraní není zbraň, která se sice nabíjí v důsledku předchozího výstřelu, ale její konstrukce neumožňuje více výstřelů na jedno stisknutí spouště (to je samonabíjecí zbraň). Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 462,
@@ -5088,7 +5111,8 @@
    "C": "palná zbraň, u níž se opětovné nabití děje v důsledku předchozího výstřelu a jejíž konstrukce neumožňuje více výstřelů na jedno stisknutí spouště.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Samonabíjecí (poloautomatická) palná zbraň se opětovně nabíjí v důsledku předchozího výstřelu, ale na jedno stisknutí spouště vypálí jen jednu ránu. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 463,
@@ -5099,7 +5123,8 @@
    "C": "využitím externího pohonu odlišného od ruční manipulace s jejím závěrovým mechanismem.",
    "spravne": "A",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Samonabíjecí zbraň splňuje definici, když se opětovné nabití děje v důsledku předchozího výstřelu a konstrukce neumožňuje více výstřelů na jedno stisknutí spouště. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 464,
@@ -5198,7 +5223,8 @@
    "C": "neaktivní zbraň, u níž je poškození nebo degradace takového rozsahu, že její uschopnění ke střelbě je vyloučeno.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Znehodnocená zbraň je neaktivní zbraň, která byla včetně všech hlavních částí učiněna trvale nefunkční postupem stanoveným zákonem (popř. přímo použitelným předpisem EU nebo jiným právním předpisem). Odpovědi A a C popisují expanzní, resp. degradovanou zbraň. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 473,
@@ -5506,7 +5532,8 @@
    "C": "vložná hlaveň.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Mezi regulované součásti podle přílohy č. 1 patří například závorník i vložná hlaveň, ale noktovizor (přístroj pro noční vidění) mezi ně nepatří. Zdroj: příloha č. 1 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 501,
@@ -5726,7 +5753,8 @@
    "C": "R2.",
    "spravne": "B",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Dlouhá samonabíjecí palná zbraň, jejíž zásobník nebo nábojová schránka a nábojová komora mohou dohromady pojmout více než 3, avšak nejvýše 10 nábojů, patří do kategorie R3. Zdroj: příloha č. 2 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 521,
@@ -5759,7 +5787,8 @@
    "C": "R4.",
    "spravne": "C",
    "obrazek": null,
-   "obrazky": null
+   "obrazky": null,
+   "vysvetleni": "Samonabíjecí nebo opakovací palná zbraň s hladkým vývrtem hlavně, jejíž zásobovací ústrojí a nábojová komora nemohou dohromady pojmout více než 3 náboje a délka hlavně je větší než 60 cm, patří do kategorie R4. Zdroj: příloha č. 2 zákona č. 90/2024 Sb."
   },
   {
    "cislo": 524,
