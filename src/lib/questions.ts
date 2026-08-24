@@ -88,7 +88,35 @@ export function getSubject(id: string): Subject | undefined {
   return SUBJECTS.find((s) => s.id === id);
 }
 
-/** Questions available to the user: free tier = first N by official number. */
-export function availableQuestions(questions: Question[], isPremium: boolean): Question[] {
-  return isPremium ? questions : questions.slice(0, FREE_QUESTION_LIMIT);
+/**
+ * Questions available to the user. Free tier gets FREE_QUESTION_LIMIT otázek
+ * rozdělených napříč všemi okruhy, aby se dal procvičit každý okruh.
+ */
+export function availableQuestions(
+  questions: Question[],
+  isPremium: boolean,
+): Question[] {
+  if (isPremium) return questions;
+  const bySubject = new Map<string, Question[]>();
+  for (const q of questions) {
+    const list = bySubject.get(q.subject_id) ?? [];
+    list.push(q);
+    bySubject.set(q.subject_id, list);
+  }
+  const groups = [...bySubject.values()];
+  const picked: Question[] = [];
+  let index = 0;
+  while (picked.length < FREE_QUESTION_LIMIT) {
+    let added = false;
+    for (const group of groups) {
+      const q = group[index];
+      if (!q) continue;
+      picked.push(q);
+      added = true;
+      if (picked.length >= FREE_QUESTION_LIMIT) break;
+    }
+    if (!added) break;
+    index += 1;
+  }
+  return picked;
 }
