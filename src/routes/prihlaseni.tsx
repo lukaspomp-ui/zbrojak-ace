@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, KeyRound, Loader2, LogIn, Mail } from "lucide-react";
+import { Apple, ArrowLeft, KeyRound, Loader2, LogIn, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useAppQuery, useAppTheme } from "@/hooks/use-exam-data";
+
 
 export const Route = createFileRoute("/prihlaseni")({
   ssr: false,
