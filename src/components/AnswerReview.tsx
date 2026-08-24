@@ -6,6 +6,7 @@ import type { AnswerKey, Question } from "@/lib/data";
 /**
  * Per-question review used both on the exam result screen and in test history.
  * Green = correct answer, red = the answer the user picked wrongly.
+ * The user's selected answer is explicitly marked with a "Tvá odpověď" badge.
  */
 export function AnswerReview({
   questions,
