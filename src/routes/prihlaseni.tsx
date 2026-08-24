@@ -106,6 +106,27 @@ function LoginPage() {
     }
   }
 
+  async function signInWithGoogle() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error("Přihlášení přes Google se nepovedlo.");
+        return;
+      }
+      if (result.redirected) return;
+      toast.success("Přihlášeno.");
+      navigate({ to: "/" });
+    } catch {
+      toast.error("Přihlášení přes Google se nepovedlo.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
 
 
   const title =
