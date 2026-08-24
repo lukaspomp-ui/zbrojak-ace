@@ -185,6 +185,24 @@ function LoginPage() {
         )}
       </motion.form>
 
+      {mode !== "forgot" && (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              nebo
+            </span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <Button full variant="outline" type="button" disabled={busy} onClick={signInWithApple}>
+            <Apple className="h-4 w-4" />
+            Pokračovat s Apple
+          </Button>
+        </div>
+      )}
+
+
+
       <div className="text-center text-xs text-muted-foreground">
         {mode === "signup" ? (
           <button type="button" onClick={() => setMode("signin")} className="underline">
