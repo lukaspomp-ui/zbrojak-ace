@@ -3,7 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ChevronDown,
+  Sparkles,
   Flag,
   RotateCcw,
   Star,
@@ -64,7 +64,6 @@ export function QuizRunner({
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [reporting, setReporting] = useState(false);
-  const [explanationOpen, setExplanationOpen] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(EXAM_DURATION_SECONDS);
   /** Playful practice-mode feedback (cosmetic only). */
   const [wasCorrect, setWasCorrect] = useState<boolean | null>(null);
@@ -112,7 +111,6 @@ export function QuizRunner({
     const answer = question.answers.find((a) => a.id === answerId);
     const wasCorrect = !!answer?.is_correct;
     if (wasCorrect) setCorrectCount((c) => c + 1);
-    if (!wasCorrect) setExplanationOpen(true);
     // Cosmetic feedback — practice mode only, the exam stays blind.
     setWasCorrect(wasCorrect);
     recordAccuracy(question.subject_id, wasCorrect);
@@ -140,7 +138,6 @@ export function QuizRunner({
 
   function next() {
     setSelectedId(null);
-    setExplanationOpen(false);
     setWasCorrect(null);
     if (index + 1 >= total) {
       setFinished(true);
@@ -323,35 +320,15 @@ export function QuizRunner({
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="card-surface overflow-hidden"
+              className="card-surface p-4"
             >
-              <button
-                type="button"
-                onClick={() => setExplanationOpen((o) => !o)}
-                className="flex w-full items-center justify-between gap-2 p-4 text-left text-sm font-semibold"
-              >
+              <p className="flex items-center gap-2 text-sm font-semibold">
+                <Sparkles className="h-4 w-4 shrink-0 text-primary" />
                 Proč je to správně
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                    explanationOpen && "rotate-180",
-                  )}
-                />
-              </button>
-              <AnimatePresence initial={false}>
-                {explanationOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.24 }}
-                  >
-                    <p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">
-                      {question.explanation}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {question.explanation}
+              </p>
             </motion.div>
           )}
         </motion.div>
