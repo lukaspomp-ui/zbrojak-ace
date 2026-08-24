@@ -17,7 +17,6 @@ import { AnswerReview } from "./AnswerReview";
 import { RangeCountdown } from "./RangeCountdown";
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
-import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS } from "@/lib/app-config";
 import { useLicenseGroup } from "@/lib/license-group";
