@@ -23,6 +23,7 @@ import { useFavorites } from "@/lib/favorites";
 import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
 import { hitLabel, missLabel } from "@/lib/copy";
 import { playClick, playHit, playMiss } from "@/lib/sound";
+import { recordAccuracy } from "@/lib/accuracy";
 import {
   recordAnswer,
   type AnswerKey,
@@ -114,6 +115,7 @@ export function QuizRunner({
     if (!wasCorrect) setExplanationOpen(true);
     // Cosmetic feedback — practice mode only, the exam stays blind.
     setWasCorrect(wasCorrect);
+    recordAccuracy(question.subject_id, wasCorrect);
     if (wasCorrect) {
       setFeedbackLabel(hitLabel(hitTotal.current++));
       setHitStreak((s) => s + 1);

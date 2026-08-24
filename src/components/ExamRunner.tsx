@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS } from "@/lib/app-config";
 import { useLicenseGroup } from "@/lib/license-group";
 import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
+import { recordAccuracy } from "@/lib/accuracy";
 import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
 import {
   recordAnswer,
@@ -89,6 +90,7 @@ export function ExamRunner({
       const wasCorrect =
         !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
       if (wasCorrect) correct++;
+      recordAccuracy(q.subject_id, wasCorrect);
       const entry = secMap.get(q.subject_id) ?? {
         name: nameById.get(q.subject_id) ?? "Okruh",
         correct: 0,
