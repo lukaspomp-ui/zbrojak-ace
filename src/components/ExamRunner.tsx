@@ -15,7 +15,7 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "./Button";
 import { AnswerReview } from "./AnswerReview";
 import { RangeCountdown } from "./RangeCountdown";
-import { ShareResultButton } from "./ShareResultButton";
+
 import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
