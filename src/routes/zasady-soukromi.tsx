@@ -14,7 +14,7 @@ export const Route = createFileRoute("/zasady-soukromi")({
 
 const UPDATED = "25. 8. 2026";
 const APP = "Zbrojní průkaz 2026";
-const CONTACT = "info@zbrojak2026.cz"; // TODO: aktualizovat na skutečný e-mail
+const CONTACT = "lukas.pomp@gmail.com"; // TODO: aktualizovat na skutečný e-mail
 
 function PrivacyPage() {
   return (
