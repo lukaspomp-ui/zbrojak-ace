@@ -20,7 +20,8 @@ import { ReportModal } from "./ReportModal";
 import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { useFavorites } from "@/lib/favorites";
-import { EXAM_DURATION_SECONDS, EXAM_PASS_CORRECT } from "@/lib/app-config";
+import { EXAM_DURATION_SECONDS } from "@/lib/app-config";
+import { useLicenseGroup } from "@/lib/license-group";
 import { hitLabel, missLabel } from "@/lib/copy";
 import { playClick, playHit, playMiss } from "@/lib/sound";
 import { recordAccuracy } from "@/lib/accuracy";
@@ -53,6 +54,8 @@ export function QuizRunner({
   embedded?: boolean;
 }) {
   const queryClient = useQueryClient();
+  const { group } = useLicenseGroup();
+  const examPassCorrect = group.passCorrect;
   const { isFavorite, toggle: toggleFavorite } = useFavorites();
   const [index, setIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<AnswerKey | null>(null);
@@ -92,10 +95,7 @@ export function QuizRunner({
 
   const question = questions[index];
   const total = questions.length;
-  const passed = useMemo(
-    () => total > 0 && correctCount >= EXAM_PASS_CORRECT,
-    [correctCount, total],
-  );
+  const passed = useMemo(() => total > 0 && correctCount >= examPassCorrect, [correctCount, total]);
 
   async function pick(answerId: AnswerKey) {
     if (selectedId || !question) return;
