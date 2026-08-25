@@ -302,7 +302,18 @@ function ProfilePage() {
               Smazat účet
             </Button>
           </section>
-        </>
+          <div className="flex flex-col items-center gap-1.5 py-2">
+          <Link
+            to="/zasady-soukromi"
+            className="text-xs text-muted-foreground underline underline-offset-2"
+          >
+            Zásady soukromí / Privacy Policy
+          </Link>
+          <p className="text-[11px] text-muted-foreground">
+            Zbrojní průkaz 2026 · v1.0
+          </p>
+        </div>
+      </>
       )}
 
       {changing && <ChangePasswordModal onClose={() => setChanging(false)} />}
