@@ -18,6 +18,7 @@ import { HudBackground } from "../components/HudBackground";
 import { BottomNav } from "../components/BottomNav";
 import { hasChosenLicenseGroup } from "../lib/license-group";
 import { applyTheme, getThemeMode } from "../lib/theme";
+import { initNativeShell, isNativeApp } from "../lib/native";
 
 function NotFoundComponent() {
   return (
