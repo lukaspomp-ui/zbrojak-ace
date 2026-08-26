@@ -62,7 +62,7 @@ V Xcode nastav svůj Team, pak Product → Archive → Distribute App.
 
 1. **Guideline 4.2 (minimální funkčnost):** appka nesmí být jen webview odkaz.
    Splňujeme díky nativnímu splash screenu, offline fallbacku, ikoně a plnému
-   uzamčení navigace na vlastní domény.
+   nativnímu status baru a uzamčení na portrait režim.
 2. **Guideline 3.1.1 (in-app nákupy):** jakmile bude Premium za 99 Kč prodejné
    v iOS appce, MUSÍ jít přes Apple In-App Purchase. Do té doby nesmí být v iOS
    verzi žádné odkazy na externí platbu ani cena — jinak přijde odmítnutí.

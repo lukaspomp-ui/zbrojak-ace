@@ -14,7 +14,6 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: "never",
     backgroundColor: "#0a0a0d",
-    limitsNavigationsToAppBoundDomains: true,
   },
   server: {
     url: "https://zbrojak-ace.lovable.app",

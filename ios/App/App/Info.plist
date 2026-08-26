@@ -72,9 +72,5 @@
 	<array>
 		<string>cs</string>
 	</array>
-	<key>WKAppBoundDomains</key>
-	<array>
-		<string>zbrojak-ace.lovable.app</string>
-	</array>
 </dict>
 </plist>
