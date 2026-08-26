@@ -31,7 +31,7 @@ export const MASTERY_STREAK = 1;
 export const PAYWALL_COPY = {
   headline: "Uděláš zbroják napoprvé.",
   sub: "Odemkni kompletní databázi a procvičování chyb.",
-  price: "299 Kč jednorázově",
+  price: "99 Kč jednorázově",
   benefits: [
     "Neomezená databáze všech otázek",
     "Ostrý test na 30 otázek s časomírou",

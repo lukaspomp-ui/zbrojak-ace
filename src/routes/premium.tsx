@@ -19,7 +19,7 @@ export const Route = createFileRoute("/premium")({
       {
         name: "description",
         content:
-          "Odemkni kompletní databázi otázek, chytré opakování chyb a vysvětlení paragrafů. 299 Kč jednorázově.",
+          "Odemkni kompletní databázi otázek, chytré opakování chyb a vysvětlení paragrafů. 99 Kč jednorázově.",
       },
       { property: "og:title", content: "Premium — Uděláš zbroják napoprvé" },
       {
@@ -180,13 +180,13 @@ function Paywall() {
           />
           <Button full onClick={signUpAndUnlock} disabled={busy}>
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-            Odemknout za 299 Kč
+            Odemknout za 99 Kč
           </Button>
         </div>
       ) : (
         <Button full onClick={purchase} disabled={busy}>
           {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-          Odemknout za 299 Kč
+          Odemknout za 99 Kč
         </Button>
       )}
 
