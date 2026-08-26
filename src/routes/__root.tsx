@@ -150,6 +150,8 @@ function RootComponent() {
   }, []);
 
   useEffect(() => {
+    void initNativeShell();
+    if (isNativeApp()) return;
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
