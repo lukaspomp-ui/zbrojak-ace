@@ -1,0 +1,42 @@
+workflows:
+  ios-app-store:
+    name: Zbrojní průkaz 2026 — iOS App Store
+    max_build_duration: 60
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: cz.zbrojak2026.app
+      vars:
+        XCODE_PROJECT: "Zbroják 2026.xcodeproj"
+        XCODE_SCHEME: "Zbroják 2026"
+        BUNDLE_ID: "cz.zbrojak2026.app"
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Set bundle ID
+        script: |
+          cd src
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "Zbroják 2026/Info.plist"
+      - name: Install pods
+        script: |
+          cd src
+          pod install --repo-update
+      - name: Build and archive
+        script: |
+          cd src
+          xcode-project use-profiles
+          xcodebuild -workspace "Zbroják 2026.xcworkspace" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath build/Zbrojak.xcarchive \
+            archive
+      - name: Export IPA
+        script: |
+          cd src
+          xcode-project build-ipa \
+            --archive-path build/Zbrojak.xcarchive
+    artifacts:
+      - src/build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
