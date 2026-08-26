@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, Crown, Loader2, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isNativeApp } from "@/lib/native";
 import { toast } from "sonner";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
@@ -45,6 +46,11 @@ function Paywall() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  // App Store guideline 3.1.1: no external prices/payments inside the iOS app
+  // until Premium is sold through Apple In-App Purchase.
+  const [native, setNative] = useState(false);
+  useEffect(() => setNative(isNativeApp()), []);
+  const ctaLabel = native ? "Odemknout Premium" : "Odemknout za 99 Kč";
 
   async function signUpAndUnlock() {
     if (!email || password.length < 6) {
@@ -152,9 +158,11 @@ function Paywall() {
         ))}
       </ul>
 
-      <div className="flex items-baseline justify-center gap-2">
-        <span className="text-2xl font-bold">{PAYWALL_COPY.price}</span>
-      </div>
+      {!native && (
+        <div className="flex items-baseline justify-center gap-2">
+          <span className="text-2xl font-bold">{PAYWALL_COPY.price}</span>
+        </div>
+      )}
 
       {isGuest ? (
         <div className="flex flex-col gap-2.5">
@@ -180,19 +188,19 @@ function Paywall() {
           />
           <Button full onClick={signUpAndUnlock} disabled={busy}>
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-            Odemknout za 99 Kč
+            {ctaLabel}
           </Button>
         </div>
       ) : (
         <Button full onClick={purchase} disabled={busy}>
           {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-          Odemknout za 99 Kč
+          {ctaLabel}
         </Button>
       )}
 
       <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
         <ShieldCheck className="h-3.5 w-3.5" />
-        Jednorázová platba, žádné předplatné ani reklamy.
+        {native ? "Žádné předplatné ani reklamy." : "Jednorázová platba, žádné předplatné ani reklamy."}
       </p>
     </main>
   );

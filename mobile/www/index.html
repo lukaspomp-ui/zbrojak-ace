@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"
+    />
+    <title>Zbroják 2026</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0a0a0d;
+        color: #f4f4f5;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", system-ui, sans-serif;
+      }
+      main {
+        display: flex;
+        min-height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 32px 24px;
+        text-align: center;
+      }
+      .ring {
+        width: 64px;
+        height: 64px;
+        border-radius: 999px;
+        border: 3px solid rgba(255, 125, 26, 0.25);
+        border-top-color: #ff7d1a;
+        animation: spin 0.9s linear infinite;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: 17px;
+        font-weight: 800;
+        margin: 0;
+      }
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: #a1a1aa;
+        max-width: 22rem;
+        line-height: 1.5;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="ring" aria-hidden="true"></div>
+      <h1>Zbroják 2026</h1>
+      <p>
+        Načítám aplikaci. Pokud se nic nenačte, zkontroluj prosím připojení k internetu a zkus
+        to znovu.
+      </p>
+    </main>
+  </body>
+</html>
