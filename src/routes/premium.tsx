@@ -46,6 +46,11 @@ function Paywall() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  // App Store guideline 3.1.1: no external prices/payments inside the iOS app
+  // until Premium is sold through Apple In-App Purchase.
+  const [native, setNative] = useState(false);
+  useEffect(() => setNative(isNativeApp()), []);
+  const ctaLabel = native ? "Odemknout Premium" : "Odemknout za 99 Kč";
 
   async function signUpAndUnlock() {
     if (!email || password.length < 6) {
