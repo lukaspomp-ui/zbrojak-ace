@@ -12,7 +12,6 @@ workflows:
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
-        BUNDLE_ID: "cz.zbrojak2026.app"
       xcode: latest
       cocoapods: default
       node: 20
@@ -38,28 +37,14 @@ workflows:
         script: |
           cd ios/App
           pod install --repo-update
-      - name: Fetch signing files
-        script: |
-          app-store-connect fetch-signing-files \
-            "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
-      - name: Set up keychain
-        script: |
-          keychain initialize
-          keychain add-certificates
-      - name: Build and archive
+      - name: Set up code signing
         script: |
           xcode-project use-profiles
-          xcodebuild -workspace "$XCODE_WORKSPACE" \
-            -scheme "$XCODE_SCHEME" \
-            -configuration Release \
-            -archivePath build/Zbrojak.xcarchive \
-            -destination 'generic/platform=iOS' \
-            archive
-      - name: Export IPA
+      - name: Build IPA
         script: |
-          xcode-project build-ipa --archive-path build/Zbrojak.xcarchive
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
