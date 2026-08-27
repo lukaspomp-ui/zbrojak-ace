@@ -14,14 +14,16 @@ workflows:
       cocoapods: default
       node: 22
     scripts:
-      - name: Install dependencies
+      - name: Install dependencies and build web app
         script: |
           npm install -g bun
           bun install
-      - name: Generate iOS project (Capacitor)
+          bun run build
+      - name: Sync Capacitor iOS project
         script: |
           npx cap add ios || true
           npx cap sync ios
+          cd ios/App && pod install
       - name: Set bundle ID and version
         script: |
           cd ios/App
