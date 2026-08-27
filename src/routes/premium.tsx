@@ -80,13 +80,13 @@ function Paywall() {
     if (!userId) return;
     setBusy(true);
     try {
-      // Placeholder: real in-app purchase gets wired here later.
+      // Premium se aktivuje na serveru po zaplacení — klient ho nastavit nemůže.
       await unlockPremium(userId);
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Premium aktivováno. Hodně štěstí u zkoušky!");
       navigate({ to: "/" });
-    } catch {
-      toast.error("Aktivace se nepovedla. Zkus to prosím znovu.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Aktivace se nepovedla. Zkus to prosím znovu.");
     } finally {
       setBusy(false);
     }

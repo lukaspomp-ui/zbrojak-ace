@@ -17,6 +17,7 @@ import {
 } from "@/hooks/use-exam-data";
 import { availableQuestions, QUESTIONS } from "@/lib/data";
 import { computeStreak } from "@/lib/streak";
+import { calculateReadinessScore } from "@/lib/smart-repetition";
 import { EMPTY_HISTORY, readinessVerdict, streakLabel } from "@/lib/copy";
 import { Loading } from "@/components/Loading";
 import { getExamHistory, type ExamAttempt } from "@/lib/exam-history";
@@ -68,9 +69,17 @@ function StatsPage() {
 
   const pool = availableQuestions(questions, isPremium);
   const inPool = (id: number) => pool.some((q) => q.id === id);
-  const masteredCount = progress.filter((p) => p.mastered && inPool(p.question_id)).length;
-  const readiness = pool.length ? Math.round((masteredCount / pool.length) * 100) : 0;
+  const poolProgress = progress.filter((p) => inPool(p.question_id));
+  const readinessData = calculateReadinessScore({
+    progress: poolProgress,
+    poolSize: pool.length,
+    examPercentages: history.map((h) => (h.total ? Math.round((h.correct / h.total) * 100) : 0)),
+    examPassed: history.some((h) => h.passed),
+  });
+  const masteredCount = readinessData.mastered;
+  const readiness = readinessData.score;
   const streak = computeStreak(progress);
+
 
   const accuracy = getAccuracy();
   const perSubject = subjects.map((subject) => {

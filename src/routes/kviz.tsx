@@ -14,9 +14,12 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { EXAM_QUESTION_COUNT, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
+import { FREE_EXAM_ATTEMPTS, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
 import { getFavorites } from "@/lib/favorites";
+import { generateExam } from "@/lib/exam-engine";
+import { buildMistakesSet, buildTrainingSet } from "@/lib/smart-repetition";
 import { availableQuestions, shuffle, type Question } from "@/lib/data";
+
 
 const searchSchema = z.object({
   mode: z.enum(["exam", "mistakes", "subject", "favorites"]).default("subject"),
@@ -59,15 +62,16 @@ function QuizPage() {
 
   const isPremium = profile?.is_premium === true;
   const [blocked, setBlocked] = useState(false);
+  const [examError, setExamError] = useState<string | null>(null);
 
-  // Free verze: okruhy k procvičení, statistiky a Mé chyby.
-  // Premium: ostrý test a oblíbené otázky.
+  // Free verze: okruhy k procvičení, statistiky, Mé chyby a 1 ostrý test.
+  // Premium: neomezené ostré testy a oblíbené otázky.
+  const attemptsUsed = profile?.exam_attempts_used ?? 0;
   useEffect(() => {
     if (!profile) return;
-    if ((mode === "exam" || mode === "favorites") && !isPremium) {
-      setBlocked(true);
-    }
-  }, [profile, isPremium, mode]);
+    if (mode === "favorites" && !isPremium) setBlocked(true);
+    if (mode === "exam" && !isPremium && attemptsUsed >= FREE_EXAM_ATTEMPTS) setBlocked(true);
+  }, [profile, isPremium, mode, attemptsUsed]);
 
   const [round, setRound] = useState(0);
   const lastRoundIds = useRef<number[]>([]);
@@ -76,38 +80,38 @@ function QuizPage() {
     if (!questions || !progress) return null;
     const pool = availableQuestions(questions, isPremium);
     if (mode === "exam") {
-      // Zákon: 30 otázek losovaných z celého souboru (ne z omezené sady).
-      return shuffle(questions).slice(0, EXAM_QUESTION_COUNT);
+      // Zákonná skladba: 17 / 5 / 5 / 3 z celého souboru otázek.
+      try {
+        return generateExam(questions);
+      } catch (error) {
+        console.error("[exam] nelze sestavit ostrý test", error);
+        setExamError(
+          error instanceof Error ? error.message : "Ostrý test nelze sestavit ze sady otázek.",
+        );
+        return [];
+      }
     }
     if (mode === "mistakes") {
-      const wrong = progress
-        .filter((p) => !p.mastered && p.times_wrong > 0)
-        .sort((a, b) => b.times_wrong - a.times_wrong);
-      return wrong
-        .map((p) => pool.find((q) => q.id === p.question_id))
-        .filter((q): q is Question => !!q);
+      return buildMistakesSet(pool, progress).map((entry) => entry.question);
     }
     if (mode === "favorites") {
       const favs = getFavorites();
       return favs.map((id) => questions.find((q) => q.id === id)).filter((q): q is Question => !!q);
     }
-    // Subject practice: a fresh random round, avoiding an exact repeat.
+    // Procvičování okruhu: Smart Repetition kolo, bez okamžitého opakování.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
-    if (subjectPool.length <= PRACTICE_ROUND_SIZE) return shuffle(subjectPool);
     const previous = lastRoundIds.current;
     const fresh = subjectPool.filter((q) => !previous.includes(q.id));
-    const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
-    if (picked.length < PRACTICE_ROUND_SIZE) {
-      const filler = shuffle(subjectPool.filter((q) => !picked.some((p) => p.id === q.id))).slice(
-        0,
-        PRACTICE_ROUND_SIZE - picked.length,
-      );
-      picked.push(...filler);
-    }
+    const source = fresh.length >= PRACTICE_ROUND_SIZE ? fresh : subjectPool;
+    const picked = buildTrainingSet(source, progress, PRACTICE_ROUND_SIZE);
+    lastRoundIds.current = picked.map((q) => q.id);
+    return shuffle(picked);
+
     lastRoundIds.current = picked.map((q) => q.id);
     return shuffle(picked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, progress, isPremium, mode, subjectId, round]);
+
 
   if (!ready || !userId || !set || !profile || !progress) {
     return <Loading />;
@@ -119,7 +123,9 @@ function QuizPage() {
         <div className="card-surface p-6 text-center">
           <h1 className="text-lg font-bold">Tato část je v Premium</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Ostrý test a oblíbené otázky jsou součástí Premium.
+            {mode === "exam"
+              ? "Zdarma máš jeden ostrý test. Další ostré testy jsou v Premium."
+              : "Oblíbené otázky jsou součástí Premium."}
           </p>
           <div className="mt-5 flex flex-col gap-2">
             <Button full onClick={() => navigate({ to: "/premium" })}>
@@ -136,9 +142,28 @@ function QuizPage() {
     );
   }
 
+  if (mode === "exam" && (examError || set.length === 0)) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-4 px-5">
+        <div className="card-surface p-6 text-center">
+          <h1 className="text-lg font-bold">Ostrý test nelze spustit</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Sadu otázek se nepodařilo sestavit podle zkouškové skladby. Zkus to prosím znovu později.
+          </p>
+          <Link to="/" className="mt-5 block">
+            <Button variant="outline" full>
+              Zpět na přehled
+            </Button>
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   if (mode === "exam") {
     return <ExamRunner questions={set} userId={userId} progress={progress} title="Ostrý test" />;
   }
+
 
   const title =
     mode === "mistakes"

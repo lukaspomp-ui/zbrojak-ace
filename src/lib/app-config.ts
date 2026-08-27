@@ -26,7 +26,7 @@ export const EXAM_PASS_CORRECT = 26;
 export const PRACTICE_ROUND_SIZE = 5;
 
 /** Mastery rule: correct answers in a row needed to master a question */
-export const MASTERY_STREAK = 1;
+export const MASTERY_STREAK = 2;
 
 export const PAYWALL_COPY = {
   headline: "Uděláš zbroják napoprvé.",

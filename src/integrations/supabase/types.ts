@@ -246,29 +246,44 @@ export type Database = {
       }
       user_progress: {
         Row: {
+          correct_count: number
           correct_streak: number
           id: string
+          last_answer_correct: boolean | null
           last_answered_at: string
           mastered: boolean
+          mastery_level: number
+          next_review_at: string | null
           question_id: number
+          times_seen: number
           times_wrong: number
           user_id: string
         }
         Insert: {
+          correct_count?: number
           correct_streak?: number
           id?: string
+          last_answer_correct?: boolean | null
           last_answered_at?: string
           mastered?: boolean
+          mastery_level?: number
+          next_review_at?: string | null
           question_id: number
+          times_seen?: number
           times_wrong?: number
           user_id: string
         }
         Update: {
+          correct_count?: number
           correct_streak?: number
           id?: string
+          last_answer_correct?: boolean | null
           last_answered_at?: string
           mastered?: boolean
+          mastery_level?: number
+          next_review_at?: string | null
           question_id?: number
+          times_seen?: number
           times_wrong?: number
           user_id?: string
         }
@@ -279,7 +294,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_exam_attempt: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never

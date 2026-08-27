@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
-import { CURRENT_APP_ID, MASTERY_STREAK } from "./app-config";
+import { CURRENT_APP_ID } from "./app-config";
+import { applyAnswer, type QuestionState } from "./smart-repetition";
 
 export {
   availableQuestions,
@@ -11,6 +12,7 @@ export {
 } from "./questions";
 export { DOCUMENTS, DOCUMENTS_VERSION } from "./documents";
 export { GLOSSARY, GLOSSARY_VERSION } from "./glossary";
+export { shuffle } from "./shuffle";
 export type { GlossaryTerm } from "./glossary";
 export type { Answer, AnswerKey, Question, Subject } from "./questions";
 
@@ -21,14 +23,12 @@ export type AppRow = {
   logo_url: string | null;
 };
 
-/** Progress rows are keyed on the official question number ("cislo"). */
-export type Progress = {
-  question_id: number;
-  times_wrong: number;
-  correct_streak: number;
-  mastered: boolean;
-  last_answered_at?: string | null;
-};
+/**
+ * Progress rows are keyed on the official question number ("cislo") and are the
+ * single source of truth for Smart Repetition.
+ */
+export type Progress = QuestionState;
+
 
 export type DocumentRow = {
   id: string;
@@ -76,50 +76,36 @@ export async function fetchProfile(userId: string): Promise<Profile | null> {
 export async function fetchProgress(userId: string): Promise<Progress[]> {
   const { data, error } = await supabase
     .from("user_progress")
-    .select("question_id, times_wrong, correct_streak, mastered, last_answered_at")
+    .select(
+      "question_id, times_seen, correct_count, times_wrong, correct_streak, mastery_level, mastered, last_answered_at, next_review_at, last_answer_correct",
+    )
     .eq("user_id", userId);
   if (error) throw error;
   return (data ?? []) as unknown as Progress[];
 }
 
-export function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-/** Spaced repetition write: applied after every answer. */
+/** Smart Repetition write: applied after every answer (single code path). */
 export async function recordAnswer(
   userId: string,
   questionId: number,
   wasCorrect: boolean,
   current: Progress | undefined,
 ): Promise<Progress> {
-  const next: Progress = wasCorrect
-    ? {
-        question_id: questionId,
-        times_wrong: current?.times_wrong ?? 0,
-        correct_streak: (current?.correct_streak ?? 0) + 1,
-        mastered: (current?.correct_streak ?? 0) + 1 >= MASTERY_STREAK,
-      }
-    : {
-        question_id: questionId,
-        times_wrong: (current?.times_wrong ?? 0) + 1,
-        correct_streak: 0,
-        mastered: false,
-      };
+  const next = applyAnswer(current, questionId, wasCorrect);
 
   const { error } = await supabase.from("user_progress").upsert(
     {
       user_id: userId,
       question_id: questionId,
+      times_seen: next.times_seen,
+      correct_count: next.correct_count,
       times_wrong: next.times_wrong,
       correct_streak: next.correct_streak,
+      mastery_level: next.mastery_level,
       mastered: next.mastered,
-      last_answered_at: new Date().toISOString(),
+      last_answered_at: next.last_answered_at,
+      next_review_at: next.next_review_at,
+      last_answer_correct: next.last_answer_correct,
     } as never,
     { onConflict: "user_id,question_id" },
   );
@@ -138,18 +124,26 @@ export async function reportQuestion(
   if (error) throw error;
 }
 
-export async function unlockPremium(userId: string): Promise<void> {
-  const { error } = await supabase.from("profiles").update({ is_premium: true }).eq("id", userId);
-  if (error) throw error;
+/**
+ * Premium entitlement is server-controlled — the client cannot set `is_premium`
+ * (a database trigger rejects it). Until in-app purchase is wired up, this call
+ * intentionally reports that no purchase channel is available.
+ */
+export async function unlockPremium(_userId: string): Promise<never> {
+  throw new Error("Premium se aktivuje po zaplacení; platební kanál zatím není napojený.");
 }
 
-export async function consumeExamAttempt(userId: string, used: number): Promise<void> {
-  const { error } = await supabase
-    .from("profiles")
-    .update({ exam_attempts_used: used + 1 })
-    .eq("id", userId);
+/** Consumes exactly one exam attempt server-side; returns the new counter. */
+export async function consumeExamAttempt(): Promise<number | null> {
+  const { data, error } = await (
+    supabase as unknown as {
+      rpc: (fn: string) => Promise<{ data: number | null; error: unknown }>;
+    }
+  ).rpc("consume_exam_attempt");
   if (error) throw error;
+  return data ?? null;
 }
+
 
 /* ---------- Educational content (data-driven per app_id) ---------- */
 
