@@ -24,6 +24,7 @@ workflows:
           rm -rf ios
           npx cap add ios
           npx cap sync ios
+          cd ios/App && pod install
       - name: Set bundle ID and version
         script: |
           cd ios/App
