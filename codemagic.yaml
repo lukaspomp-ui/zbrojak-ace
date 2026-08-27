@@ -32,25 +32,4 @@ workflows:
         script: |
           keychain initialize
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
-          keychain add-certificates
-          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          TEAM_ID=$(grep -aA2 "TeamIdentifier" "$PROFILES_DIR"/*.mobileprovision | grep -o '<string>[^<]*</string>' | head -n 1 | sed 's/<[^>]*>//g')
-          if [ -n "$TEAM_ID" ]; then
-            echo "Detekováno Apple Team ID: $TEAM_ID"
-            sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = $TEAM_ID;/g" ios/App/App.xcodeproj/project.pbxproj
-          fi
-          xcode-project use-profiles --project "$XCODE_PROJECT"
-      - name: Build IPA
-        script: |
-          xcode-project build-ipa \
-            --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
+            --type
