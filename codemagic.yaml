@@ -23,7 +23,8 @@ workflows:
           rm -rf ios
           npx cap add ios
           npx cap sync ios
-      - name: Set bundle ID and version
+          sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_ID;/g" ios/App/App.xcodeproj/project.pbxproj
+      - name: Set build number
         script: |
           cd ios/App
           agvtool new-version -all $(($BUILD_NUMBER + 1))
