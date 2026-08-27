@@ -47,7 +47,9 @@ export function ExamRunner({
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
+  const [timeExpired, setTimeExpired] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(EXAM_DURATION_SECONDS);
+
   const [navOpen, setNavOpen] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [confirmSubmit, setConfirmSubmit] = useState(false);
