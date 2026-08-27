@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
-import { CURRENT_APP_ID, MASTERY_STREAK } from "./app-config";
+import { CURRENT_APP_ID } from "./app-config";
+import { applyAnswer, type QuestionState } from "./smart-repetition";
 
 export {
   availableQuestions,
@@ -11,6 +12,7 @@ export {
 } from "./questions";
 export { DOCUMENTS, DOCUMENTS_VERSION } from "./documents";
 export { GLOSSARY, GLOSSARY_VERSION } from "./glossary";
+export { shuffle } from "./shuffle";
 export type { GlossaryTerm } from "./glossary";
 export type { Answer, AnswerKey, Question, Subject } from "./questions";
 
@@ -21,14 +23,12 @@ export type AppRow = {
   logo_url: string | null;
 };
 
-/** Progress rows are keyed on the official question number ("cislo"). */
-export type Progress = {
-  question_id: number;
-  times_wrong: number;
-  correct_streak: number;
-  mastered: boolean;
-  last_answered_at?: string | null;
-};
+/**
+ * Progress rows are keyed on the official question number ("cislo") and are the
+ * single source of truth for Smart Repetition.
+ */
+export type Progress = QuestionState;
+
 
 export type DocumentRow = {
   id: string;
