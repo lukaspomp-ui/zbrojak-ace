@@ -14,9 +14,12 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { EXAM_QUESTION_COUNT, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
+import { FREE_EXAM_ATTEMPTS, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
 import { getFavorites } from "@/lib/favorites";
+import { generateExam } from "@/lib/exam-engine";
+import { buildMistakesSet, buildTrainingSet } from "@/lib/smart-repetition";
 import { availableQuestions, shuffle, type Question } from "@/lib/data";
+
 
 const searchSchema = z.object({
   mode: z.enum(["exam", "mistakes", "subject", "favorites"]).default("subject"),
