@@ -470,6 +470,12 @@ function ExamResult({
 
   return (
     <main className="mx-auto w-full max-w-md px-5 pt-6 safe-bottom">
+      {timeExpired && (
+        <div className="mb-3 flex items-center gap-2 rounded-2xl border border-destructive/40 bg-destructive/15 px-4 py-3 text-sm font-semibold text-destructive">
+          <Timer className="h-4 w-4 shrink-0" />
+          Čas vypršel. Test byl automaticky odevzdán.
+        </div>
+      )}
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
