@@ -133,7 +133,7 @@ export function ExamRunner({
   }
 
   if (finished) {
-    return <ExamResult questions={questions} answers={answers} />;
+    return <ExamResult questions={questions} answers={answers} timeExpired={timeExpired} />;
   }
 
   if (!question) {
