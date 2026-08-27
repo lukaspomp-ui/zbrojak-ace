@@ -103,21 +103,22 @@ export function ExamRunner({
     setFinished(true);
   }, [answers, questions, userId, progress, queryClient, passCorrect]);
 
-  // Timer — auto-submits when it hits zero.
+  // Timer — tick only; auto-submit is handled in a separate effect.
   useEffect(() => {
     if (finished || counting) return;
     const id = window.setInterval(() => {
-      setSecondsLeft((s) => {
-        if (s <= 1) {
-          window.clearInterval(id);
-          void finish();
-          return 0;
-        }
-        return s - 1;
-      });
+      setSecondsLeft((s) => (s <= 1 ? 0 : s - 1));
     }, 1000);
     return () => window.clearInterval(id);
-  }, [finished, counting, finish]);
+  }, [finished, counting]);
+
+  // Čas vypršel → automatické odevzdání testu.
+  useEffect(() => {
+    if (finished || counting || secondsLeft > 0) return;
+    setTimeExpired(true);
+    void finish();
+  }, [secondsLeft, finished, counting, finish]);
+
 
   function requestSubmit() {
     setNavOpen(false);
