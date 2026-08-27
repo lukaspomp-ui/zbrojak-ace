@@ -25,27 +25,17 @@ workflows:
       - name: Configure Xcode project settings
         script: |
           sed -i '' "s/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_ID;/g" ios/App/App.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' ios/App/App.xcodeproj/project.pbxproj
           cd ios/App
           agvtool new-version -all $(($BUILD_NUMBER + 1))
-      - name: Fetch certificates, extract Team ID and apply profiles
+      - name: Fetch certificates and apply profiles
         script: |
           keychain initialize
           app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
           keychain add-certificates
-          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          TEAM_ID=$(grep -aA2 "TeamIdentifier" "$PROFILES_DIR"/*.mobileprovision | grep -o '<string>[^<]*</string>' | head -n 1 | sed 's/<[^>]*>//g')
-          if [ -n "$TEAM_ID" ]; then
-            echo "Detekováno Apple Team ID: $TEAM_ID"
-            sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = $TEAM_ID;/g" ios/App/App.xcodeproj/project.pbxproj
-          fi
           xcode-project use-profiles --project "$XCODE_PROJECT"
       - name: Build IPA
         script: |
-          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-          PROFILE=$(ls "$PROFILES_DIR"/*.mobileprovision | head -1)
-          PROFILE_UUID=$(grep -aA1 "UUID" "$PROFILE" | grep -o '[0-9A-F-]\{36\}' | head -1)
-          xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME" --xcodebuild-arguments "PROVISIONING_PROFILE=$PROFILE_UUID CODE_SIGN_STYLE=Manual"
+          xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
