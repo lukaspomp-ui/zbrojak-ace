@@ -123,7 +123,9 @@ function QuizPage() {
         <div className="card-surface p-6 text-center">
           <h1 className="text-lg font-bold">Tato část je v Premium</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Ostrý test a oblíbené otázky jsou součástí Premium.
+            {mode === "exam"
+              ? "Zdarma máš jeden ostrý test. Další ostré testy jsou v Premium."
+              : "Oblíbené otázky jsou součástí Premium."}
           </p>
           <div className="mt-5 flex flex-col gap-2">
             <Button full onClick={() => navigate({ to: "/premium" })}>
@@ -140,9 +142,28 @@ function QuizPage() {
     );
   }
 
+  if (mode === "exam" && (examError || set.length === 0)) {
+    return (
+      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-4 px-5">
+        <div className="card-surface p-6 text-center">
+          <h1 className="text-lg font-bold">Ostrý test nelze spustit</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Sadu otázek se nepodařilo sestavit podle zkouškové skladby. Zkus to prosím znovu později.
+          </p>
+          <Link to="/" className="mt-5 block">
+            <Button variant="outline" full>
+              Zpět na přehled
+            </Button>
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   if (mode === "exam") {
     return <ExamRunner questions={set} userId={userId} progress={progress} title="Ostrý test" />;
   }
+
 
   const title =
     mode === "mistakes"
