@@ -92,7 +92,7 @@ function QuizPage() {
       }
     }
     if (mode === "mistakes") {
-      return buildMistakesSet(pool, progress);
+      return buildMistakesSet(pool, progress).map((entry) => entry.question);
     }
     if (mode === "favorites") {
       const favs = getFavorites();
@@ -100,9 +100,13 @@ function QuizPage() {
     }
     // Procvičování okruhu: Smart Repetition kolo, bez okamžitého opakování.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
-    const picked = buildTrainingSet(subjectPool, progress, PRACTICE_ROUND_SIZE, {
-      excludeIds: lastRoundIds.current,
-    });
+    const previous = lastRoundIds.current;
+    const fresh = subjectPool.filter((q) => !previous.includes(q.id));
+    const source = fresh.length >= PRACTICE_ROUND_SIZE ? fresh : subjectPool;
+    const picked = buildTrainingSet(source, progress, PRACTICE_ROUND_SIZE);
+    lastRoundIds.current = picked.map((q) => q.id);
+    return shuffle(picked);
+
     lastRoundIds.current = picked.map((q) => q.id);
     return shuffle(picked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
