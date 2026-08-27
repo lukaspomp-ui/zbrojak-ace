@@ -6,12 +6,10 @@ workflows:
     integrations:
       app_store_connect: Zbrojak 2026
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: cz.zbrojak2026.app
       vars:
         XCODE_PROJECT: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"
+        BUNDLE_ID: "cz.zbrojak2026.app"
       xcode: latest
       node: 22
     scripts:
@@ -20,7 +18,7 @@ workflows:
           npm install -g bun
           bun install
           bun run build
-      - name: Sync Capacitor iOS project
+      - name: Generate iOS project
         script: |
           npx cap add ios || true
           npx cap sync ios
@@ -28,6 +26,15 @@ workflows:
         script: |
           cd ios/App
           agvtool new-version -all $(($BUILD_NUMBER + 1))
+      - name: Fetch and create signing profiles
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' ios/App/App.xcodeproj/project.pbxproj
+          xcode-project use-profiles --project "$XCODE_PROJECT"
       - name: Build IPA
         script: |
           xcode-project build-ipa \
