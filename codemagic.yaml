@@ -6,12 +6,10 @@ workflows:
     integrations:
       app_store_connect: Zbrojak 2026
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: cz.zbrojak2026.app
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
+        BUNDLE_ID: "cz.zbrojak2026.app"
       xcode: latest
       cocoapods: default
       node: 20
@@ -37,8 +35,13 @@ workflows:
         script: |
           cd ios/App
           pod install --repo-update
-      - name: Set up code signing
+      - name: Fetch and create signing profiles
         script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
           xcode-project use-profiles
       - name: Build IPA
         script: |
