@@ -22,12 +22,7 @@ workflows:
         script: |
           npx cap add ios || true
           npx cap sync ios
-      - name: Generate app icons and splash screens
-        script: |
-          npx capacitor-assets generate --ios \
-            --assetPath mobile/assets \
-            --iosProject ios/App
-      - name: Set bundle ID and version
+            - name: Set bundle ID and version
         script: |
           cd ios/App
           agvtool new-version -all $(($BUILD_NUMBER + 1))
