@@ -14,7 +14,25 @@ import { useLicenseGroup } from "@/lib/license-group";
 import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
 import { recordAccuracy } from "@/lib/accuracy";
 import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
-import { recordAnswer, SUBJECTS, type AnswerKey, type Progress, type Question } from "@/lib/data";
+import { getExamResult } from "@/lib/exam-scoring";
+import {
+  consumeExamAttempt,
+  recordAnswer,
+  SUBJECTS,
+  type AnswerKey,
+  type Progress,
+  type Question,
+} from "@/lib/data";
+
+/** Výsledek jednoho ostrého testu. */
+export type ExamSummary = {
+  totalQuestions: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+  unanswered: number;
+  durationSeconds: number;
+  timedOut: boolean;
+};
 
 type Answers = Record<number, AnswerKey>;
 
@@ -49,6 +67,9 @@ export function ExamRunner({
   const [finished, setFinished] = useState(false);
   const [timeExpired, setTimeExpired] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(EXAM_DURATION_SECONDS);
+  const [summary, setSummary] = useState<ExamSummary | null>(null);
+  /** Skutečný start testu (po povelovém odpočtu). */
+  const startedAt = useRef<number | null>(null);
 
   const [navOpen, setNavOpen] = useState(false);
   const [reporting, setReporting] = useState(false);
@@ -61,7 +82,8 @@ export function ExamRunner({
   const question = questions[index];
   const answeredCount = Object.keys(answers).length;
 
-  const finish = useCallback(async () => {
+  const finish = useCallback(
+    async (timedOut = false) => {
     if (submitting.current) return;
     submitting.current = true;
     const progressMap = new Map(progress.map((p) => [p.question_id, p]));
@@ -89,12 +111,32 @@ export function ExamRunner({
       }
     }
     const total = questions.length;
+    const answeredIds = Object.keys(answers).length;
+    const durationSeconds = startedAt.current
+      ? Math.round((Date.now() - startedAt.current) / 1000)
+      : EXAM_DURATION_SECONDS - secondsLeft;
+    const examSummary: ExamSummary = {
+      totalQuestions: total,
+      correctAnswers: correct,
+      wrongAnswers: total - correct - (total - answeredIds),
+      unanswered: total - answeredIds,
+      durationSeconds,
+      timedOut,
+    };
+    setSummary(examSummary);
+    try {
+      // Free limit se spotřebuje až po dokončení testu (server-side).
+      await consumeExamAttempt();
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    } catch {
+      /* nikdy neblokuj vyhodnocení testu */
+    }
     saveExamAttempt({
       id: newAttemptId(),
       date: new Date().toISOString(),
       correct,
       total,
-      passed: correct >= passCorrect,
+      passed: getExamResult(correct, group.id, total).passed,
       sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
         (x): x is { name: string; correct: number; total: number } => !!x,
       ),
@@ -103,7 +145,9 @@ export function ExamRunner({
     });
     queryClient.invalidateQueries({ queryKey: ["progress"] });
     setFinished(true);
-  }, [answers, questions, userId, progress, queryClient, passCorrect]);
+    },
+    [answers, questions, userId, progress, queryClient, group.id, secondsLeft],
+  );
 
   // Timer — tick only; auto-submit is handled in a separate effect.
   useEffect(() => {
@@ -118,7 +162,7 @@ export function ExamRunner({
   useEffect(() => {
     if (finished || counting || secondsLeft > 0) return;
     setTimeExpired(true);
-    void finish();
+    void finish(true);
   }, [secondsLeft, finished, counting, finish]);
 
 
@@ -129,11 +173,25 @@ export function ExamRunner({
   }
 
   if (counting) {
-    return <RangeCountdown onDone={() => setCounting(false)} />;
+    return (
+      <RangeCountdown
+        onDone={() => {
+          startedAt.current = Date.now();
+          setCounting(false);
+        }}
+      />
+    );
   }
 
   if (finished) {
-    return <ExamResult questions={questions} answers={answers} timeExpired={timeExpired} />;
+    return (
+      <ExamResult
+        questions={questions}
+        answers={answers}
+        timeExpired={timeExpired}
+        summary={summary}
+      />
+    );
   }
 
   if (!question) {
@@ -440,10 +498,12 @@ function ExamResult({
   questions,
   answers,
   timeExpired,
+  summary,
 }: {
   questions: Question[];
   answers: Answers;
   timeExpired?: boolean;
+  summary?: ExamSummary | null;
 }) {
   const total = questions.length;
   const nameById = new Map(SUBJECTS.map((s) => [s.id, s.name]));
@@ -462,10 +522,11 @@ function ExamResult({
     bySubject.set(q.subject_id, entry);
   }
 
-  const percent = total ? Math.round((correct / total) * 100) : 0;
   const { group } = useLicenseGroup();
-  const passCorrect = group.passCorrect;
-  const passed = correct >= passCorrect;
+  const result = getExamResult(correct, group.id, total);
+  const percent = result.percentage;
+  const passCorrect = result.requiredCorrectAnswers;
+  const passed = result.passed;
   const sections = SUBJECTS.map((s) => bySubject.get(s.id)).filter((x): x is SectionResult => !!x);
 
   return (
@@ -499,6 +560,13 @@ function ExamResult({
             Hodnoceno pro {group.scope === "obecne" ? "obecné" : "rozšířené"} oprávnění (skupina{" "}
             {group.id})
           </p>
+          {summary && (
+            <p className="mt-1 text-xs text-muted-foreground tabular-nums">
+              Nezodpovězeno {summary.unanswered} · čas{" "}
+              {Math.floor(summary.durationSeconds / 60)}:
+              {String(summary.durationSeconds % 60).padStart(2, "0")}
+            </p>
+          )}
         </div>
       </motion.div>
 
