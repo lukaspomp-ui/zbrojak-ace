@@ -68,9 +68,17 @@ function StatsPage() {
 
   const pool = availableQuestions(questions, isPremium);
   const inPool = (id: number) => pool.some((q) => q.id === id);
-  const masteredCount = progress.filter((p) => p.mastered && inPool(p.question_id)).length;
-  const readiness = pool.length ? Math.round((masteredCount / pool.length) * 100) : 0;
+  const poolProgress = progress.filter((p) => inPool(p.question_id));
+  const readinessData = calculateReadinessScore({
+    progress: poolProgress,
+    poolSize: pool.length,
+    examPercentages: history.map((h) => h.percent),
+    examPassed: history.some((h) => h.passed),
+  });
+  const masteredCount = readinessData.mastered;
+  const readiness = readinessData.score;
   const streak = computeStreak(progress);
+
 
   const accuracy = getAccuracy();
   const perSubject = subjects.map((subject) => {
