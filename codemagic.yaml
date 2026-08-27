@@ -7,11 +7,10 @@ workflows:
       app_store_connect: Zbrojak 2026
     environment:
       vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"
         BUNDLE_ID: "cz.zbrojak2026.app"
       xcode: latest
-      cocoapods: default
       node: 22
     scripts:
       - name: Install dependencies and build web app
@@ -24,7 +23,6 @@ workflows:
           rm -rf ios
           npx cap add ios
           npx cap sync ios
-          cd ios/App && pod install
       - name: Set bundle ID and version
         script: |
           cd ios/App
@@ -40,7 +38,7 @@ workflows:
       - name: Build IPA
         script: |
           xcode-project build-ipa \
-            --workspace "$XCODE_WORKSPACE" \
+            --project "$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
