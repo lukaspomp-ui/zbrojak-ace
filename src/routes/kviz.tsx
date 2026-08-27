@@ -62,15 +62,16 @@ function QuizPage() {
 
   const isPremium = profile?.is_premium === true;
   const [blocked, setBlocked] = useState(false);
+  const [examError, setExamError] = useState<string | null>(null);
 
-  // Free verze: okruhy k procvičení, statistiky a Mé chyby.
-  // Premium: ostrý test a oblíbené otázky.
+  // Free verze: okruhy k procvičení, statistiky, Mé chyby a 1 ostrý test.
+  // Premium: neomezené ostré testy a oblíbené otázky.
+  const attemptsUsed = profile?.exam_attempts_used ?? 0;
   useEffect(() => {
     if (!profile) return;
-    if ((mode === "exam" || mode === "favorites") && !isPremium) {
-      setBlocked(true);
-    }
-  }, [profile, isPremium, mode]);
+    if (mode === "favorites" && !isPremium) setBlocked(true);
+    if (mode === "exam" && !isPremium && attemptsUsed >= FREE_EXAM_ATTEMPTS) setBlocked(true);
+  }, [profile, isPremium, mode, attemptsUsed]);
 
   const [round, setRound] = useState(0);
   const lastRoundIds = useRef<number[]>([]);
@@ -79,38 +80,34 @@ function QuizPage() {
     if (!questions || !progress) return null;
     const pool = availableQuestions(questions, isPremium);
     if (mode === "exam") {
-      // Zákon: 30 otázek losovaných z celého souboru (ne z omezené sady).
-      return shuffle(questions).slice(0, EXAM_QUESTION_COUNT);
+      // Zákonná skladba: 17 / 5 / 5 / 3 z celého souboru otázek.
+      try {
+        return generateExam(questions);
+      } catch (error) {
+        console.error("[exam] nelze sestavit ostrý test", error);
+        setExamError(
+          error instanceof Error ? error.message : "Ostrý test nelze sestavit ze sady otázek.",
+        );
+        return [];
+      }
     }
     if (mode === "mistakes") {
-      const wrong = progress
-        .filter((p) => !p.mastered && p.times_wrong > 0)
-        .sort((a, b) => b.times_wrong - a.times_wrong);
-      return wrong
-        .map((p) => pool.find((q) => q.id === p.question_id))
-        .filter((q): q is Question => !!q);
+      return buildMistakesSet(pool, progress);
     }
     if (mode === "favorites") {
       const favs = getFavorites();
       return favs.map((id) => questions.find((q) => q.id === id)).filter((q): q is Question => !!q);
     }
-    // Subject practice: a fresh random round, avoiding an exact repeat.
+    // Procvičování okruhu: Smart Repetition kolo, bez okamžitého opakování.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
-    if (subjectPool.length <= PRACTICE_ROUND_SIZE) return shuffle(subjectPool);
-    const previous = lastRoundIds.current;
-    const fresh = subjectPool.filter((q) => !previous.includes(q.id));
-    const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
-    if (picked.length < PRACTICE_ROUND_SIZE) {
-      const filler = shuffle(subjectPool.filter((q) => !picked.some((p) => p.id === q.id))).slice(
-        0,
-        PRACTICE_ROUND_SIZE - picked.length,
-      );
-      picked.push(...filler);
-    }
+    const picked = buildTrainingSet(subjectPool, progress, PRACTICE_ROUND_SIZE, {
+      excludeIds: lastRoundIds.current,
+    });
     lastRoundIds.current = picked.map((q) => q.id);
     return shuffle(picked);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, progress, isPremium, mode, subjectId, round]);
+
 
   if (!ready || !userId || !set || !profile || !progress) {
     return <Loading />;
