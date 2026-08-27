@@ -436,7 +436,15 @@ function Navigator({
 
 type SectionResult = { name: string; correct: number; total: number };
 
-function ExamResult({ questions, answers }: { questions: Question[]; answers: Answers }) {
+function ExamResult({
+  questions,
+  answers,
+  timeExpired,
+}: {
+  questions: Question[];
+  answers: Answers;
+  timeExpired?: boolean;
+}) {
   const total = questions.length;
   const nameById = new Map(SUBJECTS.map((s) => [s.id, s.name]));
   const bySubject = new Map<string, SectionResult>();
