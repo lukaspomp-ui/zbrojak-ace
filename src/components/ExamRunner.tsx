@@ -47,7 +47,9 @@ export function ExamRunner({
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
+  const [timeExpired, setTimeExpired] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(EXAM_DURATION_SECONDS);
+
   const [navOpen, setNavOpen] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [confirmSubmit, setConfirmSubmit] = useState(false);
@@ -103,21 +105,22 @@ export function ExamRunner({
     setFinished(true);
   }, [answers, questions, userId, progress, queryClient, passCorrect]);
 
-  // Timer — auto-submits when it hits zero.
+  // Timer — tick only; auto-submit is handled in a separate effect.
   useEffect(() => {
     if (finished || counting) return;
     const id = window.setInterval(() => {
-      setSecondsLeft((s) => {
-        if (s <= 1) {
-          window.clearInterval(id);
-          void finish();
-          return 0;
-        }
-        return s - 1;
-      });
+      setSecondsLeft((s) => (s <= 1 ? 0 : s - 1));
     }, 1000);
     return () => window.clearInterval(id);
-  }, [finished, counting, finish]);
+  }, [finished, counting]);
+
+  // Čas vypršel → automatické odevzdání testu.
+  useEffect(() => {
+    if (finished || counting || secondsLeft > 0) return;
+    setTimeExpired(true);
+    void finish();
+  }, [secondsLeft, finished, counting, finish]);
+
 
   function requestSubmit() {
     setNavOpen(false);
@@ -130,7 +133,7 @@ export function ExamRunner({
   }
 
   if (finished) {
-    return <ExamResult questions={questions} answers={answers} />;
+    return <ExamResult questions={questions} answers={answers} timeExpired={timeExpired} />;
   }
 
   if (!question) {
@@ -433,7 +436,15 @@ function Navigator({
 
 type SectionResult = { name: string; correct: number; total: number };
 
-function ExamResult({ questions, answers }: { questions: Question[]; answers: Answers }) {
+function ExamResult({
+  questions,
+  answers,
+  timeExpired,
+}: {
+  questions: Question[];
+  answers: Answers;
+  timeExpired?: boolean;
+}) {
   const total = questions.length;
   const nameById = new Map(SUBJECTS.map((s) => [s.id, s.name]));
   const bySubject = new Map<string, SectionResult>();
@@ -459,6 +470,12 @@ function ExamResult({ questions, answers }: { questions: Question[]; answers: An
 
   return (
     <main className="mx-auto w-full max-w-md px-5 pt-6 safe-bottom">
+      {timeExpired && (
+        <div className="mb-3 flex items-center gap-2 rounded-2xl border border-destructive/40 bg-destructive/15 px-4 py-3 text-sm font-semibold text-destructive">
+          <Timer className="h-4 w-4 shrink-0" />
+          Čas vypršel. Test byl automaticky odevzdán.
+        </div>
+      )}
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
