@@ -17,6 +17,7 @@ import {
 } from "@/hooks/use-exam-data";
 import { availableQuestions, QUESTIONS } from "@/lib/data";
 import { computeStreak } from "@/lib/streak";
+import { calculateReadinessScore } from "@/lib/smart-repetition";
 import { EMPTY_HISTORY, readinessVerdict, streakLabel } from "@/lib/copy";
 import { Loading } from "@/components/Loading";
 import { getExamHistory, type ExamAttempt } from "@/lib/exam-history";
@@ -72,7 +73,7 @@ function StatsPage() {
   const readinessData = calculateReadinessScore({
     progress: poolProgress,
     poolSize: pool.length,
-    examPercentages: history.map((h) => h.percent),
+    examPercentages: history.map((h) => (h.total ? Math.round((h.correct / h.total) * 100) : 0)),
     examPassed: history.some((h) => h.passed),
   });
   const masteredCount = readinessData.mastered;
