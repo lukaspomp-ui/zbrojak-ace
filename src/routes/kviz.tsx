@@ -17,7 +17,7 @@ import {
 import { FREE_EXAM_ATTEMPTS, PRACTICE_ROUND_SIZE } from "@/lib/app-config";
 import { getFavorites } from "@/lib/favorites";
 import { generateExam } from "@/lib/exam-engine";
-import { buildMistakesSet, buildTrainingSet } from "@/lib/smart-repetition";
+import { buildMistakesSet, buildPracticeRound } from "@/lib/smart-repetition";
 import { availableQuestions, shuffle, type Question } from "@/lib/data";
 
 
