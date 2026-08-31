@@ -1,32 +1,30 @@
+import { supabase } from "@/integrations/supabase/client";
+
 export type AccuracyMap = Record<string, { answered: number; correct: number }>;
 
-const KEY = "zbrojak:accuracy";
-
-function read(): AccuracyMap {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as AccuracyMap) : {};
-  } catch {
-    return {};
+/**
+ * Úspěšnost po okruzích je vázaná na účet (ne na zařízení) — čte se ze serveru,
+ * takže se uživateli zobrazí na každém zařízení, kde je přihlášený.
+ */
+export async function fetchAccuracy(userId: string): Promise<AccuracyMap> {
+  const { data, error } = await supabase
+    .from("subject_accuracy")
+    .select("subject_id, answered, correct")
+    .eq("user_id", userId);
+  if (error) throw error;
+  const map: AccuracyMap = {};
+  for (const row of data ?? []) {
+    map[row.subject_id] = { answered: row.answered, correct: row.correct };
   }
+  return map;
 }
 
-/** Success rate per okruh, aggregated from every answered question on the device. */
-export function getAccuracy(): AccuracyMap {
-  return read();
-}
-
-export function recordAccuracy(subjectId: string, correct: boolean): void {
-  if (typeof window === "undefined" || !subjectId) return;
-  const map = read();
-  const cur = map[subjectId] ?? { answered: 0, correct: 0 };
-  cur.answered += 1;
-  if (correct) cur.correct += 1;
-  map[subjectId] = cur;
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify(map));
-  } catch {
-    /* best-effort */
-  }
+/** Zapíše jednu zodpovězenou otázku do úspěšnosti okruhu (server-side upsert). */
+export async function recordAccuracy(subjectId: string, correct: boolean): Promise<void> {
+  if (!subjectId) return;
+  const { error } = await supabase.rpc("bump_subject_accuracy", {
+    _subject_id: subjectId,
+    _correct: correct,
+  });
+  if (error) throw error;
 }
