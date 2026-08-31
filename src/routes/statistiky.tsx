@@ -8,8 +8,10 @@ import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { useAuth } from "@/hooks/use-auth";
 import {
+  useAccuracyQuery,
   useAppQuery,
   useAppTheme,
+  useExamHistoryQuery,
   useProfileQuery,
   useProgressQuery,
   useQuestionsQuery,
@@ -20,10 +22,9 @@ import { computeStreak } from "@/lib/streak";
 import { calculateReadinessScore } from "@/lib/smart-repetition";
 import { EMPTY_HISTORY, readinessVerdict, streakLabel } from "@/lib/copy";
 import { Loading } from "@/components/Loading";
-import { getExamHistory, type ExamAttempt } from "@/lib/exam-history";
+import { type ExamAttempt } from "@/lib/exam-history";
 import { cn } from "@/lib/utils";
 import { useLicenseGroup } from "@/lib/license-group";
-import { getAccuracy } from "@/lib/accuracy";
 
 export const Route = createFileRoute("/statistiky")({
   ssr: false,
