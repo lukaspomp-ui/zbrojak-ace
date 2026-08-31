@@ -83,7 +83,7 @@ function Dashboard() {
     (p) => p.mastered && pool.some((q) => q.id === p.question_id),
   ).length;
   const percent = pool.length ? (masteredCount / pool.length) * 100 : 0;
-  const wrongCount = (progress ?? []).filter((p) => !p.mastered && p.last_answer_correct === false).length;
+  const wrongCount = (progress ?? []).filter((p) => !p.mastered && p.times_wrong > 0).length;
   const streak = computeStreak(progress ?? []);
 
   return (
@@ -106,13 +106,18 @@ function Dashboard() {
           </Link>
           <RankBadge mastered={masteredCount} />
           {!isPremium && (
-            <Link
-              to="/premium"
-              className="tint-primary flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
-            >
-              <Crown className="h-3 w-3" />
-              Premium
-            </Link>
+            <div className="flex items-center gap-1.5">
+              <span className="rounded-full bg-elevated px-2.5 py-1 text-[11px] font-bold text-muted-foreground">
+                Free
+              </span>
+              <Link
+                to="/premium"
+                className="tint-primary flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
+              >
+                <Crown className="h-3 w-3" />
+                Premium
+              </Link>
+            </div>
           )}
         </div>
       </header>
@@ -209,7 +214,7 @@ function Dashboard() {
             subjectQuestions.some((q) => q.id === p.question_id),
           );
           const mastered = rows.filter((p) => p.mastered).length;
-          const wrong = rows.filter((p) => !p.mastered && p.last_answer_correct === false).length;
+          const wrong = rows.filter((p) => !p.mastered && p.times_wrong > 0).length;
           const nove = Math.max(0, total - mastered - wrong);
           return (
             <motion.div
