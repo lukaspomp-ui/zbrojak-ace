@@ -187,6 +187,40 @@ export function buildTrainingSet(
   );
 }
 
+/**
+ * Procvičovací kolo:
+ * 1) primárně otázky zodpovězené naposledy špatně (a nové), řazené podle priority,
+ * 2) správně zodpovězené otázky až na konci výběru (náhodně),
+ * 3) otázka se nesmí objevit ve více než dvou po sobě jdoucích kolech.
+ */
+export function buildPracticeRound(
+  pool: Question[],
+  progress: QuestionState[],
+  size: number,
+  /** ID otázek z předchozích kol, nejnovější kolo první. */
+  history: number[][] = [],
+  now: Date = new Date(),
+): Question[] {
+  const states = stateMap(progress);
+  const [last = [], beforeLast = []] = history;
+  const usedTwice = new Set(last.filter((id) => beforeLast.includes(id)));
+
+  const allowed = pool.filter((q) => !usedTwice.has(q.id));
+  const source = allowed.length >= size ? allowed : pool;
+
+  const priority = source
+    .filter((q) => states.get(q.id)?.last_answer_correct !== true)
+    .map((q) => ({ q, score: priorityScore(states.get(q.id), now) }))
+    .sort((a, b) => b.score - a.score)
+    .map((entry) => entry.q);
+
+  const answeredCorrectly = shuffle(
+    source.filter((q) => states.get(q.id)?.last_answer_correct === true),
+  );
+
+  return shuffle([...priority, ...answeredCorrectly].slice(0, size));
+}
+
 /** Otázky pro sekci „Mé chyby“ — poslední odpověď musela být špatná.
  * Když ji uživatel v tomto režimu zodpoví správně, zmizí ze seznamu.
  */

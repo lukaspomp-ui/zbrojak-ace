@@ -5,7 +5,8 @@ import { PremiumTeaser } from "./PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfileQuery, useProgressQuery, useQuestionsQuery } from "@/hooks/use-exam-data";
 import { PRACTICE_ROUND_SIZE } from "@/lib/app-config";
-import { availableQuestions, shuffle, type Question } from "@/lib/data";
+import { buildPracticeRound } from "@/lib/smart-repetition";
+import { availableQuestions, type Question } from "@/lib/data";
 
 /**
  * The existing 5-random-question practice round, unchanged in behaviour,
@@ -19,24 +20,14 @@ export function PracticeRound({ subjectId, title }: { subjectId: string; title: 
 
   const isPremium = profile?.is_premium === true;
   const [round, setRound] = useState(0);
-  const lastRoundIds = useRef<number[]>([]);
+  const lastRoundIds = useRef<number[][]>([]);
 
   const set = useMemo<Question[] | null>(() => {
     if (!questions || !progress) return null;
     const pool = availableQuestions(questions, isPremium).filter((q) => q.subject_id === subjectId);
-    if (pool.length <= PRACTICE_ROUND_SIZE) return shuffle(pool);
-    const previous = lastRoundIds.current;
-    const fresh = pool.filter((q) => !previous.includes(q.id));
-    const picked = shuffle(fresh).slice(0, PRACTICE_ROUND_SIZE);
-    if (picked.length < PRACTICE_ROUND_SIZE) {
-      const filler = shuffle(pool.filter((q) => !picked.some((p) => p.id === q.id))).slice(
-        0,
-        PRACTICE_ROUND_SIZE - picked.length,
-      );
-      picked.push(...filler);
-    }
-    lastRoundIds.current = picked.map((q) => q.id);
-    return shuffle(picked);
+    const picked = buildPracticeRound(pool, progress, PRACTICE_ROUND_SIZE, lastRoundIds.current);
+    lastRoundIds.current = [picked.map((q) => q.id), ...lastRoundIds.current].slice(0, 2);
+    return picked;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, progress, isPremium, subjectId, round]);
 
