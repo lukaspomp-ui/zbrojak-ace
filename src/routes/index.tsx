@@ -140,10 +140,12 @@ function Dashboard() {
             <p className="mt-2 text-lg font-extrabold leading-tight">{readinessVerdict(percent)}</p>
             <p className="num mt-1 text-xs leading-relaxed text-muted-foreground">
               Zvládnuto {masteredCount} z {pool.length} otázek
-              {!isPremium && questions.length > FREE_QUESTION_LIMIT
-                ? ` · free ${FREE_QUESTION_LIMIT}`
-                : ""}
             </p>
+            {!isPremium && questions.length > FREE_QUESTION_LIMIT && (
+              <p className="mt-2 inline-flex items-center rounded-lg bg-primary/15 px-2.5 py-1 text-xs font-bold text-primary">
+                Free verze: {FREE_QUESTION_LIMIT} z {questions.length} otázek
+              </p>
+            )}
             {wrongCount > 0 && (
               <p className="num mt-2 text-xs font-semibold text-destructive">
                 {wrongCount} otázek k opravě
@@ -199,6 +201,8 @@ function Dashboard() {
 
       <CollapsibleSection title="Okruhy k procvičení" icon={BookOpen} defaultOpen>
         {subjects.map((subject, i) => {
+          const realSubjectQuestions = questions.filter((q) => q.subject_id === subject.id);
+          const realTotal = realSubjectQuestions.length;
           const subjectQuestions = pool.filter((q) => q.subject_id === subject.id);
           const total = subjectQuestions.length;
           const rows = (progress ?? []).filter((p) =>
@@ -227,6 +231,11 @@ function Dashboard() {
                   <span className="num block text-xs text-muted-foreground">
                     {mastered} zvládnuto · {wrong} chybných · {nove} nových
                   </span>
+                  {!isPremium && realTotal > total && (
+                    <span className="num block text-xs font-semibold text-primary">
+                      {total} z {realTotal} otázek (free)
+                    </span>
+                  )}
                   <span className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-elevated">
                     <span
                       className="block h-full"
