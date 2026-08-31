@@ -140,10 +140,12 @@ function Dashboard() {
             <p className="mt-2 text-lg font-extrabold leading-tight">{readinessVerdict(percent)}</p>
             <p className="num mt-1 text-xs leading-relaxed text-muted-foreground">
               Zvládnuto {masteredCount} z {pool.length} otázek
-              {!isPremium && questions.length > FREE_QUESTION_LIMIT
-                ? ` · free ${FREE_QUESTION_LIMIT}`
-                : ""}
             </p>
+            {!isPremium && questions.length > FREE_QUESTION_LIMIT && (
+              <p className="mt-2 inline-flex items-center rounded-lg bg-primary/15 px-2.5 py-1 text-xs font-bold text-primary">
+                Free verze: {FREE_QUESTION_LIMIT} z {questions.length} otázek
+              </p>
+            )}
             {wrongCount > 0 && (
               <p className="num mt-2 text-xs font-semibold text-destructive">
                 {wrongCount} otázek k opravě
