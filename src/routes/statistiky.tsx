@@ -61,13 +61,15 @@ function StatsPage() {
   useAppTheme(app);
   const { group } = useLicenseGroup();
 
-  const [history] = useState<ExamAttempt[]>(() => getExamHistory());
+  const { data: historyData } = useExamHistoryQuery();
+  const { data: accuracyData } = useAccuracyQuery();
   const [openAttempt, setOpenAttempt] = useState<ExamAttempt | null>(null);
 
   const isPremium = profile?.is_premium === true;
 
   if (!ready || !questions || !subjects || !progress) return <Loading />;
 
+  const history = historyData ?? [];
   const pool = availableQuestions(questions, isPremium);
   const inPool = (id: number) => pool.some((q) => q.id === id);
   const poolProgress = progress.filter((p) => inPool(p.question_id));
@@ -81,8 +83,7 @@ function StatsPage() {
   const readiness = readinessData.score;
   const streak = computeStreak(progress);
 
-
-  const accuracy = getAccuracy();
+  const accuracy = accuracyData ?? {};
   const perSubject = subjects.map((subject) => {
     const total = pool.filter((q) => q.subject_id === subject.id).length;
     const mastered = progress.filter(
