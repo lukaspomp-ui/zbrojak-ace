@@ -33,7 +33,7 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { FREE_QUESTION_LIMIT } from "@/lib/app-config";
+import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
