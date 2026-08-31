@@ -106,7 +106,7 @@ export function QuizRunner({
     if (wasCorrect) setCorrectCount((c) => c + 1);
     // Cosmetic feedback — practice mode only, the exam stays blind.
     setWasCorrect(wasCorrect);
-    recordAccuracy(question.subject_id, wasCorrect);
+    void recordAccuracy(question.subject_id, wasCorrect).catch(() => {});
     if (wasCorrect) {
       setFeedbackLabel(hitLabel(hitTotal.current++));
       setHitStreak((s) => s + 1);
