@@ -82,6 +82,45 @@ export type Database = {
           },
         ]
       }
+      exam_attempts: {
+        Row: {
+          answers: Json
+          correct: number
+          created_at: string
+          id: string
+          passed: boolean
+          question_ids: Json
+          sections: Json
+          taken_at: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          answers?: Json
+          correct?: number
+          created_at?: string
+          id?: string
+          passed?: boolean
+          question_ids?: Json
+          sections?: Json
+          taken_at?: string
+          total?: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          correct?: number
+          created_at?: string
+          id?: string
+          passed?: boolean
+          question_ids?: Json
+          sections?: Json
+          taken_at?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       glossary: {
         Row: {
           app_id: string
@@ -206,6 +245,36 @@ export type Database = {
         }
         Relationships: []
       }
+      subject_accuracy: {
+        Row: {
+          answered: number
+          correct: number
+          created_at: string
+          id: string
+          subject_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answered?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          subject_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answered?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          subject_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       summaries: {
         Row: {
           app_id: string
@@ -294,6 +363,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bump_subject_accuracy: {
+        Args: { _correct: boolean; _subject_id: string }
+        Returns: undefined
+      }
       consume_exam_attempt: { Args: never; Returns: number }
     }
     Enums: {

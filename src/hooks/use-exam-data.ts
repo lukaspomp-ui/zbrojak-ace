@@ -14,6 +14,8 @@ import {
   type Subject,
 } from "@/lib/data";
 import { DEV_OPEN } from "@/lib/app-config";
+import { fetchAccuracy } from "@/lib/accuracy";
+import { fetchExamHistory } from "@/lib/exam-history";
 import { useAuth } from "./use-auth";
 
 /**
@@ -70,6 +72,26 @@ export function useProgressQuery() {
   return useQuery({
     queryKey: ["progress", userId],
     queryFn: () => fetchProgress(userId as string),
+    enabled: !!userId,
+  });
+}
+
+/** Historie ostrých testů je vázaná na účet (server), ne na zařízení. */
+export function useExamHistoryQuery() {
+  const { userId } = useAuth();
+  return useQuery({
+    queryKey: ["exam-history", userId],
+    queryFn: () => fetchExamHistory(userId as string),
+    enabled: !!userId,
+  });
+}
+
+/** Úspěšnost po okruzích je vázaná na účet (server), ne na zařízení. */
+export function useAccuracyQuery() {
+  const { userId } = useAuth();
+  return useQuery({
+    queryKey: ["accuracy", userId],
+    queryFn: () => fetchAccuracy(userId as string),
     enabled: !!userId,
   });
 }

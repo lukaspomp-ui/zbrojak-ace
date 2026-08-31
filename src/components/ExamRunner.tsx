@@ -11,7 +11,7 @@ import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS } from "@/lib/app-config";
 import { useLicenseGroup } from "@/lib/license-group";
-import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
+import { saveExamAttempt } from "@/lib/exam-history";
 import { recordAccuracy } from "@/lib/accuracy";
 import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
 import { getExamResult } from "@/lib/exam-scoring";
@@ -94,7 +94,7 @@ export function ExamRunner({
       const chosen = answers[q.id];
       const wasCorrect = !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
       if (wasCorrect) correct++;
-      recordAccuracy(q.subject_id, wasCorrect);
+      void recordAccuracy(q.subject_id, wasCorrect).catch(() => {});
       const entry = secMap.get(q.subject_id) ?? {
         name: nameById.get(q.subject_id) ?? "Okruh",
         correct: 0,
@@ -131,19 +131,25 @@ export function ExamRunner({
     } catch {
       /* nikdy neblokuj vyhodnocení testu */
     }
-    saveExamAttempt({
-      id: newAttemptId(),
-      date: new Date().toISOString(),
-      correct,
-      total,
-      passed: getExamResult(correct, group.id, total).passed,
-      sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
-        (x): x is { name: string; correct: number; total: number } => !!x,
-      ),
-      questionIds: questions.map((q) => q.id),
-      answers,
-    });
+    try {
+      // Historie testů patří k účtu, ne k zařízení.
+      await saveExamAttempt(userId, {
+        date: new Date().toISOString(),
+        correct,
+        total,
+        passed: getExamResult(correct, group.id, total).passed,
+        sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
+          (x): x is { name: string; correct: number; total: number } => !!x,
+        ),
+        questionIds: questions.map((q) => q.id),
+        answers,
+      });
+      queryClient.invalidateQueries({ queryKey: ["exam-history"] });
+    } catch {
+      /* historie je best-effort; nikdy neblokuj vyhodnocení testu */
+    }
     queryClient.invalidateQueries({ queryKey: ["progress"] });
+    queryClient.invalidateQueries({ queryKey: ["accuracy"] });
     setFinished(true);
     },
     [answers, questions, userId, progress, queryClient, group.id, secondsLeft],

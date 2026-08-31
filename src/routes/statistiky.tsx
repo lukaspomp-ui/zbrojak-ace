@@ -8,8 +8,10 @@ import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { useAuth } from "@/hooks/use-auth";
 import {
+  useAccuracyQuery,
   useAppQuery,
   useAppTheme,
+  useExamHistoryQuery,
   useProfileQuery,
   useProgressQuery,
   useQuestionsQuery,
@@ -20,10 +22,9 @@ import { computeStreak } from "@/lib/streak";
 import { calculateReadinessScore } from "@/lib/smart-repetition";
 import { EMPTY_HISTORY, readinessVerdict, streakLabel } from "@/lib/copy";
 import { Loading } from "@/components/Loading";
-import { getExamHistory, type ExamAttempt } from "@/lib/exam-history";
+import { type ExamAttempt } from "@/lib/exam-history";
 import { cn } from "@/lib/utils";
 import { useLicenseGroup } from "@/lib/license-group";
-import { getAccuracy } from "@/lib/accuracy";
 
 export const Route = createFileRoute("/statistiky")({
   ssr: false,
@@ -60,13 +61,15 @@ function StatsPage() {
   useAppTheme(app);
   const { group } = useLicenseGroup();
 
-  const [history] = useState<ExamAttempt[]>(() => getExamHistory());
+  const { data: historyData } = useExamHistoryQuery();
+  const { data: accuracyData } = useAccuracyQuery();
   const [openAttempt, setOpenAttempt] = useState<ExamAttempt | null>(null);
 
   const isPremium = profile?.is_premium === true;
 
   if (!ready || !questions || !subjects || !progress) return <Loading />;
 
+  const history = historyData ?? [];
   const pool = availableQuestions(questions, isPremium);
   const inPool = (id: number) => pool.some((q) => q.id === id);
   const poolProgress = progress.filter((p) => inPool(p.question_id));
@@ -80,8 +83,7 @@ function StatsPage() {
   const readiness = readinessData.score;
   const streak = computeStreak(progress);
 
-
-  const accuracy = getAccuracy();
+  const accuracy = accuracyData ?? {};
   const perSubject = subjects.map((subject) => {
     const total = pool.filter((q) => q.subject_id === subject.id).length;
     const mastered = progress.filter(
