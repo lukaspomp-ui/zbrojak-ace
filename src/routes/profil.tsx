@@ -171,7 +171,10 @@ function ProfilePage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">E-mail</p>
-                  <p className="truncate text-[15px] font-semibold">{session?.user.email ?? "—"}</p>
+                  <p className="truncate text-[15px] font-semibold">
+                    {session?.user.email ?? (isGuest ? "Host (bez registrace)" : "—")}
+                  </p>
+
                 </div>
                 <span
                   className={cn(
