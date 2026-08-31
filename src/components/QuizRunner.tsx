@@ -361,12 +361,14 @@ function ResultCard({
   total,
   passed,
   onNextRound,
+  mistakesMode,
 }: {
   mode: QuizMode;
   correct: number;
   total: number;
   passed: boolean;
   onNextRound?: () => void;
+  mistakesMode?: boolean;
 }) {
   const percent = total ? Math.round((correct / total) * 100) : 0;
   return (
