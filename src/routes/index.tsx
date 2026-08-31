@@ -164,18 +164,20 @@ function Dashboard() {
         <Button
           full
           onClick={() =>
-            isPremium
+            isPremium || freeExamLeft
               ? navigate({ to: "/kviz", search: { mode: "exam" } })
               : navigate({ to: "/premium" })
           }
         >
           <Timer className="h-4 w-4" />
           Spustit ostrý test
-          {!isPremium && <Lock className="h-4 w-4" />}
+          {!isPremium && !freeExamLeft && <Lock className="h-4 w-4" />}
         </Button>
         {!isPremium && (
           <p className="text-center text-[11px] text-muted-foreground">
-            Ostrý test je součástí Premium
+            {freeExamLeft
+              ? "Ve free verzi máš jeden ostrý test zdarma"
+              : "Další ostré testy jsou součástí Premium"}
           </p>
         )}
 
