@@ -74,6 +74,26 @@ export function useProgressQuery() {
   });
 }
 
+/** Historie ostrých testů je vázaná na účet (server), ne na zařízení. */
+export function useExamHistoryQuery() {
+  const { userId } = useAuth();
+  return useQuery({
+    queryKey: ["exam-history", userId],
+    queryFn: () => fetchExamHistory(userId as string),
+    enabled: !!userId,
+  });
+}
+
+/** Úspěšnost po okruzích je vázaná na účet (server), ne na zařízení. */
+export function useAccuracyQuery() {
+  const { userId } = useAuth();
+  return useQuery({
+    queryKey: ["accuracy", userId],
+    queryFn: () => fetchAccuracy(userId as string),
+    enabled: !!userId,
+  });
+}
+
 
 
 
