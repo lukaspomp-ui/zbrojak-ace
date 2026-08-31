@@ -1,3 +1,4 @@
+import { supabase } from "@/integrations/supabase/client";
 import type { AnswerKey } from "./data";
 
 export type SectionScore = { name: string; correct: number; total: number };
@@ -13,34 +14,45 @@ export type ExamAttempt = {
   answers: Record<number, AnswerKey>;
 };
 
-const KEY = "zbrojak:exam-history";
 const MAX = 100;
 
-/** Completed exams are stored on the device (newest first). */
-export function getExamHistory(): ExamAttempt[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as ExamAttempt[]) : [];
-  } catch {
-    return [];
-  }
+/**
+ * Historie ostrých testů je vázaná na účet — uloží se na server, takže ji
+ * uživatel vidí na každém zařízení, kde je přihlášený (nejnovější první).
+ */
+export async function fetchExamHistory(userId: string): Promise<ExamAttempt[]> {
+  const { data, error } = await supabase
+    .from("exam_attempts")
+    .select("id, taken_at, correct, total, passed, sections, question_ids, answers")
+    .eq("user_id", userId)
+    .order("taken_at", { ascending: false })
+    .limit(MAX);
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    date: row.taken_at,
+    correct: row.correct,
+    total: row.total,
+    passed: row.passed,
+    sections: (row.sections ?? []) as unknown as SectionScore[],
+    questionIds: (row.question_ids ?? []) as unknown as number[],
+    answers: (row.answers ?? {}) as unknown as Record<number, AnswerKey>,
+  }));
 }
 
-export function saveExamAttempt(attempt: ExamAttempt): ExamAttempt[] {
-  if (typeof window === "undefined") return [];
-  const list = [attempt, ...getExamHistory()].slice(0, MAX);
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify(list));
-  } catch {
-    /* storage full / unavailable — history is best-effort */
-  }
-  return list;
-}
-
-export function newAttemptId(): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+export async function saveExamAttempt(
+  userId: string,
+  attempt: Omit<ExamAttempt, "id">,
+): Promise<void> {
+  const { error } = await supabase.from("exam_attempts").insert({
+    user_id: userId,
+    taken_at: attempt.date,
+    correct: attempt.correct,
+    total: attempt.total,
+    passed: attempt.passed,
+    sections: attempt.sections as never,
+    question_ids: attempt.questionIds as never,
+    answers: attempt.answers as never,
+  });
+  if (error) throw error;
 }
