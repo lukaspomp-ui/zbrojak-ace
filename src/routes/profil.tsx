@@ -280,24 +280,27 @@ function ProfilePage() {
             </div>
           </section>
 
-          <section className="flex flex-col gap-2.5">
-            <Button variant="outline" full onClick={() => setChanging(true)}>
-              <KeyRound className="h-4 w-4" />
-              Změnit heslo
-            </Button>
-            <Button variant="outline" full onClick={() => setConfirmSignOut(true)}>
-              <LogOut className="h-4 w-4" />
-              Odhlásit se
-            </Button>
-            <Button variant="danger" full onClick={removeAccount} disabled={deleting}>
-              {deleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
-              Smazat účet
-            </Button>
-          </section>
+          {!isGuest && (
+            <section className="flex flex-col gap-2.5">
+              <Button variant="outline" full onClick={() => setChanging(true)}>
+                <KeyRound className="h-4 w-4" />
+                Změnit heslo
+              </Button>
+              <Button variant="outline" full onClick={() => setConfirmSignOut(true)}>
+                <LogOut className="h-4 w-4" />
+                Odhlásit se
+              </Button>
+              <Button variant="danger" full onClick={removeAccount} disabled={deleting}>
+                {deleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+                Smazat účet
+              </Button>
+            </section>
+          )}
+
           <div className="flex flex-col items-center gap-1.5 py-2">
           <Link
             to="/zasady-soukromi"
