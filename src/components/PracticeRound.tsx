@@ -5,7 +5,8 @@ import { PremiumTeaser } from "./PremiumTeaser";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfileQuery, useProgressQuery, useQuestionsQuery } from "@/hooks/use-exam-data";
 import { PRACTICE_ROUND_SIZE } from "@/lib/app-config";
-import { availableQuestions, shuffle, type Question } from "@/lib/data";
+import { buildPracticeRound } from "@/lib/smart-repetition";
+import { availableQuestions, type Question } from "@/lib/data";
 
 /**
  * The existing 5-random-question practice round, unchanged in behaviour,
