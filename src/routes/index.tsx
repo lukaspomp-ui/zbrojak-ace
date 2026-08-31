@@ -233,7 +233,7 @@ function Dashboard() {
                   </span>
                   {!isPremium && realTotal > total && (
                     <span className="num block text-xs font-semibold text-primary">
-                      {total} z {realTotal} otázek (free)
+                      {total} z tvých 50 free otázek
                     </span>
                   )}
                   <span className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-elevated">
