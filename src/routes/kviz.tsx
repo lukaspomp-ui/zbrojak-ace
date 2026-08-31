@@ -181,6 +181,7 @@ function QuizPage() {
         userId={userId}
         progress={progress}
         {...(mode === "subject" ? { onNextRound: () => setRound((r) => r + 1) } : {})}
+        mistakesMode={mode === "mistakes"}
         key={`${mode}-${subjectId ?? ""}-${round}`}
       />
     </main>

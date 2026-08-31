@@ -43,6 +43,7 @@ export function QuizRunner({
   progress,
   onNextRound,
   embedded,
+  mistakesMode,
 }: {
   questions: Question[];
   mode: QuizMode;
@@ -52,6 +53,8 @@ export function QuizRunner({
   onNextRound?: () => void;
   /** Rendered inside the subject tabs, where the screen already has a header. */
   embedded?: boolean;
+  /** Hides the redundant "Procvičit mé chyby" button when already in mistakes mode. */
+  mistakesMode?: boolean;
 }) {
   const queryClient = useQueryClient();
   const { group } = useLicenseGroup();
@@ -147,6 +150,7 @@ export function QuizRunner({
         total={total}
         passed={passed}
         onNextRound={onNextRound}
+        mistakesMode={mistakesMode}
       />
     );
   }
@@ -357,12 +361,14 @@ function ResultCard({
   total,
   passed,
   onNextRound,
+  mistakesMode,
 }: {
   mode: QuizMode;
   correct: number;
   total: number;
   passed: boolean;
   onNextRound?: () => void;
+  mistakesMode?: boolean;
 }) {
   const percent = total ? Math.round((correct / total) * 100) : 0;
   return (
@@ -408,12 +414,14 @@ function ResultCard({
             Zpět na přehled
           </Button>
         </Link>
-        <Link to="/kviz" search={{ mode: "mistakes" }}>
-          <Button variant="outline" full>
-            <RotateCcw className="h-4 w-4" />
-            Procvičit mé chyby
-          </Button>
-        </Link>
+        {!mistakesMode && (
+          <Link to="/kviz" search={{ mode: "mistakes" }}>
+            <Button variant="outline" full>
+              <RotateCcw className="h-4 w-4" />
+              Procvičit mé chyby
+            </Button>
+          </Link>
+        )}
       </div>
     </motion.div>
   );
