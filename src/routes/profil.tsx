@@ -134,34 +134,30 @@ function ProfilePage() {
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-6 px-5 pt-8 safe-bottom">
       <PageHeader title="Můj profil" eyebrow="Účet" icon={User} />
 
-      {isGuest ? (
+      {isGuest && (
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="card-surface flex flex-col items-center gap-4 p-6 text-center"
+          className="card-surface flex flex-col gap-3 p-5"
         >
-          <span className="tint-primary flex h-16 w-16 items-center justify-center rounded-3xl">
-            <UserPlus className="h-8 w-8" />
+          <span className="tint-primary flex h-12 w-12 items-center justify-center rounded-2xl">
+            <UserPlus className="h-6 w-6" />
           </span>
           <div>
             <h2 className="text-base font-bold">Zkoušíš jako host</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               Zaregistruj se a svůj pokrok budeš mít uložený na všech zařízeních.
             </p>
           </div>
-          <div className="flex w-full flex-col gap-2">
-            <Link to="/prihlaseni">
-              <Button full>Zaregistrovat se</Button>
-            </Link>
-            <Link to="/">
-              <Button variant="outline" full>
-                Zpět na přehled
-              </Button>
-            </Link>
-          </div>
+          <Link to="/prihlaseni">
+            <Button full>Zaregistrovat se</Button>
+          </Link>
         </motion.section>
-      ) : (
+      )}
+
+      {(
         <>
+
           <motion.section
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -175,7 +171,10 @@ function ProfilePage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">E-mail</p>
-                  <p className="truncate text-[15px] font-semibold">{session?.user.email ?? "—"}</p>
+                  <p className="truncate text-[15px] font-semibold">
+                    {session?.user.email ?? (isGuest ? "Host (bez registrace)" : "—")}
+                  </p>
+
                 </div>
                 <span
                   className={cn(
@@ -284,24 +283,27 @@ function ProfilePage() {
             </div>
           </section>
 
-          <section className="flex flex-col gap-2.5">
-            <Button variant="outline" full onClick={() => setChanging(true)}>
-              <KeyRound className="h-4 w-4" />
-              Změnit heslo
-            </Button>
-            <Button variant="outline" full onClick={() => setConfirmSignOut(true)}>
-              <LogOut className="h-4 w-4" />
-              Odhlásit se
-            </Button>
-            <Button variant="danger" full onClick={removeAccount} disabled={deleting}>
-              {deleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
-              Smazat účet
-            </Button>
-          </section>
+          {!isGuest && (
+            <section className="flex flex-col gap-2.5">
+              <Button variant="outline" full onClick={() => setChanging(true)}>
+                <KeyRound className="h-4 w-4" />
+                Změnit heslo
+              </Button>
+              <Button variant="outline" full onClick={() => setConfirmSignOut(true)}>
+                <LogOut className="h-4 w-4" />
+                Odhlásit se
+              </Button>
+              <Button variant="danger" full onClick={removeAccount} disabled={deleting}>
+                {deleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+                Smazat účet
+              </Button>
+            </section>
+          )}
+
           <div className="flex flex-col items-center gap-1.5 py-2">
           <Link
             to="/zasady-soukromi"
