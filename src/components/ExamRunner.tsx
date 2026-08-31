@@ -11,7 +11,7 @@ import { ZoomableImage } from "./ZoomableImage";
 import { cn } from "@/lib/utils";
 import { EXAM_DURATION_SECONDS } from "@/lib/app-config";
 import { useLicenseGroup } from "@/lib/license-group";
-import { newAttemptId, saveExamAttempt } from "@/lib/exam-history";
+import { saveExamAttempt } from "@/lib/exam-history";
 import { recordAccuracy } from "@/lib/accuracy";
 import { EXAM_FAIL_LINE, EXAM_PASS_LINE } from "@/lib/copy";
 import { getExamResult } from "@/lib/exam-scoring";
