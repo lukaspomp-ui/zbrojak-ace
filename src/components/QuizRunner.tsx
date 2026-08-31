@@ -43,6 +43,7 @@ export function QuizRunner({
   progress,
   onNextRound,
   embedded,
+  mistakesMode,
 }: {
   questions: Question[];
   mode: QuizMode;
@@ -52,6 +53,8 @@ export function QuizRunner({
   onNextRound?: () => void;
   /** Rendered inside the subject tabs, where the screen already has a header. */
   embedded?: boolean;
+  /** Hides the redundant "Procvičit mé chyby" button when already in mistakes mode. */
+  mistakesMode?: boolean;
 }) {
   const queryClient = useQueryClient();
   const { group } = useLicenseGroup();
