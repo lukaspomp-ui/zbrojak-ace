@@ -187,7 +187,9 @@ export function buildTrainingSet(
   );
 }
 
-/** Otázky pro sekci „Mé chyby“ — stejný engine, jen filtr na chyby. */
+/** Otázky pro sekci „Mé chyby“ — poslední odpověď musela být špatná.
+ * Když ji uživatel v tomto režimu zodpoví správně, zmizí ze seznamu.
+ */
 export function buildMistakesSet(
   pool: Question[],
   progress: QuestionState[],
@@ -195,7 +197,7 @@ export function buildMistakesSet(
 ): { question: Question; state: QuestionState; score: number }[] {
   return sortByPriority(pool, progress, now)
     .filter((entry): entry is { question: Question; state: QuestionState; score: number } =>
-      !!entry.state && entry.state.times_wrong > 0,
+      !!entry.state && entry.state.last_answer_correct === false,
     )
     .sort((a, b) => {
       const recency =
