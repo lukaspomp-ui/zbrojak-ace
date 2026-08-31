@@ -29,7 +29,7 @@ export const PRACTICE_ROUND_SIZE = 5;
 export const MASTERY_STREAK = 2;
 
 export const PAYWALL_COPY = {
-  headline: "Uděláš zbroják napoprvé.",
+  headline: "Nauč se na testy.",
   sub: "Odemkni kompletní databázi a procvičování chyb.",
   price: "99 Kč jednorázově",
   benefits: [
