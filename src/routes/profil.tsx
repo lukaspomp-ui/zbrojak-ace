@@ -309,6 +309,12 @@ function ProfilePage() {
           >
             Zásady soukromí / Privacy Policy
           </Link>
+          <Link
+            to="/smazat-ucet"
+            className="text-xs text-muted-foreground underline underline-offset-2"
+          >
+            Smazání účtu a dat
+          </Link>
           <p className="text-[11px] text-muted-foreground">
             Zbrojní průkaz 2026 · v1.0
           </p>

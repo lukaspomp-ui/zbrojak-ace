@@ -19,6 +19,7 @@ import { Route as ProchazetRouteImport } from './routes/prochazet'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ResetHeslaRouteImport } from './routes/reset-hesla'
 import { Route as SlovnicekRouteImport } from './routes/slovnicek'
+import { Route as SmazatUcetRouteImport } from './routes/smazat-ucet'
 import { Route as StatistikyRouteImport } from './routes/statistiky'
 import { Route as ZasadySoukromiRouteImport } from './routes/zasady-soukromi'
 import { Route as OkruhSubjectIdRouteImport } from './routes/okruh.$subjectId'
@@ -73,6 +74,11 @@ const SlovnicekRoute = SlovnicekRouteImport.update({
   path: '/slovnicek',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SmazatUcetRoute = SmazatUcetRouteImport.update({
+  id: '/smazat-ucet',
+  path: '/smazat-ucet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StatistikyRoute = StatistikyRouteImport.update({
   id: '/statistiky',
   path: '/statistiky',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
+  '/smazat-ucet': typeof SmazatUcetRoute
   '/statistiky': typeof StatistikyRoute
   '/zasady-soukromi': typeof ZasadySoukromiRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
+  '/smazat-ucet': typeof SmazatUcetRoute
   '/statistiky': typeof StatistikyRoute
   '/zasady-soukromi': typeof ZasadySoukromiRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/reset-hesla': typeof ResetHeslaRoute
   '/slovnicek': typeof SlovnicekRoute
+  '/smazat-ucet': typeof SmazatUcetRoute
   '/statistiky': typeof StatistikyRoute
   '/zasady-soukromi': typeof ZasadySoukromiRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
+    | '/smazat-ucet'
     | '/statistiky'
     | '/zasady-soukromi'
     | '/okruh/$subjectId'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
+    | '/smazat-ucet'
     | '/statistiky'
     | '/zasady-soukromi'
     | '/okruh/$subjectId'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reset-hesla'
     | '/slovnicek'
+    | '/smazat-ucet'
     | '/statistiky'
     | '/zasady-soukromi'
     | '/okruh/$subjectId'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   ResetHeslaRoute: typeof ResetHeslaRoute
   SlovnicekRoute: typeof SlovnicekRoute
+  SmazatUcetRoute: typeof SmazatUcetRoute
   StatistikyRoute: typeof StatistikyRoute
   ZasadySoukromiRoute: typeof ZasadySoukromiRoute
   OkruhSubjectIdRoute: typeof OkruhSubjectIdRoute
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlovnicekRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/smazat-ucet': {
+      id: '/smazat-ucet'
+      path: '/smazat-ucet'
+      fullPath: '/smazat-ucet'
+      preLoaderRoute: typeof SmazatUcetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/statistiky': {
       id: '/statistiky'
       path: '/statistiky'
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   ResetHeslaRoute: ResetHeslaRoute,
   SlovnicekRoute: SlovnicekRoute,
+  SmazatUcetRoute: SmazatUcetRoute,
   StatistikyRoute: StatistikyRoute,
   ZasadySoukromiRoute: ZasadySoukromiRoute,
   OkruhSubjectIdRoute: OkruhSubjectIdRoute,
