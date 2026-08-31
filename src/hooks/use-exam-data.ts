@@ -14,6 +14,8 @@ import {
   type Subject,
 } from "@/lib/data";
 import { DEV_OPEN } from "@/lib/app-config";
+import { fetchAccuracy } from "@/lib/accuracy";
+import { fetchExamHistory } from "@/lib/exam-history";
 import { useAuth } from "./use-auth";
 
 /**
