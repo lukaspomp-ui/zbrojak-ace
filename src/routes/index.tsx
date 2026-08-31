@@ -11,13 +11,13 @@ import {
   Flame,
   Lock,
   type LucideIcon,
-  Settings,
   Sparkles,
   SpellCheck,
   Timer,
 } from "lucide-react";
 import { useState } from "react";
 
+import { DisassembledGunIcon } from "@/components/DisassembledGunIcon";
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { RankBadge } from "@/components/RankBadge";
@@ -102,25 +102,32 @@ function Dashboard() {
             aria-label="Můj profil"
             className="card-surface rounded-full p-2.5 text-muted-foreground"
           >
-            <Settings className="h-4 w-4" />
+            <DisassembledGunIcon className="h-4 w-4" />
           </Link>
           <RankBadge mastered={masteredCount} />
-          {!isPremium && (
-            <div className="flex items-center gap-1.5">
-              <span className="rounded-full bg-elevated px-2.5 py-1 text-[11px] font-bold text-muted-foreground">
-                Free
-              </span>
-              <Link
-                to="/premium"
-                className="tint-primary flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold"
-              >
-                <Crown className="h-3 w-3" />
-                Premium
-              </Link>
-            </div>
-          )}
         </div>
       </header>
+
+      <div className="flex items-center gap-2">
+        <span
+          className={`rounded-full px-4 py-1.5 text-sm font-bold ${
+            isPremium
+              ? "bg-elevated text-muted-foreground"
+              : "tint-primary"
+          }`}
+        >
+          Free
+        </span>
+        <Link
+          to="/premium"
+          className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-bold ${
+            isPremium ? "tint-primary" : "bg-elevated text-muted-foreground"
+          }`}
+        >
+          <Crown className="h-3.5 w-3.5" />
+          Premium
+        </Link>
+      </div>
 
       {/* Hero: the scope reticle aims at the readiness ring */}
       <motion.section
