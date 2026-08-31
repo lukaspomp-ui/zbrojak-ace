@@ -414,12 +414,14 @@ function ResultCard({
             Zpět na přehled
           </Button>
         </Link>
-        <Link to="/kviz" search={{ mode: "mistakes" }}>
-          <Button variant="outline" full>
-            <RotateCcw className="h-4 w-4" />
-            Procvičit mé chyby
-          </Button>
-        </Link>
+        {!mistakesMode && (
+          <Link to="/kviz" search={{ mode: "mistakes" }}>
+            <Button variant="outline" full>
+              <RotateCcw className="h-4 w-4" />
+              Procvičit mé chyby
+            </Button>
+          </Link>
+        )}
       </div>
     </motion.div>
   );
