@@ -73,6 +73,7 @@ function Dashboard() {
   const { group } = useLicenseGroup();
 
   const isPremium = profile?.is_premium === true;
+  const freeExamLeft = !isPremium && (profile?.exam_attempts_used ?? 0) < FREE_EXAM_ATTEMPTS;
   const loading = !ready || !questions || !subjects;
 
   if (loading) return <Loading />;
