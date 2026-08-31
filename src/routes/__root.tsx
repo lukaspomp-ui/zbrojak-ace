@@ -134,7 +134,9 @@ function RootComponent() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (router.state.location.pathname === "/onboarding") return;
+    const path = router.state.location.pathname;
+    // Veřejné stránky bez onboardingu (dostupné i nepřihlášenému návštěvníkovi)
+    if (path === "/onboarding" || path === "/smazat-ucet" || path === "/zasady-soukromi") return;
     if (!hasChosenLicenseGroup()) {
       navigate({ to: "/onboarding", replace: true });
     }
