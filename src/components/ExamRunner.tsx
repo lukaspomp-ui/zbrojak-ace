@@ -131,19 +131,25 @@ export function ExamRunner({
     } catch {
       /* nikdy neblokuj vyhodnocení testu */
     }
-    saveExamAttempt({
-      id: newAttemptId(),
-      date: new Date().toISOString(),
-      correct,
-      total,
-      passed: getExamResult(correct, group.id, total).passed,
-      sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
-        (x): x is { name: string; correct: number; total: number } => !!x,
-      ),
-      questionIds: questions.map((q) => q.id),
-      answers,
-    });
+    try {
+      // Historie testů patří k účtu, ne k zařízení.
+      await saveExamAttempt(userId, {
+        date: new Date().toISOString(),
+        correct,
+        total,
+        passed: getExamResult(correct, group.id, total).passed,
+        sections: SUBJECTS.map((s) => secMap.get(s.id)).filter(
+          (x): x is { name: string; correct: number; total: number } => !!x,
+        ),
+        questionIds: questions.map((q) => q.id),
+        answers,
+      });
+      queryClient.invalidateQueries({ queryKey: ["exam-history"] });
+    } catch {
+      /* historie je best-effort; nikdy neblokuj vyhodnocení testu */
+    }
     queryClient.invalidateQueries({ queryKey: ["progress"] });
+    queryClient.invalidateQueries({ queryKey: ["accuracy"] });
     setFinished(true);
     },
     [answers, questions, userId, progress, queryClient, group.id, secondsLeft],
