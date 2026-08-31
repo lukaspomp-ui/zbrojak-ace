@@ -11,13 +11,13 @@ import {
   Flame,
   Lock,
   type LucideIcon,
+  Settings,
   Sparkles,
   SpellCheck,
   Timer,
 } from "lucide-react";
 import { useState } from "react";
 
-import { DisassembledGunIcon } from "@/components/DisassembledGunIcon";
 import { ProgressRing } from "@/components/ProgressRing";
 import { ScopeReticle } from "@/components/ScopeReticle";
 import { RankBadge } from "@/components/RankBadge";
@@ -102,7 +102,7 @@ function Dashboard() {
             aria-label="Můj profil"
             className="card-surface rounded-full p-2.5 text-muted-foreground"
           >
-            <DisassembledGunIcon className="h-4 w-4" />
+            <Settings className="h-4 w-4" />
           </Link>
           <RankBadge mastered={masteredCount} />
         </div>
