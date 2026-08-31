@@ -16,13 +16,13 @@ export const Route = createFileRoute("/premium")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Premium — Uděláš zbroják napoprvé" },
+      { title: "Premium — Nauč se na testy" },
       {
         name: "description",
         content:
           "Odemkni kompletní databázi otázek, chytré opakování chyb a vysvětlení paragrafů. 99 Kč jednorázově.",
       },
-      { property: "og:title", content: "Premium — Uděláš zbroják napoprvé" },
+      { property: "og:title", content: "Premium — Nauč se na testy" },
       {
         property: "og:description",
         content:
