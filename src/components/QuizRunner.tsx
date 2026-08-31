@@ -150,6 +150,7 @@ export function QuizRunner({
         total={total}
         passed={passed}
         onNextRound={onNextRound}
+        mistakesMode={mistakesMode}
       />
     );
   }
