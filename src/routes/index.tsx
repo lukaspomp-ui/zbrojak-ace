@@ -33,7 +33,7 @@ import {
   useQuestionsQuery,
   useSubjectsQuery,
 } from "@/hooks/use-exam-data";
-import { FREE_QUESTION_LIMIT } from "@/lib/app-config";
+import { FREE_EXAM_ATTEMPTS, FREE_QUESTION_LIMIT } from "@/lib/app-config";
 import { availableQuestions } from "@/lib/data";
 import { readinessVerdict, streakLabel } from "@/lib/copy";
 import { computeStreak } from "@/lib/streak";
@@ -73,6 +73,7 @@ function Dashboard() {
   const { group } = useLicenseGroup();
 
   const isPremium = profile?.is_premium === true;
+  const freeExamLeft = !isPremium && (profile?.exam_attempts_used ?? 0) < FREE_EXAM_ATTEMPTS;
   const loading = !ready || !questions || !subjects;
 
   if (loading) return <Loading />;
@@ -164,18 +165,20 @@ function Dashboard() {
         <Button
           full
           onClick={() =>
-            isPremium
+            isPremium || freeExamLeft
               ? navigate({ to: "/kviz", search: { mode: "exam" } })
               : navigate({ to: "/premium" })
           }
         >
           <Timer className="h-4 w-4" />
           Spustit ostrý test
-          {!isPremium && <Lock className="h-4 w-4" />}
+          {!isPremium && !freeExamLeft && <Lock className="h-4 w-4" />}
         </Button>
         {!isPremium && (
           <p className="text-center text-[11px] text-muted-foreground">
-            Ostrý test je součástí Premium
+            {freeExamLeft
+              ? "Ve free verzi máš jeden ostrý test zdarma"
+              : "Další ostré testy jsou součástí Premium"}
           </p>
         )}
 
