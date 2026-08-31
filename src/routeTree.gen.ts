@@ -23,6 +23,7 @@ import { Route as SmazatUcetRouteImport } from './routes/smazat-ucet'
 import { Route as StatistikyRouteImport } from './routes/statistiky'
 import { Route as ZasadySoukromiRouteImport } from './routes/zasady-soukromi'
 import { Route as OkruhSubjectIdRouteImport } from './routes/okruh.$subjectId'
+import { Route as ApiPublicPaddleWebhookRouteImport } from './routes/api/public/paddle-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const OkruhSubjectIdRoute = OkruhSubjectIdRouteImport.update({
   path: '/okruh/$subjectId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaddleWebhookRoute = ApiPublicPaddleWebhookRouteImport.update({
+  id: '/api/public/paddle-webhook',
+  path: '/api/public/paddle-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/statistiky': typeof StatistikyRoute
   '/zasady-soukromi': typeof ZasadySoukromiRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
+  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/statistiky': typeof StatistikyRoute
   '/zasady-soukromi': typeof ZasadySoukromiRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
+  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/statistiky': typeof StatistikyRoute
   '/zasady-soukromi': typeof ZasadySoukromiRoute
   '/okruh/$subjectId': typeof OkruhSubjectIdRoute
+  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/statistiky'
     | '/zasady-soukromi'
     | '/okruh/$subjectId'
+    | '/api/public/paddle-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/statistiky'
     | '/zasady-soukromi'
     | '/okruh/$subjectId'
+    | '/api/public/paddle-webhook'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/statistiky'
     | '/zasady-soukromi'
     | '/okruh/$subjectId'
+    | '/api/public/paddle-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   StatistikyRoute: typeof StatistikyRoute
   ZasadySoukromiRoute: typeof ZasadySoukromiRoute
   OkruhSubjectIdRoute: typeof OkruhSubjectIdRoute
+  ApiPublicPaddleWebhookRoute: typeof ApiPublicPaddleWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OkruhSubjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/paddle-webhook': {
+      id: '/api/public/paddle-webhook'
+      path: '/api/public/paddle-webhook'
+      fullPath: '/api/public/paddle-webhook'
+      preLoaderRoute: typeof ApiPublicPaddleWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   StatistikyRoute: StatistikyRoute,
   ZasadySoukromiRoute: ZasadySoukromiRoute,
   OkruhSubjectIdRoute: OkruhSubjectIdRoute,
+  ApiPublicPaddleWebhookRoute: ApiPublicPaddleWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
