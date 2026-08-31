@@ -201,6 +201,8 @@ function Dashboard() {
 
       <CollapsibleSection title="Okruhy k procvičení" icon={BookOpen} defaultOpen>
         {subjects.map((subject, i) => {
+          const realSubjectQuestions = questions.filter((q) => q.subject_id === subject.id);
+          const realTotal = realSubjectQuestions.length;
           const subjectQuestions = pool.filter((q) => q.subject_id === subject.id);
           const total = subjectQuestions.length;
           const rows = (progress ?? []).filter((p) =>
@@ -229,6 +231,11 @@ function Dashboard() {
                   <span className="num block text-xs text-muted-foreground">
                     {mastered} zvládnuto · {wrong} chybných · {nove} nových
                   </span>
+                  {!isPremium && realTotal > total && (
+                    <span className="num block text-xs font-semibold text-primary">
+                      {total} z {realTotal} otázek (free)
+                    </span>
+                  )}
                   <span className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-elevated">
                     <span
                       className="block h-full"
