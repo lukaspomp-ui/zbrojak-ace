@@ -37,6 +37,7 @@ export const PAYWALL_COPY = {
     "Ostrý test na 30 otázek s časomírou",
     "Dokumenty ke stažení a slovníček pojmů",
     "Procházení otázek a oblíbené",
+    "Statistiky progresu učení",
     "Garance aktualizace pro rok 2026",
   ],
 };
