@@ -94,7 +94,7 @@ export function ExamRunner({
       const chosen = answers[q.id];
       const wasCorrect = !!chosen && !!q.answers.find((a) => a.id === chosen)?.is_correct;
       if (wasCorrect) correct++;
-      recordAccuracy(q.subject_id, wasCorrect);
+      void recordAccuracy(q.subject_id, wasCorrect).catch(() => {});
       const entry = secMap.get(q.subject_id) ?? {
         name: nameById.get(q.subject_id) ?? "Okruh",
         correct: 0,
