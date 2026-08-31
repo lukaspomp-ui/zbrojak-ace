@@ -98,17 +98,17 @@ function QuizPage() {
       const favs = getFavorites();
       return favs.map((id) => questions.find((q) => q.id === id)).filter((q): q is Question => !!q);
     }
-    // Procvičování okruhu: Smart Repetition kolo, bez okamžitého opakování.
+    // Procvičování okruhu: Smart Repetition kolo, správně zodpovězené až na konec
+    // a stejná otázka maximálně ve dvou po sobě jdoucích kolech.
     const subjectPool = pool.filter((q) => q.subject_id === subjectId);
-    const previous = lastRoundIds.current;
-    const fresh = subjectPool.filter((q) => !previous.includes(q.id));
-    const source = fresh.length >= PRACTICE_ROUND_SIZE ? fresh : subjectPool;
-    const picked = buildTrainingSet(source, progress, PRACTICE_ROUND_SIZE);
-    lastRoundIds.current = picked.map((q) => q.id);
-    return shuffle(picked);
-
-    lastRoundIds.current = picked.map((q) => q.id);
-    return shuffle(picked);
+    const picked = buildPracticeRound(
+      subjectPool,
+      progress,
+      PRACTICE_ROUND_SIZE,
+      lastRoundIds.current,
+    );
+    lastRoundIds.current = [picked.map((q) => q.id), ...lastRoundIds.current].slice(0, 2);
+    return picked;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, progress, isPremium, mode, subjectId, round]);
 
