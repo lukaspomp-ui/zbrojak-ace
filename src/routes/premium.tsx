@@ -69,7 +69,10 @@ function Paywall() {
             options: { emailRedirectTo: window.location.origin },
           });
       if (error) throw error;
-      await purchase();
+      // Platbu otevíráme až po úspěšném vytvoření/ověření účtu.
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) throw new Error("Účet se nepodařilo ověřit. Přihlas se prosím a zkus to znovu.");
+      await purchase(data.user.id, data.user.email ?? email);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Registrace se nepovedla.");
     } finally {
@@ -77,17 +80,53 @@ function Paywall() {
     }
   }
 
-  async function purchase() {
-    if (!userId) return;
-    setBusy(true);
-    try {
-      // Premium se aktivuje na serveru po zaplacení — klient ho nastavit nemůže.
-      await unlockPremium(userId);
-      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+  /** Po zaplacení čekáme na serverové potvrzení (Paddle webhook), nikdy nenastavujeme is_premium z klienta. */
+  async function confirmOnServer(uid: string) {
+    setStatus("waiting");
+    const ok = await waitForPremium(uid);
+    await queryClient.invalidateQueries({ queryKey: ["profile"] });
+    if (ok) {
+      setStatus("success");
       toast.success("Premium aktivováno. Hodně štěstí u zkoušky!");
       navigate({ to: "/" });
+    } else {
+      setStatus("pending");
+    }
+  }
+
+  async function purchase(uidArg?: string, emailArg?: string | null) {
+    const uid = uidArg ?? userId;
+    if (!uid) {
+      toast.error("Nejsi přihlášený. Zkus to prosím znovu.");
+      return;
+    }
+    if (!isPaddleConfigured()) {
+      setStatus("error");
+      toast.error("Platba zatím není nastavená. Chybí Paddle client token nebo price ID.");
+      return;
+    }
+    setBusy(true);
+    setStatus("idle");
+    try {
+      await openPremiumCheckout({
+        userId: uid,
+        email: emailArg ?? sessionEmail,
+        events: {
+          onCompleted: () => {
+            void confirmOnServer(uid);
+          },
+          onClosed: () => {
+            setStatus((s) => (s === "idle" ? "canceled" : s));
+          },
+          onError: (message) => {
+            setStatus("error");
+            toast.error(message);
+          },
+        },
+      });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Aktivace se nepovedla. Zkus to prosím znovu.");
+      setStatus("error");
+      toast.error(e instanceof Error ? e.message : "Platbu se nepodařilo otevřít.");
     } finally {
       setBusy(false);
     }
