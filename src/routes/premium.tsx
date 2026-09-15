@@ -9,7 +9,8 @@ import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
 import { useAppQuery, useAppTheme, useProfileQuery } from "@/hooks/use-exam-data";
 import { PAYWALL_COPY } from "@/lib/app-config";
-import { unlockPremium } from "@/lib/data";
+import { waitForPremium } from "@/lib/data";
+import { isPaddleConfigured, openPremiumCheckout } from "@/lib/paddle";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/premium")({
