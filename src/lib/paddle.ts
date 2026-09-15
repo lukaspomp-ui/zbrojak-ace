@@ -9,7 +9,8 @@
 const PADDLE_JS = "https://cdn.paddle.com/paddle/v2/paddle.js";
 
 export const PADDLE_CLIENT_TOKEN: string =
-  (import.meta.env.VITE_PADDLE_CLIENT_TOKEN as string | undefined) ?? "";
+  (import.meta.env.VITE_PADDLE_CLIENT_TOKEN as string | undefined) ??
+  "live_a95707b63ba12019563e5300a5d";
 
 /** Jednorázová cena 99 Kč (one-time price, ne subscription). */
 export const PADDLE_PRICE_ID: string =
