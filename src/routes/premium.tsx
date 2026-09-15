@@ -39,14 +39,18 @@ export const Route = createFileRoute("/premium")({
 function Paywall() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { userId, isGuest, ready } = useAuth();
+  const { userId, isGuest, ready, session } = useAuth();
   const { data: app } = useAppQuery();
   const { data: profile } = useProfileQuery();
   useAppTheme(app);
 
+  const sessionEmail = session?.user.email ?? null;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  type CheckoutStatus = "idle" | "waiting" | "success" | "pending" | "canceled" | "error";
+  const [status, setStatus] = useState<CheckoutStatus>("idle");
   // App Store guideline 3.1.1: no external prices/payments inside the iOS app
   // until Premium is sold through Apple In-App Purchase.
   const [native, setNative] = useState(false);
