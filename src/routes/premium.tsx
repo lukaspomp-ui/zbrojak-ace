@@ -9,7 +9,8 @@ import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/use-auth";
 import { useAppQuery, useAppTheme, useProfileQuery } from "@/hooks/use-exam-data";
 import { PAYWALL_COPY } from "@/lib/app-config";
-import { unlockPremium } from "@/lib/data";
+import { waitForPremium } from "@/lib/data";
+import { isPaddleConfigured, openPremiumCheckout } from "@/lib/paddle";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/premium")({
@@ -38,14 +39,18 @@ export const Route = createFileRoute("/premium")({
 function Paywall() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { userId, isGuest, ready } = useAuth();
+  const { userId, isGuest, ready, session } = useAuth();
   const { data: app } = useAppQuery();
   const { data: profile } = useProfileQuery();
   useAppTheme(app);
 
+  const sessionEmail = session?.user.email ?? null;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+  type CheckoutStatus = "idle" | "waiting" | "success" | "pending" | "canceled" | "error";
+  const [status, setStatus] = useState<CheckoutStatus>("idle");
   // App Store guideline 3.1.1: no external prices/payments inside the iOS app
   // until Premium is sold through Apple In-App Purchase.
   const [native, setNative] = useState(false);
@@ -68,7 +73,10 @@ function Paywall() {
             options: { emailRedirectTo: window.location.origin },
           });
       if (error) throw error;
-      await purchase();
+      // Platbu otevíráme až po úspěšném vytvoření/ověření účtu.
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) throw new Error("Účet se nepodařilo ověřit. Přihlas se prosím a zkus to znovu.");
+      await purchase(data.user.id, data.user.email ?? email);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Registrace se nepovedla.");
     } finally {
@@ -76,17 +84,53 @@ function Paywall() {
     }
   }
 
-  async function purchase() {
-    if (!userId) return;
-    setBusy(true);
-    try {
-      // Premium se aktivuje na serveru po zaplacení — klient ho nastavit nemůže.
-      await unlockPremium(userId);
-      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+  /** Po zaplacení čekáme na serverové potvrzení (Paddle webhook), nikdy nenastavujeme is_premium z klienta. */
+  async function confirmOnServer(uid: string) {
+    setStatus("waiting");
+    const ok = await waitForPremium(uid);
+    await queryClient.invalidateQueries({ queryKey: ["profile"] });
+    if (ok) {
+      setStatus("success");
       toast.success("Premium aktivováno. Hodně štěstí u zkoušky!");
       navigate({ to: "/" });
+    } else {
+      setStatus("pending");
+    }
+  }
+
+  async function purchase(uidArg?: string, emailArg?: string | null) {
+    const uid = uidArg ?? userId;
+    if (!uid) {
+      toast.error("Nejsi přihlášený. Zkus to prosím znovu.");
+      return;
+    }
+    if (!isPaddleConfigured()) {
+      setStatus("error");
+      toast.error("Platba zatím není nastavená. Chybí Paddle client token nebo price ID.");
+      return;
+    }
+    setBusy(true);
+    setStatus("idle");
+    try {
+      await openPremiumCheckout({
+        userId: uid,
+        email: emailArg ?? sessionEmail,
+        events: {
+          onCompleted: () => {
+            void confirmOnServer(uid);
+          },
+          onClosed: () => {
+            setStatus((s) => (s === "idle" ? "canceled" : s));
+          },
+          onError: (message) => {
+            setStatus("error");
+            toast.error(message);
+          },
+        },
+      });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Aktivace se nepovedla. Zkus to prosím znovu.");
+      setStatus("error");
+      toast.error(e instanceof Error ? e.message : "Platbu se nepodařilo otevřít.");
     } finally {
       setBusy(false);
     }
@@ -192,10 +236,27 @@ function Paywall() {
           </Button>
         </div>
       ) : (
-        <Button full onClick={purchase} disabled={busy}>
-          {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+        <Button full onClick={() => void purchase()} disabled={busy || status === "waiting"}>
+          {(busy || status === "waiting") && <Loader2 className="h-4 w-4 animate-spin" />}
           {ctaLabel}
         </Button>
+      )}
+
+      {status !== "idle" && status !== "success" && (
+        <p
+          className={`rounded-2xl px-4 py-3 text-center text-xs leading-relaxed ${
+            status === "error"
+              ? "bg-destructive/10 text-destructive"
+              : "bg-elevated text-muted-foreground"
+          }`}
+          role="status"
+        >
+          {status === "waiting" && "Platba přijata, aktivujeme Premium… chvilku vydrž."}
+          {status === "pending" &&
+            "Platba proběhla, ale potvrzení ještě nedošlo. Premium se odemkne samo — zkus stránku za chvíli obnovit."}
+          {status === "canceled" && "Platba byla zrušena. Můžeš to zkusit znovu."}
+          {status === "error" && "Platbu se nepodařilo dokončit. Zkus to prosím znovu."}
+        </p>
       )}
 
       <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">

@@ -125,12 +125,22 @@ export async function reportQuestion(
 }
 
 /**
- * Premium entitlement is server-controlled — the client cannot set `is_premium`
- * (a database trigger rejects it). Until in-app purchase is wired up, this call
- * intentionally reports that no purchase channel is available.
+ * Premium entitlement je řízené serverem — klient `is_premium` nastavit nemůže
+ * (databázový trigger to odmítne). Po zaplacení jen čekáme, než Paddle webhook
+ * profil aktualizuje.
  */
-export async function unlockPremium(_userId: string): Promise<never> {
-  throw new Error("Premium se aktivuje po zaplacení; platební kanál zatím není napojený.");
+export async function waitForPremium(
+  userId: string,
+  opts: { attempts?: number; delayMs?: number } = {},
+): Promise<boolean> {
+  const attempts = opts.attempts ?? 20;
+  const delayMs = opts.delayMs ?? 1500;
+  for (let i = 0; i < attempts; i++) {
+    const profile = await fetchProfile(userId);
+    if (profile?.is_premium) return true;
+    await new Promise((r) => setTimeout(r, delayMs));
+  }
+  return false;
 }
 
 /** Consumes exactly one exam attempt server-side; returns the new counter. */
