@@ -13,7 +13,8 @@ export const PADDLE_CLIENT_TOKEN: string =
 
 /** Jednorázová cena 99 Kč (one-time price, ne subscription). */
 export const PADDLE_PRICE_ID: string =
-  (import.meta.env.VITE_PADDLE_PRICE_ID as string | undefined) ?? "";
+  (import.meta.env.VITE_PADDLE_PRICE_ID as string | undefined) ??
+  "pri_01m1bqd8qnp3kb71y4q3wd3rjb";
 
 /** "sandbox" nebo "production" */
 export const PADDLE_ENVIRONMENT: string =
