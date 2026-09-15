@@ -236,10 +236,27 @@ function Paywall() {
           </Button>
         </div>
       ) : (
-        <Button full onClick={purchase} disabled={busy}>
-          {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+        <Button full onClick={() => void purchase()} disabled={busy || status === "waiting"}>
+          {(busy || status === "waiting") && <Loader2 className="h-4 w-4 animate-spin" />}
           {ctaLabel}
         </Button>
+      )}
+
+      {status !== "idle" && status !== "success" && (
+        <p
+          className={`rounded-2xl px-4 py-3 text-center text-xs leading-relaxed ${
+            status === "error"
+              ? "bg-destructive/10 text-destructive"
+              : "bg-elevated text-muted-foreground"
+          }`}
+          role="status"
+        >
+          {status === "waiting" && "Platba přijata, aktivujeme Premium… chvilku vydrž."}
+          {status === "pending" &&
+            "Platba proběhla, ale potvrzení ještě nedošlo. Premium se odemkne samo — zkus stránku za chvíli obnovit."}
+          {status === "canceled" && "Platba byla zrušena. Můžeš to zkusit znovu."}
+          {status === "error" && "Platbu se nepodařilo dokončit. Zkus to prosím znovu."}
+        </p>
       )}
 
       <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
