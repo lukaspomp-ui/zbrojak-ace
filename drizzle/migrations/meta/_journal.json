@@ -8,6 +8,13 @@
       "when": 1791559276500,
       "tag": "0000_tighten_content_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791559357172,
+      "tag": "0001_block_guest_sessions",
+      "breakpoints": true
     }
   ]
 }
