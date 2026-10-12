@@ -15,6 +15,20 @@
       "when": 1791559357172,
       "tag": "0001_block_guest_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791791018865,
+      "tag": "0002_cleanup_anonymous_users_function",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791791029125,
+      "tag": "0003_enable_pg_cron",
+      "breakpoints": true
     }
   ]
 }
