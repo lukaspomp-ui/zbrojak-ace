@@ -367,6 +367,7 @@ export type Database = {
         Args: { _correct: boolean; _subject_id: string }
         Returns: undefined
       }
+      cleanup_anonymous_users: { Args: never; Returns: number }
       consume_exam_attempt: { Args: never; Returns: number }
     }
     Enums: {
